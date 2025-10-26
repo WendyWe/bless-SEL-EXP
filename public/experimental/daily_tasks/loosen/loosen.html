@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLESS - Loosen</title>
+  <link rel="stylesheet" href="../loosen/loosen.css">
+  <script src="../js/activityTracker.js"></script>
+</head>
+
+<body>
+  <script>
+    // 當頁面載入
+    document.addEventListener('DOMContentLoaded', () => {
+      ActivityTracker.startActivity('loosen');
+    });
+
+    // 當頁面離開
+    window.addEventListener('beforeunload', () => {
+      console.log('beforeunload event triggered!');
+      ActivityTracker.endActivity();
+    });
+  </script>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Loosen解壓小遊戲</h1>
+        <h2>
+          有時候，我們的內心會充滿 焦慮、壓力、憤怒、疲憊或其他負面情緒，讓人感到沉重。<br>
+          解壓小遊戲便是設計以協助你釋放壓力，找回內心的平靜！💆‍♂️💆‍♀️✨<br>
+          🎈 釋放壓力，擊破負面情緒！🎮💖
+        </h2>
+        <br>
+        <p>
+          🔹 選擇你想要擊破的負面情緒 — 邀請你從 20 種負面情緒 中選擇 5 個，挑戰自己最想擺脫的感受。<br>
+          🔹 點擊泡泡釋放壓力 — 遊戲中，每個泡泡都代表著一種負面情緒，點擊它們，讓它們消失！💥💨<br>
+          🔹 即時統計你的進步 — 遊戲後記錄你成功擊破的泡泡數量，您可以嘗試慢慢放下那些在心中湧上的負面情緒！📊🎯
+        </p>
+
+        <!-- 選擇負面情緒的畫面 -->
+        <div id="selection-container">
+          <h1>請選擇 5 個<br> 你想要擊破的負面情緒</h1>
+          <div id="emotion-selection"></div>
+          <button id="confirm-selection" disabled>確認選擇</button>
+        </div>
+
+        <!-- 遊戲畫面 -->
+        <div id="game-container">
+          <h1>點擊泡泡來釋放壓力！</h1>
+          <p id="message">點擊負面情緒泡泡，讓它們消失吧！</p>
+          <div id="bubble-container"></div>
+          <div id="timer">剩餘時間：<span id="time">30</span> 秒</div>
+          <button id="restart-btn">重新開始</button>
+
+          <div id="stats-container">
+            <h2>情緒釋放統計</h2>
+            <div id="stats"></div>
+          </div>
+        </div>
+
+        <!-- 按鈕區 -->
+        <div class="button-container">
+          <button id="back-button" style="display:none;">返回</button>
+          <button id="finish-btn">完成練習</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 正確的 js 檔名 -->
+  <script src="../loosen/loosen.js"></script>
+</body>
+</html>

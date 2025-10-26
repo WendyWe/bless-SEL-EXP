@@ -1,0 +1,249 @@
+* {
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+  
+body {
+    font-family: Arial, sans-serif;
+    margin-top: -20px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+    position: relative; /* 確保背景與內容層級分開 */
+}
+  
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../../LINE_ALBUM_20240908_衝浪_Z50_250102_1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.7;
+    z-index: -1; /* 讓背景在最底層 */
+}
+
+.navbar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #333;
+    z-index: 2; /* 保證導航欄在最上層 */
+}
+  
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.menu a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 1rem;
+}
+  
+.menu a:hover {
+    color: #00c8ff;
+}
+
+.hero {
+    margin-top: 60px;
+  text-align: center;
+  padding: 50px 20px;
+  background: url('hero.jpg') center/cover no-repeat;
+  height: auto;
+}
+  
+  .hero h1 {
+    font-size: 3rem;
+    color: #050505; 
+    margin-bottom: 0;
+  }
+
+  .hero h2 {
+    font-size: 1rem;
+    color: #050505; 
+    margin-bottom: 0;
+  }
+  
+  .hero p {
+    font-size: 1rem;
+    color: #050505; 
+    margin-bottom: 0;
+  }
+  
+
+/* 原有設定保留，但做部分修改 */
+
+/* 球容器 */
+.balloon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 300px; /* 高度給一點空間，避免擠到文字 */
+    margin-top: 20px;
+}
+
+/* 球本體 */
+#balloon {
+    position: absolute;
+    top: 50%;               /* 垂直置中 */
+    left: 50%;              /* 水平置中 */
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 150px;
+    background-color: rgb(131, 235, 150);
+    border-radius: 50%;
+    transition: transform 0.1s linear; 
+    pointer-events: none;   /* 不影響點擊 */
+}
+
+/* 說明文字 */
+.text-container {
+    position: relative;
+    margin-top: 250px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 800px;       /* 限制文字區塊寬度 */
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.text-container h1, 
+.text-container h2, 
+.text-container p {
+    color: #333;
+}
+
+
+.button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px; /* 與氣球保持距離 */
+}
+
+
+#control {
+    position: relative;
+    z-index: 100;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+#control:hover {
+    background-color: #6e00b3;
+}
+
+.result {
+    position: absolute;
+    margin-top: -10%;
+    right: 100px; /* 固定在右側，與右邊保持20px距離 */
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+    color: black;   
+}
+
+.reward {
+    color: green;
+    font-weight: bold;
+}
+.reminder {
+    color: rgb(251, 0, 0);
+    font-weight: bold;
+}
+
+/* Account Dropdown */
+.account-dropdown {
+    position: relative;
+    display: inline-block;
+}
+    
+.dropdown-btn {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+}
+    
+.dropdown-btn:hover {
+    background-color: #00c8ff;
+}
+    
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 4px;
+    z-index: 1;
+    min-width: 150px;
+}
+    
+.dropdown-menu a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 10px 15px;
+    font-size: 14px;
+}
+    
+.dropdown-menu a:hover {
+    background-color: #00c8ff;
+}
+    
+.account-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+
+/* 說明文字 */
+.text-container {
+    position: relative;
+    margin-top: 250px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 800px;       /* 限制文字區塊寬度 */
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.text-container h1, 
+.text-container h2, 
+.text-container p {
+    color: #333;
+}

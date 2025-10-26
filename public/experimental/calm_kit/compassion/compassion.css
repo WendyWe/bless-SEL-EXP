@@ -1,0 +1,98 @@
+/* 讓整頁滿版無邊距 */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* 背景影片設定 */
+#bgVideo {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+/* 淡黑遮罩層 */
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
+
+/* 中央文字區 */
+.center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  animation: fadeIn 3s ease-in-out;
+}
+
+#back-button {
+    padding: 12px 28px;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, #63b3ed, #3182ce);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    display: none;
+}
+
+#back-button:hover {
+    background: linear-gradient(135deg, #4299e1, #2b6cb0);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(49, 130, 206, 0.4);
+}
+
+#back-button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(49, 130, 206, 0.2);
+}
+
+.finish-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    padding: 12px 28px;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, #63b3ed, #3182ce);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+}
+
+/* hover 效果 */
+.finish-btn:hover {
+    background: linear-gradient(135deg, #4299e1, #2b6cb0);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(49, 130, 206, 0.4);
+}
+
+/* 顯示狀態 */
+.finish-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+/* 動畫淡入 */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}

@@ -1,0 +1,209 @@
+/* === 基本頁面排版 === */
+body {
+  font-family: Arial, "Microsoft JhengHei", sans-serif;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#app {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  width: 700px;
+  text-align: center;
+}
+
+.hidden {
+  display: none !important; /* 確保隱藏優先級最高 */
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #4a90e2;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #357ab8;
+}
+
+.panas-form table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 15px;
+  table-layout: fixed;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.panas-form th,
+.panas-form td {
+  border: 1px solid #e5e7eb;
+  padding: 12px 5px;
+  vertical-align: middle;
+  height: 50px;
+  text-align: center;
+}
+
+/* 題目欄位 (第一欄) */
+.panas-form td:first-child {
+  text-align: left;
+  width: 40%;
+  padding-left: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  background-color: #fefefe;
+}
+
+/* 評分欄位 */
+.panas-form th:not(:first-child),
+.panas-form td:not(:first-child) {
+  width: 10%;
+}
+
+/* Radio button 調整 */
+.panas-form input[type="radio"] {
+  display: block;
+  margin: auto;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 2px;
+  margin: 20px auto;
+}
+
+.grid-item {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease;
+}
+
+.grid-item:hover {
+  background-color: #e0e0e0;
+}
+
+.grid-item.selected {
+  font-weight: bold;
+  border: 2px solid #333;
+}
+
+.grid-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 30px auto;
+}
+
+.label-top,
+.label-bottom,
+.label-left,
+.label-right {
+  position: absolute;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.label-top {
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.label-bottom {
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.label-left {
+  left: -80px;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
+}
+
+.label-right {
+  right: -80px;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: left;
+}
+
+.corner {
+  position: absolute;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.top-left {
+  top: 0;
+  left: -40px;
+  color: red;
+}
+
+.top-right {
+  top: 0;
+  right: -40px;
+  color: orange;
+}
+
+.bottom-left {
+  bottom: 0;
+  left: -40px;
+  color: blue;
+}
+
+.bottom-right {
+  bottom: 0;
+  right: -40px;
+  color: green;
+}
+
+#feedback {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+#confirm-btn {
+  display: block;
+  margin: 15px auto;
+  padding: 8px 16px;
+  font-size: 14px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#confirm-btn:hover {
+  background: #0056b3;
+}

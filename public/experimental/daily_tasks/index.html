@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>每日任務</title>
+  <link rel="stylesheet" href="../daily_tasks/css/daily.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- 1. 影片區 -->
+    <section id="video-section">
+      <h2>今日影片</h2>
+      <video id="daily-video" width="640" height="360" controls></video>
+      <br>
+      <button id="finish-video">完成觀看</button>
+      <br>
+      <button class="btn btn-home" onclick="window.location.href='/experimental/index.html'">回到首頁</button>
+    </section>
+
+    <!-- 2. PANAS & 情緒格 -->
+    <section id="mood-section" class="hidden">
+      <h2>情緒評估</h2>
+      <form id="panas-table">
+  <p>請評估你此刻的情緒（1 = 幾乎沒有，6 = 總是如此）</p>
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th>題目</th>
+        <th>1<br>幾乎沒有</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6<br>總是如此</th>
+      </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td>1. 我覺得生活充滿希望。</td>
+            <td><input type="radio" name="q1" value="1" required></td>
+            <td><input type="radio" name="q1" value="2"></td>
+            <td><input type="radio" name="q1" value="3"></td>
+            <td><input type="radio" name="q1" value="4"></td>
+            <td><input type="radio" name="q1" value="5"></td>
+            <td><input type="radio" name="q1" value="6"></td>
+          </tr>
+          <tr>
+            <td>2. 我覺得焦慮。</td>
+            <td><input type="radio" name="q2" value="1" required></td>
+            <td><input type="radio" name="q2" value="2"></td>
+            <td><input type="radio" name="q2" value="3"></td>
+            <td><input type="radio" name="q2" value="4"></td>
+            <td><input type="radio" name="q2" value="5"></td>
+            <td><input type="radio" name="q2" value="6"></td>
+          </tr>
+          <tr>
+            <td>3. 我覺得快樂。</td>
+            <td><input type="radio" name="q3" value="1" required></td>
+            <td><input type="radio" name="q3" value="2"></td>
+            <td><input type="radio" name="q3" value="3"></td>
+            <td><input type="radio" name="q3" value="4"></td>
+            <td><input type="radio" name="q3" value="5"></td>
+            <td><input type="radio" name="q3" value="6"></td>
+          </tr>
+          <tr>
+            <td>4. 我覺得心情不好。</td>
+            <td><input type="radio" name="q4" value="1" required></td>
+            <td><input type="radio" name="q4" value="2"></td>
+            <td><input type="radio" name="q4" value="3"></td>
+            <td><input type="radio" name="q4" value="4"></td>
+            <td><input type="radio" name="q4" value="5"></td>
+            <td><input type="radio" name="q4" value="6"></td>
+          </tr>
+          <tr>
+            <td>5. 我覺得生活充滿樂趣。</td>
+            <td><input type="radio" name="q5" value="1" required></td>
+            <td><input type="radio" name="q5" value="2"></td>
+            <td><input type="radio" name="q5" value="3"></td>
+            <td><input type="radio" name="q5" value="4"></td>
+            <td><input type="radio" name="q5" value="5"></td>
+            <td><input type="radio" name="q5" value="6"></td>
+          </tr>
+          <tr>
+            <td>6. 我覺得生活是悲慘的。</td>
+            <td><input type="radio" name="q6" value="1" required></td>
+            <td><input type="radio" name="q6" value="2"></td>
+            <td><input type="radio" name="q6" value="3"></td>
+            <td><input type="radio" name="q6" value="4"></td>
+            <td><input type="radio" name="q6" value="5"></td>
+            <td><input type="radio" name="q6" value="6"></td>
+          </tr>
+          <tr>
+            <td>7. 我覺得充滿自信。</td>
+            <td><input type="radio" name="q7" value="1" required></td>
+            <td><input type="radio" name="q7" value="2"></td>
+            <td><input type="radio" name="q7" value="3"></td>
+            <td><input type="radio" name="q7" value="4"></td>
+            <td><input type="radio" name="q7" value="5"></td>
+            <td><input type="radio" name="q7" value="6"></td>
+          </tr>
+          <tr>
+            <td>8. 我覺得傷心。</td>
+            <td><input type="radio" name="q8" value="1" required></td>
+            <td><input type="radio" name="q8" value="2"></td>
+            <td><input type="radio" name="q8" value="3"></td>
+            <td><input type="radio" name="q8" value="4"></td>
+            <td><input type="radio" name="q8" value="5"></td>
+            <td><input type="radio" name="q8" value="6"></td>
+          </tr>
+          <tr>
+            <td>9. 我覺得世界是美好的。</td>
+            <td><input type="radio" name="q9" value="1" required></td>
+            <td><input type="radio" name="q9" value="2"></td>
+            <td><input type="radio" name="q9" value="3"></td>
+            <td><input type="radio" name="q9" value="4"></td>
+            <td><input type="radio" name="q9" value="5"></td>
+            <td><input type="radio" name="q9" value="6"></td>
+          </tr>
+          <tr>
+            <td>10. 我覺得失望、灰心。</td>
+            <td><input type="radio" name="q10" value="1" required></td>
+            <td><input type="radio" name="q10" value="2"></td>
+            <td><input type="radio" name="q10" value="3"></td>
+            <td><input type="radio" name="q10" value="4"></td>
+            <td><input type="radio" name="q10" value="5"></td>
+            <td><input type="radio" name="q10" value="6"></td>
+          </tr>
+          <tr>
+            <td>11. 我覺得心情愉快。</td>
+            <td><input type="radio" name="q11" value="1" required></td>
+            <td><input type="radio" name="q11" value="2"></td>
+            <td><input type="radio" name="q11" value="3"></td>
+            <td><input type="radio" name="q11" value="4"></td>
+            <td><input type="radio" name="q11" value="5"></td>
+            <td><input type="radio" name="q11" value="6"></td>
+          </tr>
+          <tr>
+            <td>12. 我覺得委屈。</td>
+            <td><input type="radio" name="q12" value="1" required></td>
+            <td><input type="radio" name="q12" value="2"></td>
+            <td><input type="radio" name="q12" value="3"></td>
+            <td><input type="radio" name="q12" value="4"></td>
+            <td><input type="radio" name="q12" value="5"></td>
+            <td><input type="radio" name="q12" value="6"></td>
+          </tr>
+          <tr>
+            <td>13. 我對自己的生活感到滿意。</td>
+            <td><input type="radio" name="q13" value="1" required></td>
+            <td><input type="radio" name="q13" value="2"></td>
+            <td><input type="radio" name="q13" value="3"></td>
+            <td><input type="radio" name="q13" value="4"></td>
+            <td><input type="radio" name="q13" value="5"></td>
+            <td><input type="radio" name="q13" value="6"></td>
+          </tr>
+          <tr>
+            <td>14. 我覺得煩惱。</td>
+            <td><input type="radio" name="q14" value="1" required></td>
+            <td><input type="radio" name="q14" value="2"></td>
+            <td><input type="radio" name="q14" value="3"></td>
+            <td><input type="radio" name="q14" value="4"></td>
+            <td><input type="radio" name="q14" value="5"></td>
+            <td><input type="radio" name="q14" value="6"></td>
+          </tr>
+          <tr>
+            <td>15. 我覺得有精神。</td>
+            <td><input type="radio" name="q15" value="1" required></td>
+            <td><input type="radio" name="q15" value="2"></td>
+            <td><input type="radio" name="q15" value="3"></td>
+            <td><input type="radio" name="q15" value="4"></td>
+            <td><input type="radio" name="q15" value="5"></td>
+            <td><input type="radio" name="q15" value="6"></td>
+          </tr>
+          <tr>
+            <td>16. 我覺得沒有精神。</td>
+            <td><input type="radio" name="q16" value="1" required></td>
+            <td><input type="radio" name="q16" value="2"></td>
+            <td><input type="radio" name="q16" value="3"></td>
+            <td><input type="radio" name="q16" value="4"></td>
+            <td><input type="radio" name="q16" value="5"></td>
+            <td><input type="radio" name="q16" value="6"></td>
+          </tr>
+          <tr>
+            <td>17. 我覺得興奮。</td>
+            <td><input type="radio" name="q17" value="1" required></td>
+            <td><input type="radio" name="q17" value="2"></td>
+            <td><input type="radio" name="q17" value="3"></td>
+            <td><input type="radio" name="q17" value="4"></td>
+            <td><input type="radio" name="q17" value="5"></td>
+            <td><input type="radio" name="q17" value="6"></td>
+          </tr>
+          <tr>
+            <td>18. 我覺得孤單、寂寞。</td>
+            <td><input type="radio" name="q18" value="1" required></td>
+            <td><input type="radio" name="q18" value="2"></td>
+            <td><input type="radio" name="q18" value="3"></td>
+            <td><input type="radio" name="q18" value="4"></td>
+            <td><input type="radio" name="q18" value="5"></td>
+            <td><input type="radio" name="q18" value="6"></td>
+          </tr>
+          <tr>
+            <td>19. 我覺得光榮。</td>
+            <td><input type="radio" name="q19" value="1" required></td>
+            <td><input type="radio" name="q19" value="2"></td>
+            <td><input type="radio" name="q19" value="3"></td>
+            <td><input type="radio" name="q19" value="4"></td>
+            <td><input type="radio" name="q19" value="5"></td>
+            <td><input type="radio" name="q19" value="6"></td>
+          </tr>
+          <tr>
+            <td>20. 我覺得害怕。</td>
+            <td><input type="radio" name="q20" value="1" required></td>
+            <td><input type="radio" name="q20" value="2"></td>
+            <td><input type="radio" name="q20" value="3"></td>
+            <td><input type="radio" name="q20" value="4"></td>
+            <td><input type="radio" name="q20" value="5"></td>
+            <td><input type="radio" name="q20" value="6"></td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <button type="submit">下一步</button>
+      <br>
+      <button class="btn btn-home" onclick="window.location.href='/experimental/index.html'">回首頁</button>
+    </form>
+
+    <section id="affectgrid-section" class="hidden">
+      <h2>情緒格</h2>
+      <div class="grid-wrapper">
+        <!-- 外圍文字標籤 -->
+        <div class="label-top">高能量情緒(激動)</div>
+        <div class="label-bottom">低能量情緒(想睡)</div>
+        <div class="label-left">負向情緒(不愉快)</div>
+        <div class="label-right">正向情緒(愉快)</div>
+
+        <!-- 四個角落標籤 -->
+        <div class="corner top-left">焦慮</div>
+        <div class="corner top-right">興奮</div>
+        <div class="corner bottom-left">憂鬱</div>
+        <div class="corner bottom-right">放鬆</div>
+
+        <!-- 方格 -->
+        <div class="grid-container"></div>
+
+        <!-- 回饋文字 -->
+        <div id="feedback"></div>
+        <button id="confirm-btn">送出</button>
+        <br>
+        <button class="btn btn-home" onclick="window.location.href='/experimental/index.html'">回到首頁</button>
+      </div>
+    </section>
+
+    <!-- 3. 隨機練習 -->
+    <section id="practice-section" class="hidden">
+      <h2>隨機練習</h2>
+      <iframe id="practiceFrame" width="100%" height="800" frameborder="0"></iframe>
+    </section>
+
+    <!-- 4. 結束頁 -->
+    <section id="end-section" class="hidden">
+      <h2>任務完成</h2>
+      <button onclick="window.location.href='/experimental/index.html'">回到首頁</button>
+    </section>
+
+  </div>
+
+  <script src="../daily_tasks/js/daily.js"></script>
+</body>
+</html>

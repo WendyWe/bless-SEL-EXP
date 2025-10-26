@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>情緒安心角</title>
+  <link rel="stylesheet" href="../calm_kit/css/calm_kit.css" />
+</head>
+<body>
+  <!-- ✳️ 進入與離開時都會出現的情緒格 -->
+  <section id="affectgrid-section">
+    <h2>情緒格</h2>
+    <div class="grid-wrapper">
+      <div class="label-top">高能量情緒(激動)</div>
+      <div class="label-bottom">低能量情緒(想睡)</div>
+      <div class="label-left">負向情緒(不愉快)</div>
+      <div class="label-right">正向情緒(愉快)</div>
+
+      <div class="corner top-left">焦慮</div>
+      <div class="corner top-right">興奮</div>
+      <div class="corner bottom-left">憂鬱</div>
+      <div class="corner bottom-right">放鬆</div>
+
+      <div class="grid-container"></div>
+
+      <div id="feedback"></div>
+      <button id="confirm-btn" class="btn">送出</button>
+      <br />
+      <button
+        id="back-home-ag"
+        class="btn btn-home hidden"
+        data-target="../index.html"
+      >
+        回到首頁
+      </button>
+    </div>
+  </section>
+
+  <!-- ✳️ 進入後顯示一次的功能選單 -->
+  <div class="container hidden">
+    <a
+      href="#"
+      id="back-home"
+      class="back-home-btn"
+      data-target="../index.html"
+    >
+      ← 回到首頁
+    </a>
+    <div class="top-box">
+      <h1>情緒安心角</h1>
+    </div>
+    <div class="bottom-boxes">
+      <button class="option-btn" data-target="mindfulness/mindfulness.html">
+        <div class="option-title">我需要馬上冷靜下來</div>
+        <div class="option-sub">
+          我感覺自己心跳很快、很焦慮、胸口有點悶
+        </div>
+      </button>
+
+      <button class="option-btn" data-target="compassion/compassion.html">
+        <div class="option-title">我覺得很痛苦，很想哭</div>
+        <div class="option-sub">
+          我感覺自己很糟、情緒很低落、感覺好難過
+        </div>
+      </button>
+
+      <button class="option-btn" data-target="grounding/grounding.html">
+        <div class="option-title">我現在腦袋很亂</div>
+        <div class="option-sub">
+          我感覺自己思緒很亂、想法好多、難以專注
+        </div>
+      </button>
+    </div>
+  </div>
+
+    <script src="../calm_kit/js/calm_kit.js"></script>
+</body>
+</html>

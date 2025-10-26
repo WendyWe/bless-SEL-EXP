@@ -1,0 +1,128 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #f0f8ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Noto Sans TC", sans-serif;
+}
+
+.container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+#start-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color:  rgba(240, 248, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: #333;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.circle-wrapper {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+#breathing-circle {
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, #90cdf4, #3182ce);
+    border-radius: 50%;
+    transition: all 4s ease-in-out;
+    box-shadow: 0 0 30px rgba(49, 130, 206, 0.6);
+    transform: scale(1);
+    flex-shrink: 0;
+}
+
+#instruction {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#countdown {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+#back-button {
+    padding: 12px 28px;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, #63b3ed, #3182ce);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    display: none;
+}
+
+#back-button:hover {
+    background: linear-gradient(135deg, #4299e1, #2b6cb0);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(49, 130, 206, 0.4);
+}
+
+#back-button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(49, 130, 206, 0.2);
+}
+
+.finish-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    padding: 12px 28px;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, #63b3ed, #3182ce);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+}
+
+/* hover 效果 */
+.finish-btn:hover {
+    background: linear-gradient(135deg, #4299e1, #2b6cb0);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(49, 130, 206, 0.4);
+}
+
+/* 顯示狀態 */
+.finish-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+#breathing-circle {
+    transition: all 4s ease-in-out;
+}

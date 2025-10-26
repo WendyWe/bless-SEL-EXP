@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>心理位移書寫實驗</title>
+  <link rel="stylesheet" href="../writing/writing.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- 1. PANAS 前測 -->
+    <section id="panas-pre-section">
+      <h2>PANAS</h2>
+      <form id="panas-pre-form">
+        <p>請評估你此刻的情緒（1 = 幾乎沒有，6 = 總是如此）</p>
+        <table border="1" cellspacing="0" cellpadding="5">
+          <tbody>
+            <tr><td>1. 我覺得生活充滿希望。</td><td><input type="radio" name="q1" value="1" required></td><td><input type="radio" name="q1" value="2"></td><td><input type="radio" name="q1" value="3"></td><td><input type="radio" name="q1" value="4"></td><td><input type="radio" name="q1" value="5"></td><td><input type="radio" name="q1" value="6"></td></tr>
+            <tr><td>2. 我覺得焦慮。</td><td><input type="radio" name="q2" value="1" required></td><td><input type="radio" name="q2" value="2"></td><td><input type="radio" name="q2" value="3"></td><td><input type="radio" name="q2" value="4"></td><td><input type="radio" name="q2" value="5"></td><td><input type="radio" name="q2" value="6"></td></tr>
+            <tr><td>3. 我覺得快樂。</td><td><input type="radio" name="q3" value="1" required></td><td><input type="radio" name="q3" value="2"></td><td><input type="radio" name="q3" value="3"></td><td><input type="radio" name="q3" value="4"></td><td><input type="radio" name="q3" value="5"></td><td><input type="radio" name="q3" value="6"></td></tr>
+            <tr><td>4. 我覺得心情不好。</td><td><input type="radio" name="q4" value="1" required></td><td><input type="radio" name="q4" value="2"></td><td><input type="radio" name="q4" value="3"></td><td><input type="radio" name="q4" value="4"></td><td><input type="radio" name="q4" value="5"></td><td><input type="radio" name="q4" value="6"></td></tr>
+            <tr><td>5. 我覺得生活充滿樂趣。</td><td><input type="radio" name="q5" value="1" required></td><td><input type="radio" name="q5" value="2"></td><td><input type="radio" name="q5" value="3"></td><td><input type="radio" name="q5" value="4"></td><td><input type="radio" name="q5" value="5"></td><td><input type="radio" name="q5" value="6"></td></tr>
+            <tr><td>6. 我覺得生活是悲慘的。</td><td><input type="radio" name="q6" value="1" required></td><td><input type="radio" name="q6" value="2"></td><td><input type="radio" name="q6" value="3"></td><td><input type="radio" name="q6" value="4"></td><td><input type="radio" name="q6" value="5"></td><td><input type="radio" name="q6" value="6"></td></tr>
+            <tr><td>7. 我覺得充滿自信。</td><td><input type="radio" name="q7" value="1" required></td><td><input type="radio" name="q7" value="2"></td><td><input type="radio" name="q7" value="3"></td><td><input type="radio" name="q7" value="4"></td><td><input type="radio" name="q7" value="5"></td><td><input type="radio" name="q7" value="6"></td></tr>
+            <tr><td>8. 我覺得傷心。</td><td><input type="radio" name="q8" value="1" required></td><td><input type="radio" name="q8" value="2"></td><td><input type="radio" name="q8" value="3"></td><td><input type="radio" name="q8" value="4"></td><td><input type="radio" name="q8" value="5"></td><td><input type="radio" name="q8" value="6"></td></tr>
+            <tr><td>9. 我覺得世界是美好的。</td><td><input type="radio" name="q9" value="1" required></td><td><input type="radio" name="q9" value="2"></td><td><input type="radio" name="q9" value="3"></td><td><input type="radio" name="q9" value="4"></td><td><input type="radio" name="q9" value="5"></td><td><input type="radio" name="q9" value="6"></td></tr>
+            <tr><td>10. 我覺得失望、灰心。</td><td><input type="radio" name="q10" value="1" required></td><td><input type="radio" name="q10" value="2"></td><td><input type="radio" name="q10" value="3"></td><td><input type="radio" name="q10" value="4"></td><td><input type="radio" name="q10" value="5"></td><td><input type="radio" name="q10" value="6"></td></tr>
+            <tr><td>11. 我覺得心情愉快。</td><td><input type="radio" name="q11" value="1" required></td><td><input type="radio" name="q11" value="2"></td><td><input type="radio" name="q11" value="3"></td><td><input type="radio" name="q11" value="4"></td><td><input type="radio" name="q11" value="5"></td><td><input type="radio" name="q11" value="6"></td></tr>
+            <tr><td>12. 我覺得委屈。</td><td><input type="radio" name="q12" value="1" required></td><td><input type="radio" name="q12" value="2"></td><td><input type="radio" name="q12" value="3"></td><td><input type="radio" name="q12" value="4"></td><td><input type="radio" name="q12" value="5"></td><td><input type="radio" name="q12" value="6"></td></tr>
+            <tr><td>13. 我對自己的生活感到滿意。</td><td><input type="radio" name="q13" value="1" required></td><td><input type="radio" name="q13" value="2"></td><td><input type="radio" name="q13" value="3"></td><td><input type="radio" name="q13" value="4"></td><td><input type="radio" name="q13" value="5"></td><td><input type="radio" name="q13" value="6"></td></tr>
+            <tr><td>14. 我覺得煩惱。</td><td><input type="radio" name="q14" value="1" required></td><td><input type="radio" name="q14" value="2"></td><td><input type="radio" name="q14" value="3"></td><td><input type="radio" name="q14" value="4"></td><td><input type="radio" name="q14" value="5"></td><td><input type="radio" name="q14" value="6"></td></tr>
+            <tr><td>15. 我覺得有精神。</td><td><input type="radio" name="q15" value="1" required></td><td><input type="radio" name="q15" value="2"></td><td><input type="radio" name="q15" value="3"></td><td><input type="radio" name="q15" value="4"></td><td><input type="radio" name="q15" value="5"></td><td><input type="radio" name="q15" value="6"></td></tr>
+            <tr><td>16. 我覺得沒有精神。</td><td><input type="radio" name="q16" value="1" required></td><td><input type="radio" name="q16" value="2"></td><td><input type="radio" name="q16" value="3"></td><td><input type="radio" name="q16" value="4"></td><td><input type="radio" name="q16" value="5"></td><td><input type="radio" name="q16" value="6"></td></tr>
+            <tr><td>17. 我覺得興奮。</td><td><input type="radio" name="q17" value="1" required></td><td><input type="radio" name="q17" value="2"></td><td><input type="radio" name="q17" value="3"></td><td><input type="radio" name="q17" value="4"></td><td><input type="radio" name="q17" value="5"></td><td><input type="radio" name="q17" value="6"></td></tr>
+            <tr><td>18. 我覺得孤單、寂寞。</td><td><input type="radio" name="q18" value="1" required></td><td><input type="radio" name="q18" value="2"></td><td><input type="radio" name="q18" value="3"></td><td><input type="radio" name="q18" value="4"></td><td><input type="radio" name="q18" value="5"></td><td><input type="radio" name="q18" value="6"></td></tr>
+            <tr><td>19. 我覺得光榮。</td><td><input type="radio" name="q19" value="1" required></td><td><input type="radio" name="q19" value="2"></td><td><input type="radio" name="q19" value="3"></td><td><input type="radio" name="q19" value="4"></td><td><input type="radio" name="q19" value="5"></td><td><input type="radio" name="q19" value="6"></td></tr>
+            <tr><td>20. 我覺得害怕。</td><td><input type="radio" name="q20" value="1" required></td><td><input type="radio" name="q20" value="2"></td><td><input type="radio" name="q20" value="3"></td><td><input type="radio" name="q20" value="4"></td><td><input type="radio" name="q20" value="5"></td><td><input type="radio" name="q20" value="6"></td></tr>
+          </tbody>
+        </table>
+        <br>
+        <button type="submit">下一步</button>
+        <br>
+        <button class="btn btn-home" onclick="window.location.href='/shift_comparison/index.html'">回到首頁</button>
+      </form>
+    </section>
+
+    <!-- 2. Affect Grid 前測 -->
+    <section id="affectgrid-pre-section" class="hidden">
+      <h2>Affect Grid</h2>
+      <div class="grid-wrapper">
+        <div class="label-top">高能量情緒(激動)</div>
+        <div class="label-bottom">低能量情緒(想睡)</div>
+        <div class="label-left">負向情緒(不愉快)</div>
+        <div class="label-right">正向情緒(愉快)</div>
+        <div class="corner top-left">焦慮</div>
+        <div class="corner top-right">興奮</div>
+        <div class="corner bottom-left">憂鬱</div>
+        <div class="corner bottom-right">放鬆</div>
+        <div class="grid-container" id="grid-pre"></div>
+        <div id="feedback-pre"></div>
+        <button id="confirm-pre-grid">送出</button>
+      </div>
+    </section>
+
+    <!-- 3. 心理位移書寫 -->
+    <section id="writing-section" class="hidden">
+      <h2>心理位移書寫</h2>
+      <div class="row">
+        <label for="self"> <b> 我的位格</b> <br> 先誠實地寫下你的經歷，完整地表達當時的感受與想法。<br>你可以描述發生了什麼、你當下的情緒如何、有哪些細節特別讓你印象深刻。<br>這是一個傾訴的過程，就像是寫日記一樣，讓自己真正面對內心的聲音。</label>
+        <textarea id="self" placeholder="請輸入『我的位格』書寫…"></textarea>
+        <label for="you"><b>你的位格</b><br> 接著，想要邀請您想像成是您的摯友在這個經歷上會如何回應你<br>就像是坐在自己的對面會與自己說些甚麼</label>
+        <textarea id="you" placeholder="請輸入『你的位格』書寫…"></textarea>
+        <label for="he"><b>他的位格</b><br> 接著，想要邀請您從旁觀者的角度來看待這件事<br>試著像個旁觀者一樣來敘述這個事件<br>像是在看一場電影或觀察別人的故事。</label>
+        <textarea id="he" placeholder="請輸入『他的位格』書寫…"></textarea>
+        <label for="back"><b>回到我的位格</b><br>最後，回到自己的角度，重新感受一下內心的變化。<br>回到自己的內心，感受一下現在的感受</label>
+        <textarea id="back" placeholder="請輸入『回到我的位格』書寫…"></textarea>
+      </div>
+      <div class="row">
+        <span class="muted" id="status"></span>
+        <button id="btn" class="btn">取得回饋</button>
+      </div>
+      <h3>回饋結果</h3>
+      <div id="out" class="card">(尚未產生回饋)</div>
+      <br>
+      <button id="finish-writing" class="btn">完成並繼續</button>
+    </section>
+
+    <!-- 4. Affect Grid 後測 -->
+    <section id="affectgrid-post-section" class="hidden">
+      <h2>Affect Grid</h2>
+      <div class="grid-wrapper">
+        <div class="label-top">高能量情緒(激動)</div>
+        <div class="label-bottom">低能量情緒(想睡)</div>
+        <div class="label-left">負向情緒(不愉快)</div>
+        <div class="label-right">正向情緒(愉快)</div>
+        <div class="corner top-left">焦慮</div>
+        <div class="corner top-right">興奮</div>
+        <div class="corner bottom-left">憂鬱</div>
+        <div class="corner bottom-right">放鬆</div>
+        <div class="grid-container" id="grid-post"></div>
+        <div id="feedback-post"></div>
+        <button id="confirm-post-grid">送出</button>
+      </div>
+    </section>
+
+    <!-- 5. PANAS 後測（由 JS clone） -->
+    <section id="panas-post-section" class="hidden">
+      <h2>PANAS</h2>
+      <!-- JS 動態插入表單 -->
+    </section>
+
+    <!-- 6. 結束頁 -->
+    <section id="end-section" class="hidden">
+      <h2>任務完成</h2>
+      <button onclick="window.location.href='/shift_comparison/index.html'">回到首頁</button>
+    </section>
+
+  </div>
+
+  <script src="./writing.js"></script>
+</body>
+</html>
+
