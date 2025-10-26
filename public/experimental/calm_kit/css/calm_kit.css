@@ -1,0 +1,253 @@
+/*
+ * ====================================
+ * 0. 變數與全域設定
+ * ====================================
+ */
+:root {
+    --color-primary: #4a90e2; /* 主要按鈕色：藍色 */
+    --color-primary-hover: #357ab8;
+    --color-bg-brand: #EDBBAB; /* 頂部標題色：暖粉 */
+    --color-text-dark: #333;
+    --color-bg-light: #f7f7f7;
+    --radius: 8px;
+    --border-color: #ddd;
+}
+
+/* ==================================== */
+/* 1. 全域設定及主功能頁樣式 */
+/* ==================================== */
+
+html, body {
+margin: 0;
+padding: 0;
+height: 100%;
+font-family: "Noto Sans TC", sans-serif;
+}
+
+/* 主容器：主功能頁面 */
+.container {
+height: 100vh;
+width: 100vw;
+display: flex;
+flex-direction: column;
+}
+
+/* 上方標題區塊 */
+.top-box {
+height: 25%;
+background-color: #EDBBAB;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.top-box h1 {
+color: black;
+font-size: 2rem;
+margin: 0;
+}
+
+/* 下方按鈕容器 */
+.bottom-boxes {
+ height: 75%;
+ display: flex;
+ width: 100%;
+}
+
+/* 僅針對帶有 .btn 類別的按鈕（如：主選單按鈕 and 送出按鈕）應用高亮樣式 */
+.btn {
+ margin-top: 20px; /* 增加與上方元素的間距 */
+ padding: 12px 20px; /* 增加 padding，讓按鈕看起來更飽滿 */
+ font-size: 16px; /* 字體稍大 */
+ background: var(--color-primary); /* 使用變數 */
+ border: none;
+ border-radius: var(--radius);
+ color: white;
+ cursor: pointer;
+ transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
+ font-weight: 700; /* 更粗的字體 */
+ box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 增加陰影立體感 */
+ display: inline-block;
+ min-width: 120px; /* 確保按鈕有基本寬度 */
+}
+.btn:hover {
+ background: var(--color-primary-hover); /* 使用變數 */
+ box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25); /* Hover 時陰影更明顯 */
+}
+.btn:active {
+transform: translateY(2px); /* 點擊時下沉效果更明顯 */
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 返回首頁按鈕（功能頁面上的） */
+.back-home-btn {
+position: absolute;
+ top: 20px;
+left: 20px;
+ background-color: #cccccc;
+ color: white;
+ padding: 10px 16px;
+ text-decoration: none;
+ border-radius: 6px;
+ font-weight: 500;
+ box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+ transition: background-color 0.3s ease;
+ z-index: 1000; /* 保證在最上層 */
+}
+
+.back-home-btn:hover {
+ background-color: #aaa;
+}
+
+/* 功能按鈕樣式 */
+.option-btn {
+ width: 100%;
+ height: 100%;
+ border: none;
+ border-radius: 0;
+ color: black;
+ font-size: 1.2rem;
+ cursor: pointer;
+ transition: transform 0.1s ease-in-out;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ padding: 10px;
+ flex: 1;
+ flex-direction: column;
+ text-align: center;
+}
+
+/* 按鈕顏色 */
+.bottom-boxes .option-btn:nth-child(1) {
+background-color: #F09476;
+}
+.bottom-boxes .option-btn:nth-child(2) {
+background-color: #91A8D0;
+}
+.bottom-boxes .option-btn:nth-child(3) {
+background-color: #C0D6BF;
+}
+
+.option-btn:hover {
+transform: scale(1.05);
+ opacity: 0.9;
+}
+
+.option-title {
+ font-size: 1.3rem;
+ font-weight: bold;
+ margin-bottom: 8px;
+ white-space: normal;
+ word-break: break-word;
+}
+
+.option-sub {
+ font-size: 0.85rem;
+ color: rgba(0, 0, 0, 0.7);
+ line-height: 1.5;
+ padding: 0 12px;
+ white-space: normal;
+ word-break: break-word;
+}
+
+
+/* ==================================== */
+/* 2. Affect Grid 樣式 (情緒格) */
+/* ==================================== */
+
+/* Affect Grid 區塊整體覆蓋 */
+#affectgrid-section {
+ position: fixed;
+ top: 0; 
+ left: 0;
+ width: 100%; 
+ height: 100%;
+ background: white;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: column;
+ z-index: 2000;
+}
+
+/* Affect Grid Wrapper (包裹格線和標籤的容器) */
+.grid-wrapper {
+ position: relative;
+ text-align: center;
+ margin: 30px auto;
+}
+
+/* Affect Grid 容器 (格線本身) */
+.grid-container {
+ display: grid;
+ grid-template-columns: repeat(9, 1fr);
+ grid-template-rows: repeat(9, 1fr);
+ gap: 2px;
+ width: 300px;
+ height: 300px;
+ margin: 20px auto;
+}
+
+/* Affect Grid 單個項目 (每個格子) */
+.grid-item {
+background-color: #f9f9f9;
+ border: 1px solid #ccc;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ font-size: 12px;
+ cursor: pointer;
+}
+
+/* 格子被選中時的樣式 */
+.grid-item.selected {
+ font-weight: bold;
+ border: 2px solid black;
+}
+
+/* 外圍文字標籤 (上、下、左、右) */
+.label-top, .label-bottom, .label-left, .label-right, .corner {
+ position: absolute;
+ font-size: 12px;
+ color: #333;
+}
+
+/* 定位標籤 */
+.label-top { top: -20px; left: 50%; transform: translateX(-50%); }
+.label-bottom { bottom: -20px; left: 50%; transform: translateX(-50%); }
+.label-left { left: -50px; top: 50%; transform: translateY(-50%); }
+.label-right { right: -50px; top: 50%; transform: translateY(-50%); }
+
+/* 定位四個角落標籤 */
+.corner.top-left { top: -20px; left: -40px; }
+.corner.top-right { top: -20px; right: -40px; }
+.corner.bottom-left { bottom: -20px; left: -40px; } /* 修正：向下推移，避開按鈕 */
+.corner.bottom-right { bottom: -20px; right: -40px; } /* 修正：向下推移，避開按鈕 */
+
+/* 回饋文字 */
+#feedback {
+ margin-top: 10px;
+ min-height: 20px;
+ color: #444;
+}
+
+#confirm-btn {
+ /* 使用 fixed 定位，使其相對於整個視窗 (viewport) */
+ position: fixed; 
+ bottom: 40px; /* 距離視窗底部 40px */
+ left: 50%;
+ transform: translateX(-50%);
+ z-index: 2100; /* 確保它在最上層 */
+ margin-top: 0 !important; /* 確保不會有額外的上邊距 */
+}
+
+
+/* ==================================== */
+/* 3. 功能 class (關鍵的隱藏) */
+/* ==================================== */
+
+/* 確保元素被隱藏時能蓋過所有其他顯示屬性 */
+.hidden {
+ display: none !important;
+}
