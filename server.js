@@ -29,8 +29,10 @@ const db = new Pool({
     await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
-        username TEXT UNIQUE,
-        password TEXT
+        userid TEXT UNIQUE,
+        password TEXT,
+        group_label TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
       );
       CREATE TABLE IF NOT EXISTS sessions (
         id SERIAL PRIMARY KEY,
@@ -47,8 +49,6 @@ const db = new Pool({
         duration REAL
       );
     `);
-
-
     console.log("✅ PostgreSQL connected & tables ready");
   } catch (err) {
     console.error("❌ Database initialization failed:", err);
@@ -56,15 +56,15 @@ const db = new Pool({
 })();
 
 /* -------------------------------
-   ⚙️ Middleware
+   ⚙️ Middleware (CORS + CSP)
 ---------------------------------*/
 app.use(cors());
 app.use(bodyParser.json());
+
 app.use((req, res, next) => {
   const allowedConnectSrc = [
     "'self'",
     "https://bless-sel-exp.onrender.com",
-    "https://bless-exp.onrender.com", // 前端網址
     "https://api.openai.com"
   ];
 
@@ -84,7 +84,6 @@ app.use((req, res, next) => {
   res.setHeader("Content-Security-Policy", csp);
   next();
 });
-
 
 /* -------------------------------
    🌐 Static Routes
@@ -114,9 +113,8 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
   try {
-    const result = await db.query("SELECT * FROM users WHERE username = $1", [
-      username,
-    ]);
+    // 因為前端傳來的是 username，但實際資料表是 userid
+    const result = await db.query("SELECT * FROM users WHERE userid = $1", [username]);
     const user = result.rows[0];
 
     if (!user)
@@ -135,16 +133,17 @@ app.post("/api/login", async (req, res) => {
 
       res.json({
         success: true,
-        userId: user.id,
+        userId: user.userid,
         sessionId: sessionInsert.rows[0].id,
         loginTime,
         period,
+        group: user.group_label
       });
     } else {
       res.json({ success: false, message: "Invalid password" });
     }
   } catch (err) {
-    console.error(err);
+    console.error("❌ Login DB Error:", err);
     res.json({ success: false, message: "Database error" });
   }
 });
