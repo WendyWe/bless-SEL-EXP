@@ -48,12 +48,6 @@ const db = new Pool({
       );
     `);
 
-    // 建立測試帳號（如果不存在）
-    await db.query(`
-      INSERT INTO users (username, password)
-      VALUES ('testuser', '1234')
-      ON CONFLICT (username) DO NOTHING;
-    `);
 
     console.log("✅ PostgreSQL connected & tables ready");
   } catch (err) {
