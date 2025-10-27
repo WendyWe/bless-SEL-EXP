@@ -64,19 +64,27 @@ app.use((req, res, next) => {
   const allowedConnectSrc = [
     "'self'",
     "https://bless-sel-exp.onrender.com",
-    "https://api.openai.com",
+    "https://bless-exp.onrender.com", // 前端網址
+    "https://api.openai.com"
   ];
-  res.setHeader(
-    "Content-Security-Policy",
-    `default-src 'self';
-    script-src 'self' 'unsafe-inline';
-    style-src 'self' 'unsafe-inline';
-    connect-src 'self' https://api.openai.com https://bless-exp.onrender.com;
-    img-src 'self' data:;
-    font-src 'self' data:;`
-  );
+
+  const allowedScriptSrc = ["'self'", "'unsafe-inline'"];
+  const allowedStyleSrc = ["'self'", "'unsafe-inline'"];
+  const allowedImgSrc = ["'self'", "data:"];
+  const allowedFontSrc = ["'self'", "data:"];
+
+  const csp =
+    "default-src 'self'; " +
+    "script-src " + allowedScriptSrc.join(" ") + "; " +
+    "style-src " + allowedStyleSrc.join(" ") + "; " +
+    "connect-src " + allowedConnectSrc.join(" ") + "; " +
+    "img-src " + allowedImgSrc.join(" ") + "; " +
+    "font-src " + allowedFontSrc.join(" ") + ";";
+
+  res.setHeader("Content-Security-Policy", csp);
   next();
 });
+
 
 /* -------------------------------
    🌐 Static Routes
