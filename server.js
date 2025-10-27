@@ -72,7 +72,7 @@ app.use((req, res, next) => {
     default-src 'self';
     script-src 'self' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
-    connect-src ${allowedConnectSrc.join(" ")};
+    connect-src 'self' https://api.openai.com https://bless-exp.onrender.com;
     img-src 'self' data:;
     font-src 'self' data:;
     `
