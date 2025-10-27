@@ -30,12 +30,26 @@ const db = new Pool({
 app.use(cors());
 app.use(bodyParser.json());
 app.use((req, res, next) => {
+  const allowedConnectSrc = [
+    "'self'",
+    "https://bless-sel-exp.onrender.com",  // Render 正式網域
+    "https://api.openai.com",              // 給 ChatGPT Feedback 用
+  ];
+
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.openai.com https://bless-sel-exp.onrender.com"
+    `
+    default-src 'self';
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+    connect-src ${allowedConnectSrc.join(' ')};
+    img-src 'self' data:;
+    font-src 'self' data:;
+    `
   );
   next();
 });
+
 
 // 靜態檔案
 app.use('/experimental', express.static(path.join(__dirname, 'public', 'experimental')));
