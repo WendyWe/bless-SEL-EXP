@@ -113,7 +113,6 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
   try {
-    // 因為前端傳來的是 username，但實際資料表是 userid
     const result = await db.query("SELECT * FROM users WHERE userid = $1", [username]);
     const user = result.rows[0];
 
@@ -169,12 +168,10 @@ app.post("/api/activity/end", async (req, res) => {
   const { activityId } = req.body;
   try {
     await db.query(
-      `
-      UPDATE activities 
-      SET end_time = NOW(),
-          duration = EXTRACT(EPOCH FROM (NOW() - start_time)) / 60
-      WHERE id = $1
-    `,
+      `UPDATE activities 
+       SET end_time = NOW(),
+           duration = EXTRACT(EPOCH FROM (NOW() - start_time)) / 60
+       WHERE id = $1`,
       [activityId]
     );
     res.json({ success: true });
@@ -219,41 +216,24 @@ app.post("/api/feedback", async (req, res) => {
 });
 
 /* -------------------------------
-   📚 Daily Article
+   📚 Daily Article (Static)
 ---------------------------------*/
-const articles = [
-  {
-    title: "放鬆心靈的力量",
-    content: `<p>在忙碌的生活中，我們很容易忽略內心的聲音。適當的休息與冥想，
-    可以幫助我們更好地面對壓力，並培養更深的覺察力。</p>
-    <p>🌿 試著每天花 10 分鐘，深呼吸並靜靜觀察內在感受。</p>`,
-  },
-  {
-    title: "情緒調節的三個方法",
-    content: `<p>研究顯示，覺察情緒、表達感受，以及重新詮釋經驗，
-    是有效的情緒調節策略。</p>
-    <ul><li>🧘 呼吸練習</li><li>📝 書寫日記</li><li>🤝 與朋友傾訴</li></ul>`,
-  },
-  {
-    title: "自我慈悲：與自己和解",
-    content: `<p>自我慈悲代表著在失敗或痛苦時，仍能以善意與理解對待自己。</p>
-    <blockquote>💡 「像對待朋友一樣，溫柔對待自己。」</blockquote>`,
-  },
-];
+app.use(
+  "/Articles/daily",
+  express.static(path.join(__dirname, "public", "experimental", "articles"))
+);
 
 app.get("/api/daily-article", (req, res) => {
-  const today = new Date();
-  const index = today.getDate() % articles.length;
-  const article = articles[index];
-  res.json({
-    title: article.title,
-    date: today.toISOString().split("T")[0],
-    content: article.content,
-  });
+  const articles = ["article1.html", "article2.html", "article3.html"];
+  const day = req.query.day ? parseInt(req.query.day) : new Date().getDate();
+  const index = day % articles.length;
+  const articleUrl = `/experimental/articles/${articles[index]}`;
+  console.log("Day:", day, "→ 派送文章:", articleUrl);
+  res.json({ day, url: articleUrl });
 });
 
 /* -------------------------------
-   🎥 Daily Video
+   🎥 Daily Video (Static)
 ---------------------------------*/
 app.use(
   "/Videos/daily",
