@@ -19,9 +19,10 @@ body {
 }
 
 .hidden {
-  display: none !important; /* 確保隱藏優先級最高 */
+  display: none !important;
 }
 
+/* === 按鈕樣式 === */
 button {
   margin-top: 15px;
   padding: 10px 20px;
@@ -31,13 +32,41 @@ button {
   border-radius: 5px;
   color: white;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 button:hover {
   background: #357ab8;
 }
 
-.panas-form table {
+/* === AVI 問卷樣式 === */
+#avi-section {
+  max-height: 80vh;
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+#avi-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+#avi-section::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+#avi-section p {
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+/* === AVI 表格 === */
+.avi-form table {
   border-collapse: collapse;
   width: 100%;
   margin: 1.5rem 0;
@@ -48,8 +77,8 @@ button:hover {
   overflow: hidden;
 }
 
-.panas-form th,
-.panas-form td {
+.avi-form th,
+.avi-form td {
   border: 1px solid #e5e7eb;
   padding: 12px 5px;
   vertical-align: middle;
@@ -58,7 +87,7 @@ button:hover {
 }
 
 /* 題目欄位 (第一欄) */
-.panas-form td:first-child {
+.avi-form td:first-child {
   text-align: left;
   width: 40%;
   padding-left: 15px;
@@ -68,142 +97,25 @@ button:hover {
 }
 
 /* 評分欄位 */
-.panas-form th:not(:first-child),
-.panas-form td:not(:first-child) {
-  width: 10%;
+.avi-form th:not(:first-child),
+.avi-form td:not(:first-child) {
+  width: 12%;
 }
 
 /* Radio button 調整 */
-.panas-form input[type="radio"] {
+.avi-form input[type="radio"] {
   display: block;
   margin: auto;
   transform: scale(1.2);
   cursor: pointer;
 }
 
-
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 2px;
-  margin: 20px auto;
-}
-
-.grid-item {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background-color: #f9f9f9;
-  transition: background-color 0.3s ease;
-}
-
-.grid-item:hover {
-  background-color: #e0e0e0;
-}
-
-.grid-item.selected {
-  font-weight: bold;
-  border: 2px solid #333;
-}
-
-.grid-wrapper {
-  position: relative;
-  display: inline-block;
-  margin: 30px auto;
-}
-
-.label-top,
-.label-bottom,
-.label-left,
-.label-right {
-  position: absolute;
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
-}
-
-.label-top {
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.label-bottom {
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.label-left {
-  left: -80px;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: right;
-}
-
-.label-right {
-  right: -80px;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: left;
-}
-
-.corner {
-  position: absolute;
-  font-size: 12px;
-  font-weight: bold;
-  background-color: rgba(255, 255, 255, 0.7);
-  padding: 2px 5px;
-  border-radius: 3px;
-}
-
-.top-left {
-  top: 0;
-  left: -40px;
-  color: red;
-}
-
-.top-right {
-  top: 0;
-  right: -40px;
-  color: orange;
-}
-
-.bottom-left {
-  bottom: 0;
-  left: -40px;
-  color: blue;
-}
-
-.bottom-right {
-  bottom: 0;
-  right: -40px;
-  color: green;
-}
-
-#feedback {
-  margin-top: 10px;
-  text-align: center;
-  font-size: 14px;
-  color: #333;
-}
-
-#confirm-btn {
-  display: block;
-  margin: 15px auto;
-  padding: 8px 16px;
-  font-size: 14px;
-  background: #007bff;
-  color: #fff;
+/* === 結束頁與 iframe 區塊 === */
+#practice-section iframe {
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  border-radius: 8px;
 }
 
-#confirm-btn:hover {
-  background: #0056b3;
+#end-section {
+  padding: 20px;
 }
