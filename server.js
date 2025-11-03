@@ -48,6 +48,13 @@ const db = new Pool({
         end_time TIMESTAMP,
         duration REAL
       );
+      CREATE TABLE IF NOT EXISTS avi_results (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        phase TEXT,                
+        responses JSONB,           
+        created_at TIMESTAMP DEFAULT NOW()
+      );
     `);
     console.log("✅ PostgreSQL connected & tables ready");
   } catch (err) {
@@ -180,6 +187,24 @@ app.post("/api/activity/end", async (req, res) => {
     res.json({ success: false });
   }
 });
+
+/* -------------------------------
+   🧭 AVI 前後測儲存
+---------------------------------*/
+app.post("/api/avi/save", async (req, res) => {
+  const { userId, phase, responses } = req.body; // phase = 'pre' or 'post'
+  try {
+    await db.query(
+      "INSERT INTO avi_results (user_id, phase, responses) VALUES ($1, $2, $3)",
+      [userId, phase, responses]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ AVI Save Error:", err);
+    res.json({ success: false });
+  }
+});
+
 
 /* -------------------------------
    💬 Feedback (OpenAI)
