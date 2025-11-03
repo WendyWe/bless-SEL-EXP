@@ -63,11 +63,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = Object.fromEntries(formData.entries());
 
       // 可在此送往後端 API 儲存
-      fetch(`/api/save-avi?type=${formType}`, {
+      fetch('/api/avi/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(result)
+        body: JSON.stringify({
+          userId: currentUserId,   // ✅ 使用實際的登入 userId（後端用來關聯 users）
+          phase: formType,         // ✅ "pre" 或 "post"
+          responses: result        // ✅ 問卷結果（你原本的 result）
+        })
       }).catch(err => console.error('送出 AVI 失敗:', err));
+
 
       if (formType === 'pre') {
         // === 前測後進入練習 ===
