@@ -133,20 +133,19 @@ app.post("/api/login", async (req, res) => {
       const period = getTaipeiPeriod();
 
       const sessionInsert = await db.query(
-        "INSERT INTO sessions (user_id, login_time, period) VALUES ($1, $2, $3)",
+        "INSERT INTO sessions (userid, login_time, period) VALUES ($1, $2, $3) RETURNING id",
         [user.userid, loginTime, period]
-        );
-
+      );
 
       res.json({
         success: true,
-        userId: user.userid,
+        userId: user.userid,                 // 存 TEST001 到前端
         sessionId: sessionInsert.rows[0].id,
         loginTime,
         period,
         group: user.group_label
       });
-    } else {
+  }else {
       res.json({ success: false, message: "Invalid password" });
     }
   } catch (err) {
