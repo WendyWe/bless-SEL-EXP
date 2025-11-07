@@ -198,20 +198,23 @@ app.post("/api/activity/end", async (req, res) => {
    🧭 AVI 前後測儲存
 ---------------------------------*/
 app.post("/api/avi/save", async (req, res) => {
-  const { userId, phase, responses } = req.body;
-  const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
-
+  const { userId, phase, featureType, responses } = req.body; // ✅ 加上 featureType
   try {
+    const loginTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+
     await db.query(
-      "INSERT INTO avi_results (user_id, phase, feature_type, responses, created_at) VALUES ($1, $2, $3, $4, $5)",
-      [userId, phase, featureType, responses, taipeiTime]
+      `INSERT INTO avi_results (user_id, phase, feature_type, responses, created_at)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [userId, phase, featureType, responses, loginTime] // ✅ 新增 featureType & loginTime
     );
+
     res.json({ success: true });
   } catch (err) {
     console.error("❌ AVI Save Error:", err);
     res.json({ success: false, message: err.message });
   }
 });
+
 
 
 

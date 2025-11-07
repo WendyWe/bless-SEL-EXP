@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
       form.classList.add('hidden');
 
       const formType = form.dataset.type;
-      const featureType = form.dataset.feature; // 新增這行
       const formData = new FormData(form);
       const result = Object.fromEntries(formData.entries());
 
@@ -107,5 +106,5 @@ window.addEventListener("message", (e) => {
   postAviForm.dataset.feature = practiceType; // ⭐ 把練習類型也記起來
   postAviForm.reset();
   postAviForm.classList.remove('hidden');
-  }
+}
 });
