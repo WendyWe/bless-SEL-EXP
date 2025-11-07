@@ -1,6 +1,12 @@
 // 全域變數
 let practiceSection, endSection, aviSection, afterPractice = false;
 
+// ✅ 取得登入使用者 ID（與 ActivityTracker 相同邏輯）
+const currentUserId = localStorage.getItem('userId');
+if (!currentUserId) {
+  console.warn('⚠️ 未找到使用者登入資訊，請重新登入');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // 區塊元素
   const videoSection = document.getElementById('video-section');
