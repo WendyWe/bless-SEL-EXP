@@ -133,7 +133,7 @@ app.post("/api/login", async (req, res) => {
       const period = getTaipeiPeriod();
 
       const sessionInsert = await db.query(
-        "INSERT INTO sessions (userid, login_time, period) VALUES ($1, $2, $3)",
+        "INSERT INTO sessions (user_id, login_time, period) VALUES ($1, $2, $3)",
         [user.userid, loginTime, period]
         );
 
