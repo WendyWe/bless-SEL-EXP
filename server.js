@@ -203,8 +203,8 @@ app.post("/api/avi/save", async (req, res) => {
 
   try {
     await db.query(
-      "INSERT INTO avi_results (user_id, phase, responses, created_at) VALUES ($1, $2, $3, $4)",
-      [userId, phase, responses, taipeiTime]
+      "INSERT INTO avi_results (user_id, phase, feature_type, responses, created_at) VALUES ($1, $2, $3, $4, $5)",
+      [userId, phase, featureType, responses, taipeiTime]
     );
     res.json({ success: true });
   } catch (err) {
