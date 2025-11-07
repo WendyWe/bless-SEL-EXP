@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
       form.classList.add('hidden');
 
       const formType = form.dataset.type;
+      const featureType = form.dataset.feature; // 新增這行
       const formData = new FormData(form);
       const result = Object.fromEntries(formData.entries());
 
@@ -75,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({
           userId: currentUserId,   // ✅ 使用實際的登入 userId（後端用來關聯 users）
           phase: formType,         // ✅ "pre" 或 "post"
+          featureType: practiceType,  // 🧩 加上這行
           responses: result        // ✅ 問卷結果（你原本的 result）
         })
       }).catch(err => console.error('送出 AVI 失敗:', err));
@@ -99,10 +101,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // ⭐ 練習完成後顯示後測
 window.addEventListener("message", (e) => {
   if (e?.data?.type === "practice-finished") {
-    practiceSection.classList.add('hidden');
+  practiceSection.classList.add('hidden');
 
-    const postAviForm = document.getElementById('avi-form-post');
-    postAviForm.reset(); // 清除上次填答
-    postAviForm.classList.remove('hidden');
+  const postAviForm = document.getElementById('avi-form-post');
+  postAviForm.dataset.feature = practiceType; // ⭐ 把練習類型也記起來
+  postAviForm.reset();
+  postAviForm.classList.remove('hidden');
   }
 });
