@@ -127,24 +127,24 @@ app.post("/api/login", async (req, res) => {
       return res.json({ success: false, message: "User not found" });
 
     if (password === user.password) {
-      const loginTime = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Taipei",
-      });
-      const period = getTaipeiPeriod();
+    const loginTime = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Taipei",
+    });
+    const period = getTaipeiPeriod();
 
-      const sessionInsert = await db.query(
-        "INSERT INTO sessions (userid, login_time, period) VALUES ($1, $2, $3) RETURNING id",
-        [user.userid, loginTime, period]
-      );
+    const sessionInsert = await db.query(
+      "INSERT INTO sessions (userid, login_time, period) VALUES ($1, $2, $3) RETURNING id",
+      [user.userid, loginTime, period]
+    );
 
-      res.json({
-        success: true,
-        userId: user.userid,                 // 存 TEST001 到前端
-        sessionId: sessionInsert.rows[0].id,
-        loginTime,
-        period,
-        group: user.group_label
-      });
+    res.json({
+      success: true,
+      userId: user.userid,                 // 存 TEST001 到前端
+      sessionId: sessionInsert.rows[0].id,
+      loginTime,
+      period,
+      group: user.group_label
+    });
   }else {
       res.json({ success: false, message: "Invalid password" });
     }
@@ -159,51 +159,60 @@ app.post("/api/login", async (req, res) => {
 ---------------------------------*/
 app.post("/api/activity/start", async (req, res) => {
   const { userId, featureType } = req.body;
+  const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+
   try {
     const result = await db.query(
-      "INSERT INTO activities (user_id, type, start_time) VALUES ($1, $2, NOW()) RETURNING id",
-      [userId, featureType]
+      "INSERT INTO activities (user_id, type, start_time) VALUES ($1, $2, $3) RETURNING id",
+      [userId, featureType, taipeiTime]
     );
     res.json({ success: true, activityId: result.rows[0].id });
   } catch (err) {
-    console.error(err);
-    res.json({ success: false });
+    console.error("❌ Activity Save Error:", err);
+    res.json({ success: false, message: err.message });
   }
 });
 
+
 app.post("/api/activity/end", async (req, res) => {
   const { activityId } = req.body;
+  const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+
   try {
     await db.query(
       `UPDATE activities 
-       SET end_time = NOW(),
-           duration = EXTRACT(EPOCH FROM (NOW() - start_time)) / 60
-       WHERE id = $1`,
-      [activityId]
+       SET end_time = $1,
+           duration = EXTRACT(EPOCH FROM (TIMESTAMP $1 - start_time)) / 60
+       WHERE id = $2`,
+      [taipeiTime, activityId]
     );
     res.json({ success: true });
   } catch (err) {
-    console.error(err);
-    res.json({ success: false });
+    console.error("❌ Activity End Error:", err);
+    res.json({ success: false, message: err.message });
   }
 });
+
 
 /* -------------------------------
    🧭 AVI 前後測儲存
 ---------------------------------*/
 app.post("/api/avi/save", async (req, res) => {
-  const { userId, phase, responses } = req.body; // phase = 'pre' or 'post'
+  const { userId, phase, responses } = req.body;
+  const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+
   try {
     await db.query(
-      "INSERT INTO avi_results (user_id, phase, responses) VALUES ($1, $2, $3)",
-      [userId, phase, responses]
+      "INSERT INTO avi_results (user_id, phase, responses, created_at) VALUES ($1, $2, $3, $4)",
+      [userId, phase, responses, taipeiTime]
     );
     res.json({ success: true });
   } catch (err) {
     console.error("❌ AVI Save Error:", err);
-    res.json({ success: false });
+    res.json({ success: false, message: err.message });
   }
 });
+
 
 
 /* -------------------------------
