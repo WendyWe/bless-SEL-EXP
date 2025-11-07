@@ -182,7 +182,7 @@ app.post("/api/activity/end", async (req, res) => {
     await db.query(
       `UPDATE activities 
        SET end_time = $1,
-           duration = EXTRACT(EPOCH FROM (TIMESTAMP $1 - start_time)) / 60
+           duration = EXTRACT(EPOCH FROM ($1::timestamp - start_time)) / 60
        WHERE id = $2`,
       [taipeiTime, activityId]
     );
