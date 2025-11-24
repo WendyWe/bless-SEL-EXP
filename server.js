@@ -253,6 +253,36 @@ app.post("/api/feedback", async (req, res) => {
 });
 
 /* -------------------------------
+   🎯 Get Task Sequence (Trial-based)
+---------------------------------*/
+app.get("/api/getTask", async (req, res) => {
+  const { subject, trial } = req.query;
+
+  if (!subject || !trial) {
+    return res.status(400).json({ error: "Missing subject or trial" });
+  }
+
+  try {
+    const result = await db.query(
+      `SELECT task FROM task_sequence
+       WHERE subject_id = $1 AND trial = $2`,
+      [subject, trial]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.json({ task: result.rows[0].task });
+
+  } catch (err) {
+    console.error("❌ GetTask Error:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+
+/* -------------------------------
    📚 Daily Article (Static)
 ---------------------------------*/
 app.use(
