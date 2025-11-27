@@ -141,7 +141,7 @@ app.post("/api/login", async (req, res) => {
 
     const sessionInsert = await db.query(
       "INSERT INTO sessions (user_id, login_time, period) VALUES ($1, $2, $3) RETURNING id",
-      [user.userid, loginTime, period]
+      [userid, loginTime, period]
     );
 
     res.json({
