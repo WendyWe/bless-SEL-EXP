@@ -126,40 +126,47 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 ---------------------------------*/
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
+
   try {
+    // 查詢使用者
     const result = await db.query("SELECT * FROM users WHERE userid = $1", [username]);
     const user = result.rows[0];
 
-    if (!user)
+    if (!user) {
       return res.json({ success: false, message: "User not found" });
+    }
 
-    if (password === user.password) {
-    const loginTime = new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Taipei",
-    });
+    if (password !== user.password) {
+      return res.json({ success: false, message: "Invalid password" });
+    }
+
+    // 登入時間 / 時段
+    const loginTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
     const period = getTaipeiPeriod();
 
+    // ⭐ 正確欄位：user_id
+    // ⭐ 正確傳入：user.id（整數 PK）
     const sessionInsert = await db.query(
       "INSERT INTO sessions (user_id, login_time, period) VALUES ($1, $2, $3) RETURNING id",
-      [userid, loginTime, period]
+      [user.id, loginTime, period]
     );
 
+    // 登入成功回傳
     res.json({
       success: true,
-      userId: user.userid,                 // 存 TEST001 到前端
+      userId: user.userid,  // TEST001，前端要用這個
       sessionId: sessionInsert.rows[0].id,
       loginTime,
       period,
       group: user.group_label
     });
-  }else {
-      res.json({ success: false, message: "Invalid password" });
-    }
+
   } catch (err) {
     console.error("❌ Login DB Error:", err);
     res.json({ success: false, message: "Database error" });
   }
 });
+
 
 /* -------------------------------
    📊 Activity Tracking
