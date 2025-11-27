@@ -51,7 +51,8 @@ const db = new Pool({
       CREATE TABLE IF NOT EXISTS avi_results (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
-        phase TEXT,                
+        phase TEXT, 
+        feature_type TEXT,                
         responses JSONB,           
         created_at TIMESTAMP DEFAULT NOW()
       );
@@ -128,33 +129,36 @@ app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // 查詢使用者
-    const result = await db.query("SELECT * FROM users WHERE userid = $1", [username]);
-    const user = result.rows[0];
+    const result = await db.query(
+      "SELECT * FROM users WHERE userid = $1",
+      [username]
+    );
 
+    const user = result.rows[0];
     if (!user) {
       return res.json({ success: false, message: "User not found" });
     }
 
-    if (password !== user.password) {
+    if (user.password !== password) {
       return res.json({ success: false, message: "Invalid password" });
     }
 
-    // 登入時間 / 時段
-    const loginTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+    // 建立 session
+    const loginTime = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Taipei",
+    });
     const period = getTaipeiPeriod();
 
-    // ⭐ 正確欄位：user_id
-    // ⭐ 正確傳入：user.id（整數 PK）
     const sessionInsert = await db.query(
-      "INSERT INTO sessions (user_id, login_time, period) VALUES ($1, $2, $3) RETURNING id",
+      `INSERT INTO sessions (user_id, login_time, period)
+       VALUES ($1, $2, $3)
+       RETURNING id`,
       [user.id, loginTime, period]
     );
 
-    // 登入成功回傳
     res.json({
       success: true,
-      userId: user.userid,  // TEST001，前端要用這個
+      userId: user.userid,          // TEST001 → 前端用
       sessionId: sessionInsert.rows[0].id,
       loginTime,
       period,
@@ -168,19 +172,36 @@ app.post("/api/login", async (req, res) => {
 });
 
 
+
 /* -------------------------------
    📊 Activity Tracking
 ---------------------------------*/
 app.post("/api/activity/start", async (req, res) => {
-  const { userId, featureType } = req.body;
-  const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+  const { userId, featureType } = req.body; // userId = TEST001
 
   try {
-    const result = await db.query(
-      "INSERT INTO activities (user_id, type, start_time) VALUES ($1, $2, $3) RETURNING id",
-      [userId, featureType, taipeiTime]
+    // 將 TEST001 → 找到真正的 users.id
+    const userResult = await db.query(
+      "SELECT id FROM users WHERE userid = $1",
+      [userId]
     );
+
+    if (userResult.rows.length === 0) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    const realId = userResult.rows[0].id;
+    const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+
+    const result = await db.query(
+      `INSERT INTO activities (user_id, type, start_time)
+       VALUES ($1, $2, $3)
+       RETURNING id`,
+      [realId, featureType, taipeiTime]
+    );
+
     res.json({ success: true, activityId: result.rows[0].id });
+
   } catch (err) {
     console.error("❌ Activity Save Error:", err);
     res.json({ success: false, message: err.message });
@@ -194,13 +215,15 @@ app.post("/api/activity/end", async (req, res) => {
 
   try {
     await db.query(
-      `UPDATE activities 
+      `UPDATE activities
        SET end_time = $1,
            duration = EXTRACT(EPOCH FROM ($1::timestamp - start_time)) / 60
        WHERE id = $2`,
       [taipeiTime, activityId]
     );
+
     res.json({ success: true });
+
   } catch (err) {
     console.error("❌ Activity End Error:", err);
     res.json({ success: false, message: err.message });
@@ -208,21 +231,35 @@ app.post("/api/activity/end", async (req, res) => {
 });
 
 
+
 /* -------------------------------
    🧭 AVI 前後測儲存
 ---------------------------------*/
 app.post("/api/avi/save", async (req, res) => {
-  const { userId, phase, featureType, responses } = req.body; // ✅ 加上 featureType
+  const { userId, phase, featureType, responses } = req.body; // userId = TEST001
+
   try {
-    const loginTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+    // 把 TEST001 → 查 user.id
+    const userResult = await db.query(
+      "SELECT id FROM users WHERE userid = $1",
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    const realId = userResult.rows[0].id;
+    const time = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
 
     await db.query(
       `INSERT INTO avi_results (user_id, phase, feature_type, responses, created_at)
        VALUES ($1, $2, $3, $4, $5)`,
-      [userId, phase, featureType, responses, loginTime] // ✅ 新增 featureType & loginTime
+      [realId, phase, featureType, responses, time]
     );
 
     res.json({ success: true });
+
   } catch (err) {
     console.error("❌ AVI Save Error:", err);
     res.json({ success: false, message: err.message });
@@ -230,61 +267,69 @@ app.post("/api/avi/save", async (req, res) => {
 });
 
 
+
 /* -------------------------------
    🔒 Check Daily Usage (一天一次限制)
 ---------------------------------*/
-app.get("/api/daily/check", async (req, res) => {
-  const { userId } = req.query;
-  if (!userId) return res.json({ usedToday: false });
-
-  const today = new Date().toLocaleString("en-US", {
-    timeZone: "Asia/Taipei",
-  }).split(",")[0]; // yyyy/mm/dd
+app.post("/api/checkDaily", async (req, res) => {
+  const { userId } = req.body; // TEST001
 
   try {
-    const result = await db.query(
-      `SELECT 1 FROM daily_usage
-       WHERE user_id = (SELECT id FROM users WHERE userid = $1)
-       AND date = $2`,
-      [userId, today]
+    const userResult = await db.query(
+      "SELECT id FROM users WHERE userid = $1",
+      [userId]
+    );
+    if (userResult.rows.length === 0)
+      return res.json({ success: false, message: "User not found" });
+
+    const realId = userResult.rows[0].id;
+
+    const today = new Date().toISOString().split("T")[0];
+
+    const check = await db.query(
+      "SELECT * FROM daily_usage WHERE user_id = $1 AND date = $2",
+      [realId, today]
     );
 
-    if (result.rows.length > 0) {
-      return res.json({ usedToday: true });
+    if (check.rows.length > 0) {
+      return res.json({ success: true, blocked: true });
+    } else {
+      return res.json({ success: true, blocked: false });
     }
 
-    res.json({ usedToday: false });
   } catch (err) {
-    console.error("❌ Daily Check Error:", err);
-    res.json({ usedToday: false });
+    console.error("❌ checkDaily Error:", err);
+    res.json({ success: false, message: err.message });
   }
 });
 
-/* -------------------------------
-   📝 Mark Today Used
----------------------------------*/
-app.post("/api/daily/markUsed", async (req, res) => {
+app.post("/api/daily/start", async (req, res) => {
   const { userId } = req.body;
-  if (!userId) return res.json({ success: false });
-
-  const today = new Date().toLocaleString("en-US", {
-    timeZone: "Asia/Taipei",
-  }).split(",")[0];
 
   try {
+    const userResult = await db.query(
+      "SELECT id FROM users WHERE userid = $1",
+      [userId]
+    );
+    const realId = userResult.rows[0].id;
+
+    const today = new Date().toISOString().split("T")[0];
+
     await db.query(
       `INSERT INTO daily_usage (user_id, date)
-       VALUES ((SELECT id FROM users WHERE userid = $1), $2)
+       VALUES ($1, $2)
        ON CONFLICT DO NOTHING`,
-      [userId, today]
+      [realId, today]
     );
 
     res.json({ success: true });
+
   } catch (err) {
-    console.error("❌ Mark Daily Usage Error:", err);
-    res.json({ success: false });
+    console.error("❌ daily/start Error:", err);
+    res.json({ success: false, message: err.message });
   }
 });
+
 
 
 /* -------------------------------
