@@ -55,6 +55,13 @@ const db = new Pool({
         responses JSONB,           
         created_at TIMESTAMP DEFAULT NOW()
       );
+      CREATE TABLE IF NOT EXISTS daily_usage (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        date DATE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE(user_id, date)
+      );
     `);
     console.log("✅ PostgreSQL connected & tables ready");
   } catch (err) {
@@ -212,6 +219,63 @@ app.post("/api/avi/save", async (req, res) => {
   } catch (err) {
     console.error("❌ AVI Save Error:", err);
     res.json({ success: false, message: err.message });
+  }
+});
+
+
+/* -------------------------------
+   🔒 Check Daily Usage (一天一次限制)
+---------------------------------*/
+app.get("/api/daily/check", async (req, res) => {
+  const { userId } = req.query;
+  if (!userId) return res.json({ usedToday: false });
+
+  const today = new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Taipei",
+  }).split(",")[0]; // yyyy/mm/dd
+
+  try {
+    const result = await db.query(
+      `SELECT 1 FROM daily_usage
+       WHERE user_id = (SELECT id FROM users WHERE userid = $1)
+       AND date = $2`,
+      [userId, today]
+    );
+
+    if (result.rows.length > 0) {
+      return res.json({ usedToday: true });
+    }
+
+    res.json({ usedToday: false });
+  } catch (err) {
+    console.error("❌ Daily Check Error:", err);
+    res.json({ usedToday: false });
+  }
+});
+
+/* -------------------------------
+   📝 Mark Today Used
+---------------------------------*/
+app.post("/api/daily/markUsed", async (req, res) => {
+  const { userId } = req.body;
+  if (!userId) return res.json({ success: false });
+
+  const today = new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Taipei",
+  }).split(",")[0];
+
+  try {
+    await db.query(
+      `INSERT INTO daily_usage (user_id, date)
+       VALUES ((SELECT id FROM users WHERE userid = $1), $2)
+       ON CONFLICT DO NOTHING`,
+      [userId, today]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ Mark Daily Usage Error:", err);
+    res.json({ success: false });
   }
 });
 
