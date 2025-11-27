@@ -271,7 +271,7 @@ app.post("/api/avi/save", async (req, res) => {
 /* -------------------------------
    🔒 Check Daily Usage (一天一次限制)
 ---------------------------------*/
-app.post("/api/checkDaily", async (req, res) => {
+app.post("/api/daily/check", async (req, res) => {
   const { userId } = req.body; // TEST001
 
   try {
