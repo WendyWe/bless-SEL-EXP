@@ -8,6 +8,23 @@ let afterPractice = false;
 const currentUserId = localStorage.getItem('userId');
 if (!currentUserId) console.warn('⚠️ 未找到使用者登入資訊，請重新登入');
 
+// === 每日任務限制：一天只能一次 ===
+async function checkDailyUsageOnce() {
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
+
+  const res = await fetch(`/api/daily/check?userId=${userId}`);
+  const data = await res.json();
+
+  if (data.usedToday) {
+    alert("你今天已經完成每日任務，請明天再來！");
+    window.location.href = "/experimental/home.html";
+  }
+}
+
+// ⭐ 在第一時間就檢查
+checkDailyUsageOnce();
+
 document.addEventListener('DOMContentLoaded', () => {
   // === 區塊元素 ===
   const videoSection = document.getElementById('video-section');
