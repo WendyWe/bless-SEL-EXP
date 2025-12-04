@@ -331,7 +331,7 @@ app.post("/api/daily/check", async (req, res) => {
 
     res.json({
       success: true,
-      usedToday: check.rows.length > 0
+      blocked: check.rows.length > 0
     });
 
   } catch (err) {
