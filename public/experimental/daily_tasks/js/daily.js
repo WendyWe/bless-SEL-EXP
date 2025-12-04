@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // === 前測與後測共同提交邏輯 ===
   function handleAviSubmit(form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       form.classList.add('hidden');
 
@@ -120,13 +120,34 @@ document.addEventListener('DOMContentLoaded', async () => {
       }).catch(err => console.error('送出 AVI 失敗:', err));
 
       if (formType === 'pre') {
-        // === 前測後進入練習 ===
-        const frame = document.getElementById('practiceFrame');
-        frame.src = practicePages[practiceType];
-        practiceSection.classList.remove('hidden');
-      } else {
-        endSection.classList.remove('hidden');
+
+        // 1. 取得今日 trial（你可從 localStorage 或後端給的變數拿）
+        const subject = currentUserId;  // TEST001
+        const trial = localStorage.getItem("trial") ?? 1;
+
+        // 2. 向後端查詢 task
+        const taskRes = await fetch(`/api/getTask?subject=${subject}&trial=${trial}`);
+        const taskData = await taskRes.json();
+
+        if (!taskData.task) {
+          alert("今日練習不存在，請連絡管理員");
+          return;
+        }
+
+        // 3. 組合 task HTML 路徑
+        const task = taskData.task; // e.g., "loosen"
+        const frame = document.getElementById("practiceFrame");
+        frame.src = `/experimental/daily_tasks/${task}/${task}.html`;
+
+        // 4. 顯示練習區
+        practiceSection.classList.remove("hidden");
+
+        // 5. trial +1 回存
+        localStorage.setItem("trial", Number(trial) + 1);
       }
+      else {
+              endSection.classList.remove('hidden');
+            }
     });
   }
 
