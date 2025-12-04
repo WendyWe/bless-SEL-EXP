@@ -31,7 +31,7 @@ async function checkDailyUsageOnce() {
 
     if (data.blocked) {
       alert("你今天已經完成每日任務，請明天再來！");
-      window.location.href = "/experimental/home.html";
+      window.location.href = "/experimental/index.html";
       return false; // ❗ 告訴呼叫方「不要再繼續初始化 daily flow」
     }
 
