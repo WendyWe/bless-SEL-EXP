@@ -63,7 +63,7 @@ const db = new Pool({
         created_at TIMESTAMP DEFAULT NOW(),
         UNIQUE(user_id, date)
       );
-      CREATE TABLE IF NOT EXISTS task_sequence (
+      CREATE TABLE IF NOT EXISTS task_sequence_test (
         subject_id TEXT,
         trial INTEGER,
         task TEXT,
@@ -335,7 +335,7 @@ app.get("/api/getTask", async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT task FROM task_sequence
+      `SELECT task FROM task_sequence_test
        WHERE subject_id = $1 AND trial = $2`,
       [subject, trial]
     );
