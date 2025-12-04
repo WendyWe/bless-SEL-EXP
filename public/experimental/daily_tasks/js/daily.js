@@ -11,27 +11,57 @@ if (!currentUserId) console.warn('⚠️ 未找到使用者登入資訊，請重
 // === 每日任務限制：一天只能一次 ===
 async function checkDailyUsageOnce() {
   const userId = localStorage.getItem("userId");
-  if (!userId) return;
+  if (!userId) return true; // 找不到 user，直接放行避免整個卡死
 
   try {
-    const res = await fetch(`/api/daily/check?userId=${userId}`);
+    // ✅ 和後端 server.js 一致：POST + JSON body
+    const res = await fetch("/api/daily/check", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId })
+    });
+
     const data = await res.json();
 
-    if (data.usedToday) {
+    // 後端回傳格式：{ success: true, blocked: true/false }
+    if (!data.success) {
+      console.warn("checkDailyUsage API 回傳失敗：", data.message);
+      return true; // 不故意擋使用者，避免因為 bug 導致完全不能用
+    }
+
+    if (data.blocked) {
       alert("你今天已經完成每日任務，請明天再來！");
       window.location.href = "/experimental/home.html";
+      return false; // ❗ 告訴呼叫方「不要再繼續初始化 daily flow」
     }
+
+    // ✅ 第一次使用：順便寫入 daily_usage（標記今天已使用）
+    await fetch("/api/daily/start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId })
+    }).catch(err => console.error("❌ daily/start 記錄失敗（不致命）：", err));
+
+    return true;
 
   } catch (err) {
     console.error("❌ 前端 checkDailyUsageOnce Error:", err);
+    // 安全設計：後端壞掉時，不要整個平台掛掉，先允許使用
+    return true;
   }
 }
 
+// ⭐ 不再在這裡直接呼叫 checkDailyUsageOnce()
+// checkDailyUsageOnce();
 
-// ⭐ 在第一時間就檢查
-checkDailyUsageOnce();
+// ✅ 進入頁面後，先等「一天一次」檢查跑完，再初始化 daily flow
+document.addEventListener('DOMContentLoaded', async () => {
+  const allowed = await checkDailyUsageOnce();
+  if (!allowed) {
+    // 今天已使用，已經 redirect，不再做任何初始化
+    return;
+  }
 
-document.addEventListener('DOMContentLoaded', () => {
   // === 區塊元素 ===
   const videoSection = document.getElementById('video-section');
   aviSection = document.getElementById('avi-section');
@@ -125,3 +155,4 @@ window.addEventListener("message", (e) => {
     postAviForm.classList.remove('hidden');
   }
 });
+
