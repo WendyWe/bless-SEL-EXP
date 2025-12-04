@@ -123,7 +123,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 1. 取得今日 trial（你可從 localStorage 或後端給的變數拿）
         const subject = currentUserId;  // TEST001
-        const trial = Number(localStorage.getItem("trial") ?? 1);
+        // 取得 server 端紀錄的 trial
+        const progRes = await fetch(`/api/progress?userId=${currentUserId}`);
+        const progData = await progRes.json();
+        const trial = progData.trial;
         console.log("現在是第 " + trial + " 次練習");
 
         // 2. 向後端查詢 task
