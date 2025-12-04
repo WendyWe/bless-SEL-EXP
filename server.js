@@ -261,8 +261,8 @@ app.post("/api/avi/save", async (req, res) => {
 /* -------------------------------
    🔒 Check Daily Usage (一天一次限制)
 ---------------------------------*/
-app.get("/api/daily/check", async (req, res) => {
-  const userId = req.query.userId; // TEST001
+app.post("/api/daily/check", async (req, res) => {
+  const { userId } = req.body;  // TEST001
 
   try {
     const userResult = await db.query(
@@ -292,6 +292,7 @@ app.get("/api/daily/check", async (req, res) => {
     res.json({ success: false, message: err.message });
   }
 });
+
 
 
 app.post("/api/daily/start", async (req, res) => {
