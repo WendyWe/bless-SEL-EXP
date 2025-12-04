@@ -69,6 +69,10 @@ const db = new Pool({
         task TEXT,
         PRIMARY KEY (subject_id, trial)
       );
+      CREATE TABLE IF NOT EXISTS user_progress (
+        user_id INTEGER UNIQUE REFERENCES users(id),
+        current_trial INTEGER DEFAULT 1
+      );
     `);
     console.log("✅ PostgreSQL connected & tables ready");
   } catch (err) {
