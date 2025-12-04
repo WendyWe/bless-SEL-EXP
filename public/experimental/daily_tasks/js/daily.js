@@ -144,7 +144,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         practiceSection.classList.remove("hidden");
 
         // 5. trial +1 回存
-        localStorage.setItem("trial", Number(trial) + 1);
+        await fetch("/api/progress/update", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: currentUserId,
+            newTrial: Number(trial) + 1
+          })
+        });
       }
       else {
               endSection.classList.remove('hidden');
