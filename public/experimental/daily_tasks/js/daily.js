@@ -13,14 +13,20 @@ async function checkDailyUsageOnce() {
   const userId = localStorage.getItem("userId");
   if (!userId) return;
 
-  const res = await fetch(`/api/daily/check?userId=${userId}`);
-  const data = await res.json();
+  try {
+    const res = await fetch(`/api/daily/check?userId=${userId}`);
+    const data = await res.json();
 
-  if (data.usedToday) {
-    alert("你今天已經完成每日任務，請明天再來！");
-    window.location.href = "/experimental/home.html";
+    if (data.usedToday) {
+      alert("你今天已經完成每日任務，請明天再來！");
+      window.location.href = "/experimental/home.html";
+    }
+
+  } catch (err) {
+    console.error("❌ 前端 checkDailyUsageOnce Error:", err);
   }
 }
+
 
 // ⭐ 在第一時間就檢查
 checkDailyUsageOnce();

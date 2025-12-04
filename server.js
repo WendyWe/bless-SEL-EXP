@@ -271,19 +271,20 @@ app.post("/api/avi/save", async (req, res) => {
 /* -------------------------------
    🔒 Check Daily Usage (一天一次限制)
 ---------------------------------*/
-app.post("/api/daily/check", async (req, res) => {
-  const { userId } = req.body; // TEST001
+app.get("/api/daily/check", async (req, res) => {
+  const userId = req.query.userId; // TEST001
 
   try {
     const userResult = await db.query(
       "SELECT id FROM users WHERE userid = $1",
       [userId]
     );
-    if (userResult.rows.length === 0)
+
+    if (userResult.rows.length === 0) {
       return res.json({ success: false, message: "User not found" });
+    }
 
     const realId = userResult.rows[0].id;
-
     const today = new Date().toISOString().split("T")[0];
 
     const check = await db.query(
@@ -291,17 +292,17 @@ app.post("/api/daily/check", async (req, res) => {
       [realId, today]
     );
 
-    if (check.rows.length > 0) {
-      return res.json({ success: true, blocked: true });
-    } else {
-      return res.json({ success: true, blocked: false });
-    }
+    res.json({
+      success: true,
+      usedToday: check.rows.length > 0
+    });
 
   } catch (err) {
-    console.error("❌ checkDaily Error:", err);
+    console.error("❌ /api/daily/check Error:", err);
     res.json({ success: false, message: err.message });
   }
 });
+
 
 app.post("/api/daily/start", async (req, res) => {
   const { userId } = req.body;
