@@ -63,6 +63,12 @@ const db = new Pool({
         created_at TIMESTAMP DEFAULT NOW(),
         UNIQUE(user_id, date)
       );
+      CREATE TABLE IF NOT EXISTS task_sequence (
+        subject_id TEXT,
+        trial INTEGER,
+        task TEXT,
+        PRIMARY KEY (subject_id, trial)
+      );
     `);
     console.log("✅ PostgreSQL connected & tables ready");
   } catch (err) {
@@ -316,41 +322,6 @@ app.post("/api/daily/start", async (req, res) => {
 });
 
 
-
-/* -------------------------------
-   💬 Feedback (OpenAI)
----------------------------------*/
-app.post("/api/feedback", async (req, res) => {
-  try {
-    const { text } = req.body;
-    if (!text) return res.status(400).json({ error: "請提供 text" });
-
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: `
-            你是心理寫作回饋助理。使用者的文字會依四位格（我／你／他／回到我）書寫。
-            請依下列原則回饋：
-            1. 特點與情緒
-            2. 心理意涵
-            3. 以開放式問題或反思句邀請使用者探索。
-            4. 避免每段都用同樣開頭。
-          `,
-        },
-        { role: "user", content: text },
-      ],
-    });
-
-    const feedback = completion.choices[0].message.content;
-    res.json({ feedback });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
 /* -------------------------------
    🎯 Get Task Sequence (Trial-based)
 ---------------------------------*/
@@ -426,12 +397,6 @@ function getTaipeiPeriod() {
   return "晚";
 }
 
-/* -------------------------------
-   🚀 Start Server
----------------------------------*/
-app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
-});
 
 /* -------------------------------
    🌐 Static Routes
@@ -448,4 +413,11 @@ app.use(
 // 🏠 預設首頁導向
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "experimental", "index.html"));
+});
+
+/* -------------------------------
+   🚀 Start Server
+---------------------------------*/
+app.listen(port, () => {
+  console.log(`🚀 Server running on port ${port}`);
 });

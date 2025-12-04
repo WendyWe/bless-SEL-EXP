@@ -69,15 +69,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   practiceSection = document.getElementById('practice-section');
   endSection = document.getElementById('end-section');
 
-  // === 練習頁面隨機化 ===
-  practiceType = Math.floor(Math.random() * 3);   // ⭐ 賦值給全域變數
-  practicePages = {
-    0: "./breathe/breathe.html",
-    1: "./loosen/loosen.html",
-    2: "./study/study.html"
-  };
-  console.log("🎲 practiceType =", practiceType);
-
   // === 影片載入 ===
   const video = document.getElementById('daily-video');
   fetch("/api/daily-video")
