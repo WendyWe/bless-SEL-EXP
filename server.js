@@ -161,6 +161,49 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+app.get("/api/progress", async (req, res) => {
+  const userId = req.query.userId;
+
+  const userResult = await db.query(
+    "SELECT id FROM users WHERE userid = $1",
+    [userId]
+  );
+  const realId = userResult.rows[0].id;
+
+  const prog = await db.query(
+    "SELECT current_trial FROM user_progress WHERE user_id = $1",
+    [realId]
+  );
+
+  if (prog.rows.length === 0) {
+    // 第一次登入，自動建立
+    await db.query(
+      "INSERT INTO user_progress (user_id, current_trial) VALUES ($1, 1)",
+      [realId]
+    );
+    return res.json({ trial: 1 });
+  }
+
+  res.json({ trial: prog.rows[0].current_trial });
+});
+
+app.post("/api/progress/update", async (req, res) => {
+  const { userId, newTrial } = req.body;
+
+  const userResult = await db.query(
+    "SELECT id FROM users WHERE userid = $1",
+    [userId]
+  );
+  const realId = userResult.rows[0].id;
+
+  await db.query(
+    "UPDATE user_progress SET current_trial = $1 WHERE user_id = $2",
+    [newTrial, realId]
+  );
+
+  res.json({ success: true });
+});
+
 
 
 /* -------------------------------
