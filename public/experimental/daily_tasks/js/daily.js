@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 1. 取得今日 trial（你可從 localStorage 或後端給的變數拿）
         const subject = currentUserId;  // TEST001
-        const trial = localStorage.getItem("trial") ?? 1;
+        const trial = Number(localStorage.getItem("trial") ?? 1);
 
         // 2. 向後端查詢 task
         const taskRes = await fetch(`/api/getTask?subject=${subject}&trial=${trial}`);
