@@ -100,22 +100,6 @@ app.use((req, res, next) => {
   next();
 });
 
-/* -------------------------------
-   🌐 Static Routes
----------------------------------*/
-app.use(
-  "/experimental",
-  express.static(path.join(__dirname, "public", "experimental"))
-);
-app.use(
-  "/shift_comparison",
-  express.static(path.join(__dirname, "public", "shift_comparison"))
-);
-
-// 🏠 預設首頁導向
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "experimental", "index.html"));
-});
 
 /* -------------------------------
    🤖 OpenAI Client
@@ -447,4 +431,21 @@ function getTaipeiPeriod() {
 ---------------------------------*/
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
+});
+
+/* -------------------------------
+   🌐 Static Routes
+---------------------------------*/
+app.use(
+  "/experimental",
+  express.static(path.join(__dirname, "public", "experimental"))
+);
+app.use(
+  "/shift_comparison",
+  express.static(path.join(__dirname, "public", "shift_comparison"))
+);
+
+// 🏠 預設首頁導向
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "experimental", "index.html"));
 });
