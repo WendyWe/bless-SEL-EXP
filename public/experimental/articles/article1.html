@@ -1,13 +1,138 @@
 <script src="../daily_tasks/js/activityTracker.js"></script>
-<script>
-  ActivityTracker.startActivity("study");
-  window.addEventListener("beforeunload", () => {
-    ActivityTracker.endActivity();
-  });
-</script>
+<!DOCTYPE html>
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>article1</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>article1</title>
+
+<script src="../daily_tasks/js/activityTracker.js"></script>
+<script>
+ ActivityTracker.startActivity("study");
+ window.addEventListener("beforeunload", () => {
+ ActivityTracker.endActivity();
+ });
+</script>
+
+<style>
+ /* 1. 全局基礎設定 */
+ body {
+ /* 柔和的背景色，比純白更護眼 */
+ background-color: #f7f7f7; 
+ /* 設定清晰的中文無襯線字體 */
+ font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+ /* 基礎字體大小 */
+ font-size: 17px; 
+ /* 標準文字顏色 (深灰，避免純黑的刺眼) */
+ color: #333; 
+ /* 優化行高，提升可讀性 */
+ line-height: 1.7; 
+ margin: 0; /* 移除瀏覽器預設的 margin */
+ padding: 0;
+}
+ /* 2. 內容容器：控制文章最大寬度並居中 */
+.container {
+ /* 限制最大寬度，這是閱讀舒適度的關鍵 */
+ max-width: 760px; 
+ /* 內容居中顯示 */
+ margin: 40px auto; 
+ /* 兩側留白 */
+ padding: 0 20px; 
+ }
+ /* 3. 內文排版優化 */
+ .content h1 {
+ font-size: 2.4em;
+ color: #1a1a1a;
+ margin-bottom: 0.5em;
+ }
+ .content h2 {
+ font-size: 1.8em;
+ color: #222;
+ margin-top: 1.8em;
+ margin-bottom: 0.6em;
+ }
+ .content p {
+/* 段落之間的間距 */
+ margin-bottom: 1.5em; 
+ /* 段落首行縮進 */
+ text-indent: 2em; 
+ }
+ 
+ /* 4. 響應式設計 (手機優化) */
+ @media (max-width: 768px) {
+ .container {
+ margin: 20px auto;
+ padding: 0 15px; 
+}
+ body {
+ font-size: 16px;
+ line-height: 1.6;
+ }
+ .content p {
+ text-indent: 0; /* 手機上移除首行縮進 */
+ }
+ }
+ </style>
 </head>
+
+<body>
+ <div class="container">
+ <article class="content">
+
+ <h1>情緒其實是大腦「推理」出來的：建構情緒理論（Theory of Constructed Emotion）</h1>
+
+ <p>你有沒有這樣的經驗— <br>
+  期末口頭報告前站在講台邊，心跳快得像要衝出胸口，讓你緊張得幾乎喘不過氣；<br>
+  但在演唱會上，同樣的心跳加速卻讓你感到興奮、充滿能量，甚至覺得自己從未如此「活著」。<br>
+<br>
+  同一種身體反應，竟然能被解讀成完全不同的情緒。<br>
+  而這背後的原因，其實一直悄悄藏在我們的大腦裡。<br>
+<br>
+  Barrett（2017）指出：情緒不是天生固定的，而是大腦**即時**「建構」出來的結果。</p>
+ 
+ <h2>大腦的角色：從「接收世界」到「預測世界」</h2>
+ <p>大腦其實一直在運行一套概念模型（conceptual model），主動地預測下一秒身體內外會發生什麼。<br>
+  它不斷地處理內感受訊號（Interoception，如心跳、呼吸、飢餓感...）來更新其預測。<br>
+  如果現實與預測不符，就會產生預測誤差（prediction error），驅動大腦調整模型並建構一個解釋。
+<br>
+換句話說：<br>
+你所「感受到的情緒」，其實是大腦根據內感受訊號和情境知識，所建構出來的最佳解釋。</p>
+
+<h2>情緒其實是「分類」的結果</h2>
+ <p>在理論裡，大腦會把所有可能的解釋丟進一個「候選清單」裡，再從中選出最吻合當下情況的那一個。<br>
+  這個過程就是使用某個「情緒概念（emotion concept）」來分類訊號。<br>
+  例如：<br>
+• 心跳快 + 呼吸急促 +情境：站在講台上 → 分類為「緊張」<br>
+• 心跳快 + 呼吸急促 +情境：坐雲霄飛車 → 分類為「興奮」</p>
+
+<h2>大腦不是用固定路線，而是根據「整個事件」做解釋</h2>
+ <p>Barrett 的研究指出，大腦並沒有一條固定的「情緒路線」。情緒並不是按下某個按鈕、某個腦區就亮起來這麼簡單。
+  <br>相反地，科學證據顯示：<br>
+  - 同一種情緒可以由許多不同的神經組合產生<br>
+  - 同一群腦區也能參與不同種類的情緒*<br>
+<br>
+這代表每一次的情緒，其實都是重新「組裝」出來的，不會完全複製貼上。因此：
+<br>
+你的「生氣」從來不是別人的生氣，你昨天的「焦慮」也不會和你今天的焦慮長得一模一樣。 
+<br>
+不僅如此，大腦在建構情緒時，也不是只依靠單一刺激。<br>
+情緒不是因為「看到一張臉」「聽到一句話」就被觸發，而是源自大腦對一整個事件（event）的解讀。這個事件包含了：
+<br>
+- 當下你正在追求的目標<br>
+- 你的身體狀態（緊張、疲憊、能量高低）<br>
+- 你和對方的關係<br>
+- 你過去的經驗<br>
+- 整體脈絡<br>
+<br>
+也因此，同一句話，有時會像刀子一樣刺進心裡，有時卻像玩笑一樣輕描淡寫。同一組身體反應，有時被解讀成不安，有時卻會被標記成期待。</p>
+
+ <p>  <br>
+  “There is nothing either good or bad, but thinking makes it so.”
+  <br>
+  世界本無好壞，思想使然。—莎士比亞《哈姆雷特》</p>
+
+ </article>
+ </div>
+</body>
+</html>
 

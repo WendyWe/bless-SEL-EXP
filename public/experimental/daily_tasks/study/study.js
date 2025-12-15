@@ -54,28 +54,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   const finishBtn = document.getElementById("finish-btn");
 
   try {
-    // 從後端抓每日文章
-    const res = await fetch("/api/daily-article");
-    if (!res.ok) throw new Error("文章載入失敗");
+    // ① 取得今日文章資訊
+    const metaRes = await fetch("/api/daily-article");
+    if (!metaRes.ok) throw new Error("每日文章 API 載入失敗");
 
-    const data = await res.json();
+    const meta = await metaRes.json();
 
-    // 填入文章
-    titleEl.textContent = data.title || "今日文章";
-    dateEl.textContent = data.date || "";
-    contentEl.innerHTML = data.content || "<p>今日沒有內容</p>";
+    // ② 取得文章 HTML 內容
+    const articleRes = await fetch(meta.url);
+    if (!articleRes.ok) throw new Error("文章內容載入失敗");
+
+    const articleHtml = await articleRes.text();
+
+    // ③ 顯示文章
+    titleEl.textContent = "今日文章";
+    dateEl.textContent = `Day ${meta.day}`;
+    contentEl.innerHTML = articleHtml;
 
   } catch (err) {
     console.error(err);
     titleEl.textContent = "載入失敗";
-    contentEl.innerHTML = "<p>抱歉，文章目前無法載入。</p>";
+    contentEl.innerHTML = "<p>今日文章目前無法顯示。</p>";
   }
 
-
-
-
-  // ⭐ 完成閱讀 → 通知父頁
+  // 完成閱讀
   finishBtn.addEventListener("click", () => {
-    window.parent.postMessage({ type: "practice-finished", practice: "education" }, "*");
+    window.parent.postMessage(
+      { type: "practice-finished", practice: "education" },
+      "*"
+    );
   });
 });
+
