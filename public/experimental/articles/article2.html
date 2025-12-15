@@ -1,14 +1,125 @@
 <script src="../daily_tasks/js/activityTracker.js"></script>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>article1</title>
+
+<script src="../daily_tasks/js/activityTracker.js"></script>
 <script>
-  ActivityTracker.startActivity("study");
-  window.addEventListener("beforeunload", () => {
-    ActivityTracker.endActivity();
-  });
+ ActivityTracker.startActivity("study");
+ window.addEventListener("beforeunload", () => {
+ ActivityTracker.endActivity();
+ });
 </script>
 
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>article2</title>
+<style>
+ /* 1. 全局基礎設定 */
+ body {
+ /* 柔和的背景色，比純白更護眼 */
+ background-color: #f7f7f7; 
+ /* 設定清晰的中文無襯線字體 */
+ font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+ /* 基礎字體大小 */
+ font-size: 17px; 
+ /* 標準文字顏色 (深灰，避免純黑的刺眼) */
+ color: #333; 
+ /* 優化行高，提升可讀性 */
+ line-height: 1.7; 
+ margin: 0; /* 移除瀏覽器預設的 margin */
+ padding: 0;
+}
+ /* 2. 內容容器：控制文章最大寬度並居中 */
+.container {
+ /* 限制最大寬度，這是閱讀舒適度的關鍵 */
+ max-width: 760px; 
+ /* 內容居中顯示 */
+ margin: 40px auto; 
+ /* 兩側留白 */
+ padding: 0 20px; 
+ }
+ /* 3. 內文排版優化 */
+ .content h1 {
+ font-size: 2.4em;
+ color: #1a1a1a;
+ margin-bottom: 0.5em;
+ }
+ .content h2 {
+ font-size: 1.8em;
+ color: #222;
+ margin-top: 1.8em;
+ margin-bottom: 0.6em;
+ }
+ .content p {
+/* 段落之間的間距 */
+ margin-bottom: 1.5em; 
+ /* 段落首行縮進 */
+ text-indent: 0; 
+ }
+ 
+ /* 4. 響應式設計 (手機優化) */
+ @media (max-width: 768px) {
+ .container {
+ margin: 20px auto;
+ padding: 0 15px; 
+}
+ body {
+ font-size: 16px;
+ line-height: 1.6;
+ }
+ .content p {
+ text-indent: 0; /* 手機上移除首行縮進 */
+ }
+ }
+ </style>
 </head>
+
+<body>
+ <div class="container">
+ <article class="content">
+
+ <h1>你的理性腦被誰「劫持」了？</h1>
+
+ <p>一生當中，我們可能都有過這樣的經驗—<br>
+在極度憤怒或恐懼的瞬間，感覺到一股強大的情緒浪潮湧上來，心跳加速、呼吸急促，然後說出或做出了一些事，事後讓自己後悔不已 。<br>
+那不是你「不理性」或「情緒化」，那是你的大腦啟動了緊急模式，一場被稱為「<strong>杏仁核劫持</strong>」（Amygdala Hijack）的現象 。<br>
+這個現象描述了在強烈的情緒體驗中，大腦中負責情緒處理的<strong>杏仁核</strong>會像搶奪方向盤一樣，<strong>壓倒你的理性思考和有意識的判斷</strong> 。<br>
+杏仁核會觸發戰鬥或逃跑（Fight-or-Flight）的反應，並釋放壓力荷爾蒙，讓你身體為應對威脅做好準備 。<br>
+這是一種自動發生的反應，甚至可以在你有意識地意識到威脅之前就啟動 。</p>
+ 
+ <h2>關鍵衝突：理性腦被「禁用」的瞬間</h2>
+ <p>杏仁核劫持的發生，核心在於兩個關鍵腦區之間的短路：<strong>杏仁核和額葉</strong>（Frontal Lobes，即理性腦） 。<br>
+  額葉負責<strong>決策、計畫、思考</strong>和<strong>衝動控制</strong>，是基於經驗和邏輯判斷的理性中心 。<br>
+  然而，當杏仁核劫持發生時，它會有效地<strong>「禁用」額葉</strong>的功能，導致理性與意識思考的缺席 。<br>
+- 機制：慢性壓力、過去的創傷經驗或恐懼制約，都會使杏仁核過度活躍且敏感化 。<br>
+- 助燃劑：睡眠不足也會損害前額葉皮質的功能，降低其調節杏仁核的能力，從而增加劫持的風險 。<br>
+<br>
+當理性腦的控制力減弱，衝動和情緒驅動的行為便會主導我們的反應</p>
+
+<h2>災難性後果：不只是當下的失控</h2>
+ <p>杏仁核劫持的後果，絕不只是當下的一時失控，它會對我們的生活產生持久的負面影響：<br>
+- <strong>決策與行為</strong>：導致衝動行為和糟糕的決策，因為情緒壓倒了邏輯思考，可能損害個人在人際關係、工作和財務上的利益 。<br>
+- <strong>情緒與健康</strong>：劫持會放大情緒反應，導致難以有效調節情緒，可能表現為情緒波動或憤怒爆發 。頻繁的劫持會導致慢性壓力，進而引發心血管或心理健康問題 。<br>
+- <strong>關係與學習</strong>：衝動且不可預測的行為會使人際關係緊張，並影響對記憶的編碼和提取，導致難以從過去經驗中學習 。</p>
+
+<h2>奪回方向盤：練習與覺察的超能力</h2>
+ <p>既然杏仁核劫持是一種神經生物學上的<strong>短路</strong>，我們就可以透過訓練來為大腦重新布線，幫助理性腦及時上線。<br>
+  正念社會情緒學習為我們提供了奪回大腦控制權的關鍵策略：<br>
+- <strong>正念與冥想（Mindfulness）：</strong> 這是最核心的練習。它可以幫助你提高對情緒、思維和身體感覺的覺察，從而在杏仁核警報響起時，爭取到寶貴的緩衝時間，讓你在反應之前進行調節 。<br>
+- <strong>認知調整（CBT）：</strong> 學習識別並挑戰*那些驅動劫持的非理性思維模式。<br>
+- <strong>情緒調節技巧：</strong> 透過學習深呼吸、放鬆練習等技巧，來管理和預防劫持的發生 。<br>
+<br>
+通過有意識地練習這些策略，你就能學會暫停、反思，並 engage in more rational thinking，有效地減少劫持的頻率和強度 。</p>
+
+ <p>  <br>
+  “There is nothing either good or bad, but thinking makes it so.”
+  <br>
+  世界本無好壞，思想使然。—莎士比亞《哈姆雷特》</p>
+  <br>
+  <P>Orji, L. C., & Ita, U. A. (2024). Amygdala hijack: Contemporary insights into causes, correlates and consequences.<strong>African Journal of Health, Nursing and Midwifery, 7</strong>(3), 102-111.</P>
+ </article>
+ </div>
+</body>
+</html>
+

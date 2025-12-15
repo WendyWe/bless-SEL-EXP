@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // ③ 顯示文章
     titleEl.textContent = "今日文章";
-    dateEl.textContent = `Day ${meta.day}`;
+    //dateEl.textContent = `Day ${meta.day}`;
     contentEl.innerHTML = articleHtml;
 
   } catch (err) {
