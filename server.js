@@ -412,10 +412,18 @@ app.get("/api/daily-article", (req, res) => {
   const articles = ["article1.html", "article2.html", "article3.html"];
   const day = req.query.day ? parseInt(req.query.day) : new Date().getDate();
   const index = day % articles.length;
-  const articleUrl = `/experimental/articles/${articles[index]}`;
+
+  // ⚠️ 統一使用 static 掛載的路徑
+  const articleUrl = `/Articles/daily/${articles[index]}`;
+
   console.log("Day:", day, "→ 派送文章:", articleUrl);
-  res.json({ day, url: articleUrl });
+
+  res.json({
+    day,
+    url: articleUrl,
+  });
 });
+
 
 /* -------------------------------
    🎥 Daily Video (Static)
