@@ -408,21 +408,61 @@ app.use(
   express.static(path.join(__dirname, "public", "experimental", "articles"))
 );
 
-app.get("/api/daily-article", (req, res) => {
-  const articles = ["article1.html", "article2.html", "article3.html"];
-  const day = req.query.day ? parseInt(req.query.day) : new Date().getDate();
-  const index = day % articles.length;
+app.get("/api/daily-article", async (req, res) => {
+  const { userId } = req.query; // TEST001
 
-  // ⚠️ 統一使用 static 掛載的路徑
-  const articleUrl = `/Articles/daily/${articles[index]}`;
+  if (!userId) {
+    return res.status(400).json({ error: "Missing userId" });
+  }
 
-  console.log("Day:", day, "→ 派送文章:", articleUrl);
+  try {
+    // 1️⃣ 找到真實 users.id
+    const userResult = await db.query(
+      "SELECT id FROM users WHERE userid = $1",
+      [userId]
+    );
 
-  res.json({
-    day,
-    url: articleUrl,
-  });
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const realId = userResult.rows[0].id;
+
+    // 2️⃣ 取得或建立 education_progress
+    let progress = await db.query(
+      "SELECT education_count FROM education_progress WHERE user_id = $1",
+      [realId]
+    );
+
+    if (progress.rows.length === 0) {
+      await db.query(
+        "INSERT INTO education_progress (user_id, education_count) VALUES ($1, 0)",
+        [realId]
+      );
+      progress = { rows: [{ education_count: 0 }] };
+    }
+
+    const count = progress.rows[0].education_count;
+
+    // 3️⃣ 根據「使用次數」決定文章
+    const articleNumber = count + 1; // 第幾篇
+    const articleUrl = `/Articles/daily/article${articleNumber}.html`;
+
+    console.log(
+      `📘 User ${userId} | education_count=${count} → article${articleNumber}`
+    );
+
+    res.json({
+      articleIndex: articleNumber, // 僅供 debug，不顯示給使用者
+      url: articleUrl
+    });
+
+  } catch (err) {
+    console.error("❌ daily-article error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
+
 
 
 /* -------------------------------

@@ -48,6 +48,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
+
+  const userId = localStorage.getItem("userId"); // ⭐⭐ 加這行
+
+  if (!userId) {
+    console.error("❌ userId not found in localStorage");
+    return;
+  }
+});
+
   const titleEl = document.getElementById("article-title");
   const dateEl = document.getElementById("article-date");
   const contentEl = document.getElementById("article-content");
@@ -78,11 +87,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 完成閱讀
-  finishBtn.addEventListener("click", () => {
-    window.parent.postMessage(
-      { type: "practice-finished", practice: "education" },
-      "*"
-    );
-  });
-});
+  finishBtn.addEventListener("click", async () => {
+  try {
+    // ⭐ 1. 通知後端：這個使用者完成一次文章閱讀
+    await fetch("/api/education/complete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId }) // ⚠️ userId = TEST001（你登入後已有）
+    });
 
+  } catch (err) {
+    console.error("❌ education complete failed:", err);
+    // 就算失敗，也不要卡住使用者流程
+  }
+
+  // ⭐ 2. 再通知父頁：此任務完成，進入下一步
+  window.parent.postMessage(
+    { type: "practice-finished", practice: "education" },
+    "*"
+  );
+  });
