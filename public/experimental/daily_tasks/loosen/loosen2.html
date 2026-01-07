@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EF Training Game</title>
+  <link rel="stylesheet" href="loosen2.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>執行功能訓練遊戲</h1>
+    <p class="sub">
+      第一關：記憶顏色 × 方向　
+      第二關：忽略字義與方向，只回報顏色
+    </p>
+  </header>
+
+  <!-- 規則卡 -->
+  <section class="card">
+    <div class="hd">規則</div>
+    <div class="rules" id="rules"></div>
+  </section>
+
+  <!-- 遊戲區 -->
+  <section class="card arena">
+    <div class="center">
+      <div class="fix" id="fix"></div>
+
+      <div class="stim hidden" id="stim">
+        <div class="arrow" id="arrow"></div>
+        <div class="word" id="word"></div>
+      </div>
+    </div>
+
+    <!-- 第一關：方向鍵 -->
+    <div class="controls hidden" id="dirControls">
+      <button data-key="ArrowUp">⬆ 上</button>
+      <button data-key="ArrowLeft">⬅ 左</button>
+      <button data-key="ArrowRight">➡ 右</button>
+      <button data-key="ArrowDown">⬇ 下</button>
+    </div>
+
+    <!-- 第二關：顏色鍵 -->
+    <div class="controls hidden" id="colorControls">
+      <button data-key="RED" class="red">紅</button>
+      <button data-key="BLUE" class="blue">藍</button>
+      <button data-key="YELLOW" class="yellow">黃</button>
+      <button data-key="GREEN" class="green">綠</button>
+    </div>
+
+    <div class="status" id="status">請點擊開始</div>
+  </section>
+
+  <button class="btn primary" id="startBtn">開始訓練</button>
+  <button id="exitBtn" class="hidden">回到首頁</button>
+</div>
+
+<script src="loosen2.js"></script>
+</body>
+</html>

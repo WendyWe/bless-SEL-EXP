@@ -1,0 +1,143 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system;
+  background: #0b0f18;
+  color: #e8eefc;
+}
+
+.wrap {
+  max-width: 760px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 { margin-bottom: 6px; }
+.sub { color: #a9b4d6; font-size: 14px; }
+
+.card {
+  background: #121a2a;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.hd {
+  font-size: 14px;
+  color: #a9b4d6;
+  margin-bottom: 10px;
+}
+
+/* 規則卡 */
+.rules {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.rule {
+  background: rgba(255,255,255,0.08);
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* 遊戲區 */
+.arena {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.center {
+  height: 220px;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* 修改這部分 */
+.stim {
+  position: absolute;
+  top: 0;           /* 填滿父層 */
+  left: 0;          /* 填滿父層 */
+  right: 0;         /* 填滿父層 */
+  bottom: 0;        /* 填滿父層 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px; /* 讓方塊邊角圓滑一點 */
+}
+
+/* 確保 Fixation 是十字或明顯的一點 */
+.fix {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.arrow {
+  font-size: 36px;
+  opacity: 0.6;
+  margin-bottom: 6px;
+}
+
+.word {
+  font-size: 44px;
+  font-weight: 900;
+}
+
+.hidden { display: none; }
+
+/* 按鈕 */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.controls button {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.controls button:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.red { background: #ff5c7a; }
+.blue { background: #5c7aff; }
+.yellow { background: #f2c94c; color: #000; }
+.green { background: #35d07f; color: #000; }
+
+.status {
+  color: #a9b4d6;
+  font-size: 14px;
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.primary {
+  background: #35d07f;
+  color: #0b0f18;
+}
