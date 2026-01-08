@@ -6,7 +6,7 @@ const wordEl = document.getElementById("word");
 const fixEl = document.getElementById("fix");
 const statusEl = document.getElementById("status");
 const startBtn = document.getElementById("startBtn");
-const exitBtn = document.getElementById("exitBtn");
+const finishBtn = document.getElementById("finish-btn");
 const dirControls = document.getElementById("dirControls");
 const colorControls = document.getElementById("colorControls");
 
@@ -224,3 +224,14 @@ startBtn.onclick = () => {
   startCountdown();
 };
 
+finishBtn.addEventListener("click", () => {
+  window.parent.postMessage(
+    {
+      type: "practice-finished",
+      practice: "loosen",
+      version: "loosen2",
+      trials: trialLog.length
+    },
+    "*"
+  );
+});
