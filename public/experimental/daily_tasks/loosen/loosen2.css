@@ -141,3 +141,11 @@ h1 { margin-bottom: 6px; }
   background: #35d07f;
   color: #0b0f18;
 }
+
+#finish-btn {
+  background-color: #7b7b7b;
+}
+
+#finish-btn:hover {
+  background-color: #5c5c5c;
+}
