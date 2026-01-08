@@ -153,7 +153,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
 
+        const frame = document.getElementById("practiceFrame");
+        if (!frame) {
+          console.error("practiceFrame not found");
+          return;
+        }
+
         frame.src = `/experimental/daily_tasks/${task}/${page}`;
+
 
 
         // 4. 顯示練習區
