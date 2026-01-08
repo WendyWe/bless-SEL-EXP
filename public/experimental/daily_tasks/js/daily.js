@@ -139,9 +139,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // 3. 組合 task HTML 路徑
-        const task = taskData.task; // e.g., "loosen"
-        const frame = document.getElementById("practiceFrame");
-        frame.src = `/experimental/daily_tasks/${task}/${task}.html`;
+        const TASK_PAGE_MAP = {
+          loosen: "loosen2.html",
+          breathe: "breathe.html",
+          study: "study.html"
+        };
+
+        const task = taskData.task;
+        const page = TASK_PAGE_MAP[task];
+
+        if (!page) {
+          alert(`未知的 task：${task}`);
+          return;
+        }
+
+        frame.src = `/experimental/daily_tasks/${task}/${page}`;
+
 
         // 4. 顯示練習區
         practiceSection.classList.remove("hidden");
