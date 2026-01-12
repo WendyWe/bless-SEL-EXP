@@ -382,6 +382,17 @@ app.get("/api/getTask", async (req, res) => {
     return res.status(400).json({ error: "Missing subject or trial" });
   }
 
+  // ✅ 驗證用：允許暫時強制 task
+  if (forceTask && ["breathe", "study", "loosen"].includes(forceTask)) {
+    console.warn("🧪 FORCE TASK ENABLED", {
+      subject,
+      trial,
+      forceTask
+    });
+
+    return res.json({ task: forceTask });
+  }
+
   try {
     const result = await db.query(
       `SELECT task FROM task_sequence_test
