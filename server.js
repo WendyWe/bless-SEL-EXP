@@ -11,6 +11,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const { Pool } = require("pg");
 const OpenAI = require("openai");
+const fs = require("fs");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -409,10 +410,25 @@ app.use(
 );
 
 app.get("/api/daily-article", async (req, res) => {
-  const { userId } = req.query; // TEST001
+  const { userId, source } = req.query; // source = "study"
 
+  // 🧪 行為邊界感測（一定要放最前面）
+  console.log("🧪 DAILY ARTICLE REQUEST", {
+    userId,
+    source,
+    path: req.originalUrl,
+    referer: req.headers.referer,
+    time: new Date().toISOString()
+  });
+
+  // 🚫 基本防呆
   if (!userId) {
     return res.status(400).json({ error: "Missing userId" });
+  }
+
+  // 🚫 僅允許 study 派發文章
+  if (source !== "study") {
+    return res.status(403).json({ error: "Invalid source" });
   }
 
   try {
@@ -444,16 +460,38 @@ app.get("/api/daily-article", async (req, res) => {
 
     const count = progress.rows[0].education_count;
 
-    // 3️⃣ 根據「使用次數」決定文章
-    const articleNumber = count + 1; // 第幾篇
+    // 3️⃣ 根據使用次數決定文章
+    const articleNumber = count + 1;
     const articleUrl = `/Articles/daily/article${articleNumber}.html`;
+
+    // 🔒 防呆：確認文章檔案存在
+    const articlePath = path.join(
+      __dirname,
+      "public",
+      "experimental",
+      "articles",
+      `article${articleNumber}.html`
+    );
+
+    if (!fs.existsSync(articlePath)) {
+      console.warn("⚠️ Article not found", {
+        userId,
+        articleNumber
+      });
+
+      return res.status(404).json({
+        error: "Article not available yet",
+        articleIndex: articleNumber
+      });
+    }
 
     console.log(
       `📘 User ${userId} | education_count=${count} → article${articleNumber}`
     );
 
+    // 4️⃣ 僅派發，不推進狀態
     res.json({
-      articleIndex: articleNumber, // 僅供 debug，不顯示給使用者
+      articleIndex: articleNumber, // debug 用
       url: articleUrl
     });
 
@@ -462,6 +500,7 @@ app.get("/api/daily-article", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
 
 
 
