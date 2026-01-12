@@ -12,6 +12,7 @@ const path = require("path");
 const { Pool } = require("pg");
 const OpenAI = require("openai");
 const fs = require("fs");
+const MAX_ARTICLES = 10; 
 
 const app = express();
 const port = process.env.PORT || 3000;
