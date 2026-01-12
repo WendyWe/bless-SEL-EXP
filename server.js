@@ -401,6 +401,7 @@ app.get("/api/getTask", async (req, res) => {
 });
 
 
+
 /* -------------------------------
    📚 Daily Article (Static)
 ---------------------------------*/
@@ -409,97 +410,71 @@ app.use(
   express.static(path.join(__dirname, "public", "experimental", "articles"))
 );
 
-app.get("/api/daily-article", async (req, res) => {
-  const { userId, source } = req.query; // source = "study"
+app.get("/api/daily-article", (req, res) => {
+  const { userId, source, index } = req.query;
 
-  // 🧪 行為邊界感測（一定要放最前面）
+  // 🧪 行為驗證用 log（建議保留）
   console.log("🧪 DAILY ARTICLE REQUEST", {
     userId,
     source,
-    path: req.originalUrl,
-    referer: req.headers.referer,
+    index,
     time: new Date().toISOString()
   });
 
-  // 🚫 基本防呆
+  // ① 基本防呆
   if (!userId) {
     return res.status(400).json({ error: "Missing userId" });
   }
 
-  // 🚫 僅允許 study 派發文章
+  // ② 只允許 study
   if (source !== "study") {
     return res.status(403).json({ error: "Invalid source" });
   }
 
-  try {
-    // 1️⃣ 找到真實 users.id
-    const userResult = await db.query(
-      "SELECT id FROM users WHERE userid = $1",
-      [userId]
-    );
+  // ③ 解析文章 index（前端負責給）
+  const articleIndex = parseInt(index, 10);
 
-    if (userResult.rows.length === 0) {
-      return res.status(404).json({ error: "User not found" });
-    }
+  if (
+    Number.isNaN(articleIndex) ||
+    articleIndex < 1 ||
+    articleIndex > MAX_ARTICLES
+  ) {
+    return res.status(400).json({
+      error: "Invalid article index",
+      max: MAX_ARTICLES
+    });
+  }
 
-    const realId = userResult.rows[0].id;
+  // ④ 組出文章路徑
+  const articleFilename = `article${articleIndex}.html`;
+  const articlePath = path.join(
+    __dirname,
+    "public",
+    "experimental",
+    "articles",
+    articleFilename
+  );
 
-    // 2️⃣ 取得或建立 education_progress
-    let progress = await db.query(
-      "SELECT education_count FROM education_progress WHERE user_id = $1",
-      [realId]
-    );
-
-    if (progress.rows.length === 0) {
-      await db.query(
-        "INSERT INTO education_progress (user_id, education_count) VALUES ($1, 0)",
-        [realId]
-      );
-      progress = { rows: [{ education_count: 0 }] };
-    }
-
-    const count = progress.rows[0].education_count;
-
-    // 3️⃣ 根據使用次數決定文章
-    const articleNumber = count + 1;
-    const articleUrl = `/Articles/daily/article${articleNumber}.html`;
-
-    // 🔒 防呆：確認文章檔案存在
-    const articlePath = path.join(
-      __dirname,
-      "public",
-      "experimental",
-      "articles",
-      `article${articleNumber}.html`
-    );
-
-    if (!fs.existsSync(articlePath)) {
-      console.warn("⚠️ Article not found", {
-        userId,
-        articleNumber
-      });
-
-      return res.status(404).json({
-        error: "Article not available yet",
-        articleIndex: articleNumber
-      });
-    }
-
-    console.log(
-      `📘 User ${userId} | education_count=${count} → article${articleNumber}`
-    );
-
-    // 4️⃣ 僅派發，不推進狀態
-    res.json({
-      articleIndex: articleNumber, // debug 用
-      url: articleUrl
+  // ⑤ 確認檔案真的存在（避免回傳死連結）
+  if (!fs.existsSync(articlePath)) {
+    console.warn("⚠️ Article file missing", {
+      articleIndex,
+      articleFilename
     });
 
-  } catch (err) {
-    console.error("❌ daily-article error:", err);
-    res.status(500).json({ error: "Server error" });
+    return res.status(404).json({
+      error: "Article not available yet",
+      articleIndex
+    });
   }
+
+  // ✅ 成功派發（不改任何狀態）
+  res.json({
+    articleIndex,
+    url: `/Articles/daily/${articleFilename}`
+  });
 });
+
 
 
 
