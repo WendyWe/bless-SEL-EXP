@@ -1,13 +1,116 @@
 <script src="../daily_tasks/js/activityTracker.js"></script>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>當身體比大腦先說話：理解「多重迷走神經」的生存導航</title>
+
+<script src="../daily_tasks/js/activityTracker.js"></script>
 <script>
-  ActivityTracker.startActivity("study");
-  window.addEventListener("beforeunload", () => {
-    ActivityTracker.endActivity();
-  });
+ ActivityTracker.startActivity("study");
+ window.addEventListener("beforeunload", () => {
+ ActivityTracker.endActivity();
+ });
 </script>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>article3</title>
+<style>
+ /* 1. 全局基礎設定 */
+ body {
+ /* 柔和的背景色，比純白更護眼 */
+ background-color: #f7f7f7; 
+ /* 設定清晰的中文無襯線字體 */
+ font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+ /* 基礎字體大小 */
+ font-size: 17px; 
+ /* 標準文字顏色 (深灰，避免純黑的刺眼) */
+ color: #333; 
+ /* 優化行高，提升可讀性 */
+ line-height: 1.7; 
+ margin: 0; /* 移除瀏覽器預設的 margin */
+ padding: 0;
+}
+ /* 2. 內容容器：控制文章最大寬度並居中 */
+.container {
+ /* 限制最大寬度，這是閱讀舒適度的關鍵 */
+ max-width: 760px; 
+ /* 內容居中顯示 */
+ margin: 40px auto; 
+ /* 兩側留白 */
+ padding: 0 20px; 
+ }
+ /* 3. 內文排版優化 */
+ .content h1 {
+ font-size: 2.4em;
+ color: #1a1a1a;
+ margin-bottom: 0.5em;
+ }
+ .content h2 {
+ font-size: 1.8em;
+ color: #222;
+ margin-top: 1.8em;
+ margin-bottom: 0.6em;
+ }
+ .content p {
+/* 段落之間的間距 */
+ margin-bottom: 1.5em; 
+ /* 段落首行縮進 */
+ text-indent: 0; 
+ }
+ 
+ /* 4. 響應式設計 (手機優化) */
+ @media (max-width: 768px) {
+ .container {
+ margin: 20px auto;
+ padding: 0 15px; 
+}
+ body {
+ font-size: 16px;
+ line-height: 1.6;
+ }
+ .content p {
+ text-indent: 0; /* 手機上移除首行縮進 */
+ }
+ }
+ </style>
 </head>
+
+<body>
+ <div class="container">
+ <article class="content">
+
+ <h1>當身體比大腦先說話：理解「多重迷走神經」的生存導航</h1>
+
+ <p>想像一下，你正走在昏暗的巷弄，後方傳來急促的腳步聲。<br>
+  即便大腦還沒反應過來，你的心跳已然加速、肌肉緊繃。<br>
+  又或者，當你在眾人面前遭受羞辱時，你可能突然感到大腦一片空白、手腳冰冷，甚至想找個地洞鑽進去。<br>
+  這些反應並非軟弱，而是體內最古老的守護者—<strong>多重迷走神經（Polyvagal Theory）</strong>正在運作。</p>
+<img src="../../../media/raw_image/3.png"  style="width:60%">
+<br>
+ 
+ <h2>演化的階梯：三套生存系統</h2>
+ <p>由神經科學家史蒂芬·波吉斯（Stephen W. Porges）提出的多重迷走神經理論，打破了過去「自律神經只有交感與副交感」的二元論。<br>
+  他指出，人類的神經系統像是一座「演化的階梯」，隨著環境的安全程度，會依序啟動三種不同層次的迴路：<br>
+  1. <strong>腹側迷走神經（Ventral Vagal）——社交參與的溫床</strong> <br>
+    這是哺乳類演化出最先進的系統。當人們感到安全時，此迴路便會啟動，用以調節心率，讓我們能展現生動表情、溫柔嗓音，並與人建立深度連結，這即是創造力與同理心的來源。<br>
+  2. <strong>交感神經（Sympathetic）——戰或逃的引擎</strong> <br>
+    當環境出現危險，身體會切換到此模式。腎上腺素爆發以為「戰鬥」或「逃跑」提供能量。這時我們會感到焦慮、憤怒或極度警覺。<br>
+  3. <strong>背側迷走神經（Dorsal Vagal）——凍結與崩潰的防線</strong> <br>
+    這是最原始的爬蟲類神經迴路。當威脅大到無法戰鬥也無法逃跑時，神經系統會選擇「關閉」。我們會感到麻木、解離、甚至昏倒，如同動物「裝死」以規避最終的傷害。<br>    
+  </p>
+
+<h2>療癒的關鍵：重塑安全感</h2>
+ <p>這套理論最大的啟示在於：<strong>療癒並非僅靠理性的思考，更要透過身體的調節。</strong> <br>
+  透過特定的生理介入，如緩慢的深呼吸（增加迷走神經張力）或是安全的人際互動，都可以刺激腹側迷走神經，發揮「剎車的作用」來抑制過度活躍的防衛反應。<br>
+  當我們明白憤怒或退縮只是神經系統在試圖保護我們時，我們就能透過深呼吸、安全的連結，重新掌握生命的主導權，讓身體再次成為心靈的安全港灣。</p>
+ <p>  <br>
+  “Being able to feel safe with other people is probably the single most important aspect of mental health; safe connections are fundamental to meaningful and satisfying lives.”
+  <br>
+  能夠在他人身邊感到安全，或許是心理健康中最重要的一環；因為唯有在安全的連結之中，我們才有可能活出真正有意義、也能被自己承接的人生。― Bessel A. van der Kolk</p>
+  <br>
+  <P>Porges, S. W. (2009). The polyvagal theory: New insights into adaptive reactions of the autonomic nervous system. Cleveland Clinic journal of medicine, 76(Suppl 2), S86.</P>
+ </article>
+ </div>
+</body>
+</html>
+
