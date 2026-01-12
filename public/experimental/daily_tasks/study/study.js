@@ -1,4 +1,13 @@
 
+function getCurrentArticleIndex() {
+  return parseInt(localStorage.getItem("dailyArticleIndex") || "1", 10);
+}
+
+function advanceArticleIndex() {
+  const current = getCurrentArticleIndex();
+  localStorage.setItem("dailyArticleIndex", current + 1);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const textarea = document.getElementById("reflection-input");
   const finishBtn = document.getElementById("finish-btn"); // 假設這個 ID 正確
@@ -58,52 +67,55 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
   const titleEl = document.getElementById("article-title");
-  const dateEl = document.getElementById("article-date");
-  const contentEl = document.getElementById("article-content");
-  const finishBtn = document.getElementById("finish-btn");
+const contentEl = document.getElementById("article-content");
+const finishBtn = document.getElementById("finish-btn");
 
+try {
+  const articleIndex = getCurrentArticleIndex();
+
+  // ① 取得今日文章資訊（⚠️ 帶參數）
+  const metaRes = await fetch(
+    `/api/daily-article?userId=${userId}&source=study&index=${articleIndex}`
+  );
+  if (!metaRes.ok) throw new Error("每日文章 API 載入失敗");
+
+  const meta = await metaRes.json();
+
+  // ② 取得文章 HTML 內容
+  const articleRes = await fetch(meta.url);
+  if (!articleRes.ok) throw new Error("文章內容載入失敗");
+
+  const articleHtml = await articleRes.text();
+
+  // ③ 顯示文章
+  titleEl.textContent = `第 ${meta.articleIndex} 篇文章`;
+  contentEl.innerHTML = articleHtml;
+
+} catch (err) {
+  console.error(err);
+  titleEl.textContent = "載入失敗";
+  contentEl.innerHTML = "<p>今日文章目前無法顯示。</p>";
+}
+finishBtn.addEventListener("click", async () => {
   try {
-    // ① 取得今日文章資訊
-    const metaRes = await fetch("/api/daily-article");
-    if (!metaRes.ok) throw new Error("每日文章 API 載入失敗");
+    // ✅ 1. 前端自己推進到下一篇
+    advanceArticleIndex();
 
-    const meta = await metaRes.json();
-
-    // ② 取得文章 HTML 內容
-    const articleRes = await fetch(meta.url);
-    if (!articleRes.ok) throw new Error("文章內容載入失敗");
-
-    const articleHtml = await articleRes.text();
-
-    // ③ 顯示文章
-    titleEl.textContent = "今日文章";
-    //dateEl.textContent = `Day ${meta.day}`;
-    contentEl.innerHTML = articleHtml;
-
-  } catch (err) {
-    console.error(err);
-    titleEl.textContent = "載入失敗";
-    contentEl.innerHTML = "<p>今日文章目前無法顯示。</p>";
-  }
-
-  // 完成閱讀
-  finishBtn.addEventListener("click", async () => {
-  try {
-    // ⭐ 1. 通知後端：這個使用者完成一次文章閱讀
+    // （你原本的 API 可以先留著，或之後再拿掉）
     await fetch("/api/education/complete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId }) // ⚠️ userId = TEST001（你登入後已有）
+      body: JSON.stringify({ userId })
     });
 
   } catch (err) {
     console.error("❌ education complete failed:", err);
-    // 就算失敗，也不要卡住使用者流程
   }
 
-  // ⭐ 2. 再通知父頁：此任務完成，進入下一步
+  // ✅ 2. 告知父頁：完成 study
   window.parent.postMessage(
     { type: "practice-finished", practice: "education" },
     "*"
   );
-  });
+});
+
