@@ -1,3 +1,12 @@
+document.addEventListener("DOMContentLoaded", async () => {
+
+  const userId = localStorage.getItem("userId"); // ⭐⭐ 加這行
+
+  if (!userId) {
+    console.error("❌ userId not found in localStorage");
+    return;
+  }
+});
 
 function getCurrentArticleIndex() {
   return parseInt(localStorage.getItem("dailyArticleIndex") || "1", 10);
@@ -56,15 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateCount();
 });
 
-document.addEventListener("DOMContentLoaded", async () => {
 
-  const userId = localStorage.getItem("userId"); // ⭐⭐ 加這行
-
-  if (!userId) {
-    console.error("❌ userId not found in localStorage");
-    return;
-  }
-});
 
   const titleEl = document.getElementById("article-title");
 const contentEl = document.getElementById("article-content");
