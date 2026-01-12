@@ -324,7 +324,11 @@ app.post("/api/daily/check", async (req, res) => {
     }
 
     const realId = userResult.rows[0].id;
-    const today = new Date().toISOString().split("T")[0];
+    const fakeOffset = Number(req.query._dayOffset || 0);
+    const today = new Date(Date.now() + fakeOffset * 86400000)
+      .toISOString()
+      .split("T")[0];
+
 
     const check = await db.query(
       "SELECT * FROM daily_usage WHERE user_id = $1 AND date = $2",
