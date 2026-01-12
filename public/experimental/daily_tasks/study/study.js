@@ -1,12 +1,10 @@
-document.addEventListener("DOMContentLoaded", async () => {
+// ✅ 1️⃣ 宣告在最外層（module scope）
+const userId = localStorage.getItem("userId");
 
-  const userId = localStorage.getItem("userId"); // ⭐⭐ 加這行
+if (!userId) {
+  console.error("❌ userId not found in localStorage");
+}
 
-  if (!userId) {
-    console.error("❌ userId not found in localStorage");
-    return;
-  }
-});
 
 function getCurrentArticleIndex() {
   return parseInt(localStorage.getItem("dailyArticleIndex") || "1", 10);
