@@ -165,15 +165,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 4. 顯示練習區
         practiceSection.classList.remove("hidden");
 
-        // 5. trial +1 回存
-        await fetch("/api/progress/update", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: currentUserId,
-            newTrial: Number(trial) + 1
-          })
-        });
       } else {
           // 🎯 後測提交區
           try {
@@ -182,6 +173,20 @@ document.addEventListener('DOMContentLoaded', async () => {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ userId: currentUserId, isFinished: true })
             });
+            
+            // trial +1 回存
+            const progRes = await fetch(`/api/progress?userId=${currentUserId}`);
+            const progData = await progRes.json();
+
+            await fetch("/api/progress/update", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                userId: currentUserId,
+                newTrial: Number(progData.trial) + 1
+              })
+            });
+            
             console.log("✅ 今日任務狀態：已完成");
           } catch (err) {
             console.error("更新完成狀態失敗:", err);
