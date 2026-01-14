@@ -62,6 +62,9 @@ const db = new Pool({
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
         date DATE,
+        started_at TIMESTAMP,           
+        avi_posttest_done BOOLEAN DEFAULT false, 
+        completed_at TIMESTAMP,         
         created_at TIMESTAMP DEFAULT NOW(),
         UNIQUE(user_id, date)
       );
@@ -344,7 +347,7 @@ app.post("/api/daily/check", async (req, res) => {
 
 
 
-app.post("/api/daily/start", async (req, res) => {
+app.post("/api/daily/status", async (req, res) => {
   const { userId, isFinished } = req.body;
 
   try {
@@ -355,7 +358,7 @@ app.post("/api/daily/start", async (req, res) => {
     if (userResult.rows.length === 0) {
       return res.json({ success: false, message: "User not found" });
     }
-    
+
     const realId = userResult.rows[0].id;
     const today = new Date().toISOString().split("T")[0];
 
@@ -367,6 +370,7 @@ app.post("/api/daily/start", async (req, res) => {
          WHERE user_id = $1 AND date = $2`,
         [realId, today]
       );
+      console.log(`✅ User ${userId} 已完成今日任務`);
     } else {
       // 🎯 開始時：建立紀錄 (如果還沒有的話)，標記開始時間
       await db.query(
@@ -375,6 +379,7 @@ app.post("/api/daily/start", async (req, res) => {
          ON CONFLICT (user_id, date) DO NOTHING`,
         [realId, today]
       );
+      console.log(`🚩 User ${userId} 已開始今日任務`);
     }
 
     res.json({ success: true });
