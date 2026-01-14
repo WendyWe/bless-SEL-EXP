@@ -320,27 +320,17 @@ app.post("/api/daily/check", async (req, res) => {
     const userResult = await db.query(
       "SELECT id FROM users WHERE userid = $1",
       [userId]
-    );
-    if (userResult.rows.length === 0) {
-      return res.json({ success: false, message: "User not found" });
-    }
-
+    );if (userResult.rows.length === 0) {return res.json({ success: false, message: "User not found" });}
     const realId = userResult.rows[0].id;
     const today = new Date().toISOString().split("T")[0];
-
-  // avi_post_done
+    
     const check = await db.query(
-      "SELECT avi_posttest_done FROM daily_usage WHERE user_id = $1 AND date = $2",
+      "SELECT 1 FROM daily_usage WHERE user_id = $1 AND date = $2 AND avi_posttest_done = true LIMIT 1",
       [realId, today]
     );
 
-    res.json({
-      success: true,
-      blocked: check.rows.length > 0 && check.rows[0].avi_posttest_done === true
-    });
-
+    res.json({ success: true, blocked: check.rows.length > 0 });
   } catch (err) {
-    console.error("❌ /api/daily/check Error:", err);
     res.json({ success: false, message: err.message });
   }
 });
@@ -367,21 +357,23 @@ app.post("/api/daily/status", async (req, res) => {
       await db.query(
         `UPDATE daily_usage 
          SET avi_posttest_done = true, completed_at = NOW() 
-         WHERE user_id = $1 AND date = $2`,
+         WHERE id = (
+           SELECT id FROM daily_usage 
+           WHERE user_id = $1 AND date = $2 AND avi_posttest_done = false 
+           ORDER BY started_at DESC LIMIT 1
+         )`,
         [realId, today]
       );
       console.log(`✅ User ${userId} 已完成今日任務`);
     } else {
       // 🎯 開始時：建立紀錄 (如果還沒有的話)，標記開始時間
       await db.query(
-        `INSERT INTO daily_usage (user_id, date, started_at) 
-         VALUES ($1, $2, NOW()) 
-         ON CONFLICT (user_id, date) DO NOTHING`,
+        `INSERT INTO daily_usage (user_id, date, started_at, avi_posttest_done) 
+         VALUES ($1, $2, NOW(), false)`,
         [realId, today]
       );
       console.log(`🚩 User ${userId} 已開始今日任務`);
     }
-
     res.json({ success: true });
 
   } catch (err) {
