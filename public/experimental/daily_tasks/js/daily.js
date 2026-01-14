@@ -58,9 +58,14 @@ async function checkDailyUsageOnce() {
 document.addEventListener('DOMContentLoaded', async () => {
   const allowed = await checkDailyUsageOnce();
   if (!allowed) {
-    // 今天已使用，已經 redirect，不再做任何初始化
     return;
   }
+
+  fetch("/api/daily/status", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId: currentUserId, isFinished: false })
+  });
 
   // === 區塊元素 ===
   const videoSection = document.getElementById('video-section');
@@ -175,10 +180,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             newTrial: Number(trial) + 1
           })
         });
+      } else {
+          // 🎯 後測提交區
+          try {
+            await fetch("/api/daily/status", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userId: currentUserId, isFinished: true })
+            });
+            console.log("✅ 今日任務狀態：已完成");
+          } catch (err) {
+            console.error("更新完成狀態失敗:", err);
+          }
+
+          endSection.classList.remove('hidden');
       }
-      else {
-              endSection.classList.remove('hidden');
-            }
     });
   }
 
