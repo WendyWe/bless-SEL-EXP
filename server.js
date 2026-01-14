@@ -311,14 +311,13 @@ app.post("/api/avi/save", async (req, res) => {
    🔒 Check Daily Usage (一天一次限制)
 ---------------------------------*/
 app.post("/api/daily/check", async (req, res) => {
-  const { userId } = req.body;  // TEST001
+  const { userId } = req.body;  
 
   try {
     const userResult = await db.query(
       "SELECT id FROM users WHERE userid = $1",
       [userId]
     );
-
     if (userResult.rows.length === 0) {
       return res.json({ success: false, message: "User not found" });
     }
@@ -326,14 +325,15 @@ app.post("/api/daily/check", async (req, res) => {
     const realId = userResult.rows[0].id;
     const today = new Date().toISOString().split("T")[0];
 
+  // avi_post_done
     const check = await db.query(
-      "SELECT * FROM daily_usage WHERE user_id = $1 AND date = $2",
+      "SELECT avi_posttest_done FROM daily_usage WHERE user_id = $1 AND date = $2",
       [realId, today]
     );
 
     res.json({
       success: true,
-      blocked: check.rows.length > 0
+      blocked: check.rows.length > 0 && check.rows[0].avi_posttest_done === true
     });
 
   } catch (err) {
@@ -353,15 +353,25 @@ app.post("/api/daily/start", async (req, res) => {
       [userId]
     );
     const realId = userResult.rows[0].id;
-
     const today = new Date().toISOString().split("T")[0];
 
-    await db.query(
-      `INSERT INTO daily_usage (user_id, date)
-       VALUES ($1, $2)
-       ON CONFLICT DO NOTHING`,
-      [realId, today]
-    );
+    if (isFinished) {
+      // 🎯 完成時：更新 avi_posttest_done 為 true，並記錄完成時間
+      await db.query(
+        `UPDATE daily_usage 
+         SET avi_posttest_done = true, completed_at = NOW() 
+         WHERE user_id = $1 AND date = $2`,
+        [realId, today]
+      );
+    } else {
+      // 🎯 開始時：建立紀錄 (如果還沒有的話)，標記開始時間
+      await db.query(
+        `INSERT INTO daily_usage (user_id, date, started_at) 
+         VALUES ($1, $2, NOW()) 
+         ON CONFLICT (user_id, date) DO NOTHING`,
+        [realId, today]
+      );
+    }
 
     res.json({ success: true });
 
