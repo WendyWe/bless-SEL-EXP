@@ -146,26 +146,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const task = taskData.task;
         const page = TASK_PAGE_MAP[task];
-
-        if (!page) {
-          alert(`未知的 task：${task}`);
-          return;
-        }
-
         const frame = document.getElementById("practiceFrame");
-        if (!frame) {
-          console.error("practiceFrame not found");
-          return;
+
+        if (frame) {
+          frame.src = `/experimental/daily_tasks/${task}/${page}`;
+          practiceSection.classList.remove("hidden");
         }
-
-        frame.src = `/experimental/daily_tasks/${task}/${page}`;
-
-
-
-        // 4. 顯示練習區
-        practiceSection.classList.remove("hidden");
-
-      } else {
+      } 
+      else {
           // 🎯 後測提交區
           try {
             await fetch("/api/daily/status", {
@@ -175,19 +163,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             
             // trial +1 回存
-            const progRes = await fetch(`/api/progress?userId=${currentUserId}`);
-            const progData = await progRes.json();
+            const currentProgRes = await fetch(`/api/progress?userId=${currentUserId}`);
+            const currentProgData = await currentProgRes.json();
+            const nextTrial = Number(currentProgData.trial) + 1;
 
             await fetch("/api/progress/update", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 userId: currentUserId,
-                newTrial: Number(progData.trial) + 1
+                newTrial: nextTrial
               })
             });
             
-            console.log("✅ 今日任務狀態：已完成");
+            console.log("✅ 任務完成！進度已預備為明天的第 ${nextTrial} 次");
           } catch (err) {
             console.error("更新完成狀態失敗:", err);
           }
