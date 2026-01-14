@@ -35,11 +35,11 @@ async function checkDailyUsageOnce() {
       return false; // ❗ 告訴呼叫方「不要再繼續初始化 daily flow」
     }
 
-    // ✅ 第一次使用：順便寫入 daily_usage（標記今天已使用）
-    await fetch("/api/daily/start", {
+    // 
+    await fetch("/api/daily/status", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId })
+      body: JSON.stringify({ userId: currentUserId, isFinished: false })
     }).catch(err => console.error("❌ daily/start 記錄失敗（不致命）：", err));
 
     return true;
@@ -60,12 +60,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!allowed) {
     return;
   }
-
-  fetch("/api/daily/status", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId: currentUserId, isFinished: false })
-  });
 
   // === 區塊元素 ===
   const videoSection = document.getElementById('video-section');

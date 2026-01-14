@@ -345,13 +345,17 @@ app.post("/api/daily/check", async (req, res) => {
 
 
 app.post("/api/daily/start", async (req, res) => {
-  const { userId } = req.body;
+  const { userId, isFinished } = req.body;
 
   try {
     const userResult = await db.query(
       "SELECT id FROM users WHERE userid = $1",
       [userId]
     );
+    if (userResult.rows.length === 0) {
+      return res.json({ success: false, message: "User not found" });
+    }
+    
     const realId = userResult.rows[0].id;
     const today = new Date().toISOString().split("T")[0];
 
