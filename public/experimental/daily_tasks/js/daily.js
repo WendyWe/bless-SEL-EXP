@@ -35,13 +35,6 @@ async function checkDailyUsageOnce() {
       return false; // ❗ 告訴呼叫方「不要再繼續初始化 daily flow」
     }
 
-    // 
-    await fetch("/api/daily/status", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: currentUserId, isFinished: false })
-    }).catch(err => console.error("❌ daily/start 記錄失敗（不致命）：", err));
-
     return true;
 
   } catch (err) {
@@ -105,20 +98,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       const formData = new FormData(form);
       const result = Object.fromEntries(formData.entries());
 
-      let finalFeatureType = form.dataset.feature ?? practiceType;
-
-     if (formType === 'pre') {
-
-        // 1. 取得今日 trial（你可從 localStorage 或後端給的變數拿）
-        const subject = currentUserId;  // TEST001
-        // 取得 server 端紀錄的 trial
+      if (formType === 'pre') {
+        // --- 1. 抓取 Trial 與 Task ---
         const progRes = await fetch(`/api/progress?userId=${currentUserId}`);
         const progData = await progRes.json();
         const trial = progData.trial;
-        console.log("現在是第 " + trial + " 次練習");
 
-        // 2. 向後端查詢 task
-        const taskRes = await fetch(`/api/getTask?subject=${subject}&trial=${trial}`);
+        const taskRes = await fetch(`/api/getTask?subject=${currentUserId}&trial=${trial}`);
         const taskData = await taskRes.json();
 
         if (!taskData.task) {
@@ -126,86 +112,92 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
 
-        practiceType = taskData.task; 
-        finalFeatureType = practiceType;
-        
+        // --- 2. 鎖定本次任務類型 ---
+        practiceType = taskData.task; // 例如: 'loosen'
+
+        // --- 3. 發送 daily_usage 開始紀錄 (包含 featureType) ---
+        await fetch("/api/daily/status", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            userId: currentUserId, 
+            isFinished: false, 
+            featureType: practiceType 
+          })
+        }).catch(err => console.error("開始紀錄失敗:", err));
+
+        // --- 4. 儲存 AVI 前測數據 (確保 featureType 有值) ---
         await fetch('/api/avi/save', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             userId: currentUserId,
-            phase: formType,
-            featureType: finalFeatureType, 
+            phase: 'pre',
+            featureType: practiceType, // 👈 這裡傳入動態任務名稱
             responses: result
           })
-        }).catch(err => console.error('送出 AVI 前測失敗:', err));
+        });
 
-        // 3. 組合 task HTML 路徑
-        const TASK_PAGE_MAP = {
-          loosen: "loosen2.html",
-          breathe: "breathe.html",
-          study: "study.html"
-        };
-        const task = taskData.task;
-        const page = TASK_PAGE_MAP[task];
+        // --- 5. 切換頁面 ---
+        const TASK_PAGE_MAP = { loosen: "loosen2.html", breathe: "breathe.html", study: "study.html" };
+        const page = TASK_PAGE_MAP[practiceType];
         const frame = document.getElementById("practiceFrame");
 
         form.classList.add('hidden');
         if (frame) {
-          frame.src = `/experimental/daily_tasks/${task}/${page}`;
+          frame.src = `/experimental/daily_tasks/${practiceType}/${page}`;
           practiceSection.classList.remove("hidden");
         }
       } 
       else {
-          form.classList.add('hidden');
-          // 🎯 後測提交區
+        // 🎯 後測提交區
+        form.classList.add('hidden');
 
-          await fetch('/api/avi/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              userId: currentUserId,
-              phase: formType,
-              featureType: finalFeatureType, 
-              responses: result
+        // --- 1. 儲存 AVI 後測數據 (沿用 practiceType) ---
+        await fetch('/api/avi/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: currentUserId,
+            phase: 'post',
+            featureType: practiceType, // 👈 這裡同樣確保有值
+            responses: result
+          })
+        });
+
+        try {
+          // --- 2. 發送 daily_usage 完成紀錄 ---
+          await fetch("/api/daily/status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              userId: currentUserId, 
+              isFinished: true, 
+              featureType: practiceType 
             })
-          }).catch(err => console.error('送出 AVI 後測失敗:', err));
+          });
+          
+          // --- 3. 更新進度 ---
+          const currentProgRes = await fetch(`/api/progress?userId=${currentUserId}`);
+          const currentProgData = await currentProgRes.json();
+          const nextTrial = Number(currentProgData.trial) + 1;
 
-          try {
-            await fetch("/api/daily/status", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ userId: currentUserId, isFinished: true })
-            });
-            
-            // trial +1 回存
-            const currentProgRes = await fetch(`/api/progress?userId=${currentUserId}`);
-            const currentProgData = await currentProgRes.json();
-            const nextTrial = Number(currentProgData.trial) + 1;
+          await fetch("/api/progress/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: currentUserId, newTrial: nextTrial })
+          });
 
-            await fetch("/api/progress/update", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                userId: currentUserId,
-                newTrial: nextTrial
-              })
-            });
-
-            // ⭐⭐⭐ 在這裡加入文章索引更新 ⭐⭐⭐
-            // 只有當 practiceType 是 study 時才需要更新
-            if (practiceType === 'study') {
-                const currentArticleIndex = parseInt(localStorage.getItem("dailyArticleIndex") || "1", 10);
-                localStorage.setItem("dailyArticleIndex", currentArticleIndex + 1);
-                console.log("✅ 後測通過，文章索引已更新為:", currentArticleIndex + 1);
-            }
-            
-            console.log("✅ 任務完成！進度已預備為明天的第 ${nextTrial} 次");
-          } catch (err) {
-            console.error("更新完成狀態失敗:", err);
+          if (practiceType === 'study') {
+            const currentArticleIndex = parseInt(localStorage.getItem("dailyArticleIndex") || "1", 10);
+            localStorage.setItem("dailyArticleIndex", currentArticleIndex + 1);
           }
+          
+        } catch (err) {
+          console.error("更新狀態失敗:", err);
+        }
 
-          endSection.classList.remove('hidden');
+        endSection.classList.remove('hidden');
       }
     });
   }
