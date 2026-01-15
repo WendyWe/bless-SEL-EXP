@@ -98,19 +98,22 @@ try {
 finishBtn.addEventListener("click", async () => {
   try {
     // （你原本的 API 可以先留著，或之後再拿掉）
+    /*
     await fetch("/api/education/complete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId })
     });
-
-    // ✅ 只告知父頁：文章讀完了，請帶我去後測
+    */
+   console.log("📖 文章閱讀完成，通知父頁面顯示後測...");
+   } catch (err) {
+    console.error("❌ 提交讀畢狀態時出錯:", err);
+  } finally {
+    // 3. ✅ 無論 API 是否成功，都必須告知父頁面：切換到後測問卷
     window.parent.postMessage(
-      { type: "article-read-complete", practice: "education" },
+      { type: "practice-finished", practice: "study" }, // 確保 practice 與父頁面邏輯對應
       "*"
     );
-  } catch (err) {
-    console.error("❌ education complete failed:", err);
   }
 });
 

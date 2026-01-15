@@ -221,9 +221,14 @@ window.addEventListener("message", (e) => {
     practiceSection.classList.add('hidden');
 
     const postAviForm = document.getElementById('avi-form-post');
+
+    if (postAviForm) {
     postAviForm.dataset.feature = practiceType;  // ⭐ 現在一定能抓到
     postAviForm.reset();
     postAviForm.classList.remove('hidden');
+    } else {
+      console.error("❌ 找不到後測表單元素 avi-form-post");
+    }
   }
 });
 
