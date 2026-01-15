@@ -100,25 +100,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   function handleAviSubmit(form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      form.classList.add('hidden');
-
+  
       const formType = form.dataset.type;
-      const featureType = form.dataset.feature ?? practiceType;  // ⭐ 確保有值
       const formData = new FormData(form);
       const result = Object.fromEntries(formData.entries());
 
-      fetch('/api/avi/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: currentUserId,
-          phase: formType,
-          featureType: featureType,
-          responses: result
-        })
-      }).catch(err => console.error('送出 AVI 失敗:', err));
+      let finalFeatureType = form.dataset.feature ?? practiceType;
 
-      if (formType === 'pre') {
+     if (formType === 'pre') {
 
         // 1. 取得今日 trial（你可從 localStorage 或後端給的變數拿）
         const subject = currentUserId;  // TEST001
@@ -137,24 +126,51 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
 
+        practiceType = taskData.task; 
+        finalFeatureType = practiceType;
+        
+        await fetch('/api/avi/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: currentUserId,
+            phase: formType,
+            featureType: finalFeatureType, 
+            responses: result
+          })
+        }).catch(err => console.error('送出 AVI 前測失敗:', err));
+
         // 3. 組合 task HTML 路徑
         const TASK_PAGE_MAP = {
           loosen: "loosen2.html",
           breathe: "breathe.html",
           study: "study.html"
         };
-
         const task = taskData.task;
         const page = TASK_PAGE_MAP[task];
         const frame = document.getElementById("practiceFrame");
 
+        form.classList.add('hidden');
         if (frame) {
           frame.src = `/experimental/daily_tasks/${task}/${page}`;
           practiceSection.classList.remove("hidden");
         }
       } 
       else {
+          form.classList.add('hidden');
           // 🎯 後測提交區
+
+          await fetch('/api/avi/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: currentUserId,
+              phase: formType,
+              featureType: finalFeatureType, 
+              responses: result
+            })
+          }).catch(err => console.error('送出 AVI 後測失敗:', err));
+
           try {
             await fetch("/api/daily/status", {
               method: "POST",
