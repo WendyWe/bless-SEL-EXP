@@ -337,7 +337,7 @@ app.post("/api/daily/check", async (req, res) => {
 
 
 app.post("/api/daily/status", async (req, res) => {
-  const { userId, isFinished } = req.body;
+  const { userId, isFinished, featureType } = req.body;
 
   try {
     const userResult = await db.query(
@@ -363,15 +363,15 @@ app.post("/api/daily/status", async (req, res) => {
            ORDER BY started_at DESC 
            LIMIT 1
          )`,
-        [nowTaipei, realId, today]
+        [nowTaipei, realId, today, featureType]
       );
       console.log(`✅ User ${userId} 已完成今日任務`);
     } else {
       // 🎯 開始時：建立紀錄 (如果還沒有的話)，標記開始時間
       await db.query(
-        `INSERT INTO daily_usage (user_id, date, started_at, avi_posttest_done) 
-         VALUES ($1, $2, $3, false)`,
-        [realId, today, nowTaipei]
+        `INSERT INTO daily_usage (user_id, date, started_at, avi_posttest_done, feature_type) 
+         VALUES ($1, $2, $3, false, $4)`,
+        [realId, today, nowTaipei, featureType]
       );
       console.log(`🚩 User ${userId} 已開始今日任務`);
     }
