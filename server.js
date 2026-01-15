@@ -357,12 +357,8 @@ app.post("/api/daily/status", async (req, res) => {
       // 🎯 完成時：更新 avi_posttest_done 為 true，並記錄完成時間
       await db.query(
         `UPDATE daily_usage 
-         SET avi_posttest_done = true, completed_at = NOW() 
-         WHERE id = (
-           SELECT id FROM daily_usage 
-           WHERE user_id = $1 AND date = $2 AND avi_posttest_done = false 
-           ORDER BY started_at DESC LIMIT 1
-         )`,
+         SET avi_posttest_done = true, completed_at = $1 
+         WHERE user_id = $2 AND date = $3 AND avi_posttest_done = false`,
         [nowTaipei, realId, today]
       );
       console.log(`✅ User ${userId} 已完成今日任務`);
@@ -370,7 +366,8 @@ app.post("/api/daily/status", async (req, res) => {
       // 🎯 開始時：建立紀錄 (如果還沒有的話)，標記開始時間
       await db.query(
         `INSERT INTO daily_usage (user_id, date, started_at, avi_posttest_done) 
-         VALUES ($1, $2, NOW(), false)`,
+         VALUES ($1, $2, $3, false) 
+         ON CONFLICT (user_id, date) DO NOTHING`,
         [realId, today, nowTaipei]
       );
       console.log(`🚩 User ${userId} 已開始今日任務`);
@@ -378,7 +375,7 @@ app.post("/api/daily/status", async (req, res) => {
     res.json({ success: true });
 
   } catch (err) {
-    console.error("❌ daily/start Error:", err);
+    console.error("❌ daily/status Error:", err);
     res.json({ success: false, message: err.message });
   }
 });
