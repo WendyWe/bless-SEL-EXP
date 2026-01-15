@@ -65,8 +65,7 @@ const db = new Pool({
         started_at TIMESTAMP,           
         avi_posttest_done BOOLEAN DEFAULT false, 
         completed_at TIMESTAMP,         
-        created_at TIMESTAMP DEFAULT NOW(),
-        UNIQUE(user_id, date)
+        created_at TIMESTAMP DEFAULT NOW()
       );
       CREATE TABLE IF NOT EXISTS task_sequence_test (
         subject_id TEXT,
