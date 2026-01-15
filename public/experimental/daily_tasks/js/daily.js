@@ -190,7 +190,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           if (practiceType === 'study') {
             const currentArticleIndex = parseInt(localStorage.getItem("dailyArticleIndex") || "1", 10);
-            localStorage.setItem("dailyArticleIndex", currentArticleIndex + 1);
+            const nextArticleIndex = currentArticleIndex + 1;
+            
+            // 更新索引，下次進入就會看到下一篇
+            localStorage.setItem("dailyArticleIndex", nextArticleIndex);
+            console.log(`✅ 閱讀任務完成，下次文章將從第 ${nextArticleIndex} 篇開始`);
           }
           
         } catch (err) {
