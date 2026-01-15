@@ -191,6 +191,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 newTrial: nextTrial
               })
             });
+
+            // ⭐⭐⭐ 在這裡加入文章索引更新 ⭐⭐⭐
+            // 只有當 practiceType 是 study 時才需要更新
+            if (practiceType === 'study') {
+                const currentArticleIndex = parseInt(localStorage.getItem("dailyArticleIndex") || "1", 10);
+                localStorage.setItem("dailyArticleIndex", currentArticleIndex + 1);
+                console.log("✅ 後測通過，文章索引已更新為:", currentArticleIndex + 1);
+            }
             
             console.log("✅ 任務完成！進度已預備為明天的第 ${nextTrial} 次");
           } catch (err) {
