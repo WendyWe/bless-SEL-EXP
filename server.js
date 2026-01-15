@@ -322,7 +322,7 @@ app.post("/api/daily/check", async (req, res) => {
       [userId]
     );if (userResult.rows.length === 0) {return res.json({ success: false, message: "User not found" });}
     const realId = userResult.rows[0].id;
-    const today = new Date().toISOString().split("T")[0];
+    const today = getTaipeiDateString();
     
     const check = await db.query(
       "SELECT 1 FROM daily_usage WHERE user_id = $1 AND date = $2 AND avi_posttest_done = true LIMIT 1",
@@ -350,7 +350,8 @@ app.post("/api/daily/status", async (req, res) => {
     }
 
     const realId = userResult.rows[0].id;
-    const today = new Date().toISOString().split("T")[0];
+    const today = getTaipeiDateString();
+    const nowTaipei = getTaipeiNow();
 
     if (isFinished) {
       // 🎯 完成時：更新 avi_posttest_done 為 true，並記錄完成時間
@@ -362,7 +363,7 @@ app.post("/api/daily/status", async (req, res) => {
            WHERE user_id = $1 AND date = $2 AND avi_posttest_done = false 
            ORDER BY started_at DESC LIMIT 1
          )`,
-        [realId, today]
+        [nowTaipei, realId, today]
       );
       console.log(`✅ User ${userId} 已完成今日任務`);
     } else {
@@ -370,7 +371,7 @@ app.post("/api/daily/status", async (req, res) => {
       await db.query(
         `INSERT INTO daily_usage (user_id, date, started_at, avi_posttest_done) 
          VALUES ($1, $2, NOW(), false)`,
-        [realId, today]
+        [realId, today, nowTaipei]
       );
       console.log(`🚩 User ${userId} 已開始今日任務`);
     }
@@ -511,6 +512,15 @@ app.get("/api/daily-video", (req, res) => {
 /* -------------------------------
    🕓 Helper: 時段判斷
 ---------------------------------*/
+function getTaipeiDateString() {
+  // 回傳 YYYY-MM-DD
+  return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Taipei" });
+}
+
+function getTaipeiNow() {
+  // 回傳完整時間字串
+  return new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+}
 function getTaipeiPeriod() {
   const now = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
   const hour = new Date(now).getHours();
