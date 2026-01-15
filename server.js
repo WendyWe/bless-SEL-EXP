@@ -359,7 +359,7 @@ app.post("/api/daily/status", async (req, res) => {
          SET avi_posttest_done = true, completed_at = $1 
          WHERE id = (
            SELECT id FROM daily_usage 
-           WHERE user_id = $2 AND date = $3 AND avi_posttest_done = false 
+           WHERE user_id = $2 AND date = $3 AND feature_type = $4 AND avi_posttest_done = false 
            ORDER BY started_at DESC 
            LIMIT 1
          )`,
