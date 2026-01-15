@@ -97,9 +97,6 @@ try {
 }
 finishBtn.addEventListener("click", async () => {
   try {
-    // ✅ 1. 前端自己推進到下一篇
-    advanceArticleIndex();
-
     // （你原本的 API 可以先留著，或之後再拿掉）
     await fetch("/api/education/complete", {
       method: "POST",
@@ -107,14 +104,13 @@ finishBtn.addEventListener("click", async () => {
       body: JSON.stringify({ userId })
     });
 
+    // ✅ 只告知父頁：文章讀完了，請帶我去後測
+    window.parent.postMessage(
+      { type: "article-read-complete", practice: "education" },
+      "*"
+    );
   } catch (err) {
     console.error("❌ education complete failed:", err);
   }
-
-  // ✅ 2. 告知父頁：完成 study
-  window.parent.postMessage(
-    { type: "practice-finished", practice: "education" },
-    "*"
-  );
 });
 
