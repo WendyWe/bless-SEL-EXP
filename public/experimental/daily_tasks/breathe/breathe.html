@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Breathe 腹式呼吸</title>
   <link rel="stylesheet" href="../breathe/breathe.css">
-  <script src="../js/activityTracker.js"></script>
 </head>
 
 <body>
@@ -61,16 +60,6 @@
         { type: "practice-finished", practice: "breathing" },
         "*"
       );
-    });
-
-    // 當頁面載入
-    document.addEventListener('DOMContentLoaded', () => {
-      ActivityTracker.startActivity('breathe');
-    });
-
-    // 當離開頁面
-    window.addEventListener('beforeunload', () => {
-      ActivityTracker.endActivity();
     });
   </script>
 </body>
