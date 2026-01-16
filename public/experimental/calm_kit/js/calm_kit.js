@@ -8,6 +8,10 @@ let selectedSquare = null;
 let mode = "enter"; // "enter" = 進入時, "exit" = 離開時
 let chosenFunction = null; // 使用者選過的功能
 
+// --- 💡 新增：用於追蹤時間與功能的變數 ---
+let startTime = null;
+let currentKitType = null;
+
 // 顏色邏輯
 const getColor = (x, y) => {
     if (y > 5 && x > 5) return "rgba(255, 215, 0, 0.8)";
@@ -51,12 +55,19 @@ confirmBtn.addEventListener("click", () => {
         return;
     }
 
-    // 準備要傳送的資料
+   // --- 💡 修改：計算 duration 並準備 payload ---
+    let duration = 0;
+    if (mode === "exit" && startTime) {
+        duration = (Date.now() - startTime) / 1000; // 單位：秒
+    }
+
     const payload = {
         userId: localStorage.getItem("userId"),
-        mode: mode, // 這裡是 "enter" 或 "exit"
+        mode: mode, 
         x: selectedSquare.x,
-        y: selectedSquare.y
+        y: selectedSquare.y,
+        kitType: currentKitType, // 這裡會記錄是哪個功能
+        duration: duration       // 這裡會記錄使用秒數
     };
     
     // 傳送到 Server (假設 API 路徑為 /api/save-mood)
@@ -90,6 +101,9 @@ confirmBtn.addEventListener("click", () => {
         feedback.textContent = "";
         selectedSquare = null; // 清除選擇，準備給後測使用
     } else if (mode === "exit") {
+        // --- 💡 修改：結束後清除暫存 ---
+        sessionStorage.removeItem('kitStartTime');
+        sessionStorage.removeItem('kitType');
         alert("謝謝你願意花時間照顧自己。\n希望現在的你，比剛剛更安穩一些。");
         window.location.href = "../index.html";
     }
@@ -117,6 +131,9 @@ document.querySelectorAll(".option-btn").forEach(btn => {
         const confirmMessage = `接下來約莫會花費你 ${timeMsg} 分鐘的時間練習。\n為了能穩定的接住情緒，建議給自己一段不被打擾的時間，直到練習結束。\n\n你準備好開始了嗎`;
 
         if (confirm(confirmMessage)) {
+            // --- 💡 新增：跳轉前存入時間與功能名稱 ---
+            sessionStorage.setItem('kitStartTime', Date.now());
+            sessionStorage.setItem('kitType', title);
             chosenFunction = btn.dataset.target;
             // 執行跳轉
             window.location.href = chosenFunction;
@@ -132,6 +149,10 @@ window.addEventListener("load", () => {
     // 用 URL 判斷使用者從功能頁面回來
     const url = new URL(window.location.href);
     if (url.searchParams.get("from") === "functionDone") {
+        // --- 💡 新增：從暫存中抓回練習時的資訊 ---
+        startTime = sessionStorage.getItem('kitStartTime');
+        currentKitType = sessionStorage.getItem('kitType');
+        
         mode = "exit"; // 切換為離開時情緒
         affectSection.classList.remove("hidden");
         mainContainer.classList.add("hidden");
