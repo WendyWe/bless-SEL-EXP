@@ -89,8 +89,7 @@ textarea.addEventListener("input", updateCount);
 /* -------------------------------
    🚀 3. 完成閱讀：儲存心得至 study_reflections 表
 ---------------------------------*/
-if (finishBtn) {
-    finishBtn.addEventListener('click', async () => {
+finishBtn.addEventListener('click', async () => {
         const reflectionText = textarea.value.trim();
         // 計算閱讀總時長 (秒)
         const duration = (Date.now() - startTime) / 1000; 
@@ -129,7 +128,6 @@ if (finishBtn) {
             );
         }
     });
-}
 
 /* -------------------------------
    🏁 4. 頁面初始化
