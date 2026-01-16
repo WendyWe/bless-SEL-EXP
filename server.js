@@ -83,7 +83,9 @@ const db = new Pool({
       user_id INTEGER REFERENCES users(id),
       phase TEXT,            
       x INTEGER,             
-      y INTEGER,             
+      y INTEGER,
+      kit_type TEXT,
+      duration REAL,             
       created_at TIMESTAMP DEFAULT NOW()
   );
     `);
