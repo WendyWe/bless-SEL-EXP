@@ -60,18 +60,25 @@ confirmBtn.addEventListener("click", () => {
     };
     
     // 傳送到 Server (假設 API 路徑為 /api/save-mood)
-    fetch('../api/save-mood.php', { // 根據你的後端檔名調整
+    fetch('../calm-kit/save-mood', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dataToSend)
+        body: JSON.stringify(payload)
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
+            console.log("情緒座標儲存成功");
             handleFlowAfterSave(); 
+        } else {
+            console.error("儲存失敗:", data.message);
         }
     })
-    .catch(err => console.error("Error:", err));
+    .catch(error => {
+        console.error("網路請求出錯:", error);
+        // 即使請求失敗，為了使用者體驗，通常還是會執行後續流程
+        handleFlowAfterSave(); 
+    });
 });
     
     // 封裝原本的換頁邏輯
