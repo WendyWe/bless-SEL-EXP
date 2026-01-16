@@ -318,7 +318,7 @@ app.post("/api/avi/save", async (req, res) => {
    🎨 情緒安心角：前後測情緒座標儲存
 ---------------------------------*/
 app.post("/api/calm-kit/save-mood", async (req, res) => {
-  const { userId, mode, x, y } = req.body;
+  const { userId, mode, x, y, kitType, duration } = req.body;
 
   try {
     // 1. 根據 userid 找出真正的 user_id (整數)
@@ -336,9 +336,9 @@ app.post("/api/calm-kit/save-mood", async (req, res) => {
 
     // 2. 存入新表格 calm_kit_moods
     await db.query(
-      `INSERT INTO calm_kit_moods (user_id, phase, x, y, created_at)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [realId, mode, x, y, taipeiTime]
+      `INSERT INTO calm_kit_moods (user_id, phase, x, y, kit_type, duration, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [realId, mode, x, y, kitType, duration, taipeiTime]
     );
 
     console.log(`✅ [Calm Kit] 存入成功: User=${userId}, Phase=${mode}, (${x}, ${y})`);
