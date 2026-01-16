@@ -72,6 +72,18 @@ function updateCount() {
     }
 }
 
+// --- 新增：禁止貼上功能 ---
+textarea.addEventListener("paste", (e) => {
+    e.preventDefault(); // 攔截貼上動作
+    alert("為了確保學習效果，心得區域請手動輸入，禁止直接貼上內容。");
+});
+
+// --- 新增：禁止拖放功能 (防止滑鼠選取文字後直接拖進框內) ---
+textarea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    alert("請手動輸入心得，禁止拖放文字。");
+});
+
 // 處理中文輸入法：開始組字
 textarea.addEventListener("compositionstart", () => { 
     isComposing = true; 
