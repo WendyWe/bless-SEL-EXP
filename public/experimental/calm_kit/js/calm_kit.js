@@ -60,7 +60,7 @@ confirmBtn.addEventListener("click", () => {
     };
     
     // 傳送到 Server (假設 API 路徑為 /api/save-mood)
-    fetch('../calm-kit/save-mood', { 
+    fetch('/api/calm-kit/save-mood', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
