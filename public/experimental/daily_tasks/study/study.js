@@ -114,15 +114,19 @@ if (finishBtn) {
 
             const data = await res.json();
             if (data.success) {
-                alert("心得已成功儲存！");
-                // 儲存成功後，導向回情緒安心角並觸發後測模式
-                window.location.href = "../calm_kit/calm_kit.html?from=functionDone";
+                console.log("✅ 心得儲存成功");
             } else {
-                alert("儲存失敗：" + (data.message || "請檢查網路連線"));
+                console.warn("⚠️ 心得儲存失敗:", data.message);
             }
         } catch (err) {
-            console.error("網路請求出錯:", err);
-            alert("伺服器連線失敗，請稍後再試。");
+            console.error("❌ 提交心得時出錯:", err);
+        } finally {
+            // C. 🎯 無論儲存是否成功，都執行您原本的 postMessage 告知父頁面執行後測
+            console.log("📖 通知父頁面顯示後測...");
+            window.parent.postMessage(
+                { type: "practice-finished", practice: "study" }, 
+                "*"
+            );
         }
     });
 }
