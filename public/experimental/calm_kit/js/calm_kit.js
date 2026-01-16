@@ -69,12 +69,31 @@ confirmBtn.addEventListener("click", () => {
 document.querySelectorAll(".option-btn").forEach(btn => {
     btn.addEventListener("click", (e) => {
         e.preventDefault();
+       
         if (chosenFunction) {
             alert("您已經選擇過一個功能，請完成後再回到首頁。");
             return;
         }
-        chosenFunction = btn.dataset.target;
-        window.location.href = chosenFunction;
+
+        // 2. 取得按鈕標題來決定顯示的時間
+        const title = btn.querySelector('.option-title').innerText;
+        let timeMsg = "3~5"; // 預設值
+        
+        if (title.includes("冷靜")) timeMsg = "3";
+        if (title.includes("痛苦")) timeMsg = "5";
+        if (title.includes("腦袋很亂")) timeMsg = "10";
+
+        // 3. 彈出確認視窗
+        const confirmMessage = `接下來約莫會花費你 ${timeMsg} 分鐘的時間練習。\n中途無法離開，否則無法視作使用時間。\n\n確定要現在開始嗎？`;
+
+        if (confirm(confirmMessage)) {
+            chosenFunction = btn.dataset.target;
+            // 執行跳轉
+            window.location.href = chosenFunction;
+        } else {
+            // 使用者按取消，什麼都不做，留在原頁面
+            console.log("使用者尚未準備好開始練習");
+        }
     });
 });
 
