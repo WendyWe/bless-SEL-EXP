@@ -42,13 +42,14 @@ const db = new Pool({
         login_time TIMESTAMP,
         period TEXT
       );
-      CREATE TABLE IF NOT EXISTS activities (
+      CREATE TABLE IF NOT EXISTS study_reflections (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
-        type TEXT,
-        start_time TIMESTAMP,
-        end_time TIMESTAMP,
-        duration REAL
+        article_index INTEGER,    
+        article_title TEXT,       
+        reflection_text TEXT,     
+        duration REAL,            
+        created_at TIMESTAMP DEFAULT NOW()
       );
       CREATE TABLE IF NOT EXISTS avi_results (
         id SERIAL PRIMARY KEY,
