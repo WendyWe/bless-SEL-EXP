@@ -77,6 +77,14 @@ const db = new Pool({
         user_id INTEGER UNIQUE REFERENCES users(id),
         current_trial INTEGER DEFAULT 1
       );
+      CREATE TABLE IF NOT EXISTS calm_kit_moods (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER REFERENCES users(id),
+      phase TEXT,            
+      x INTEGER,             
+      y INTEGER,             
+      created_at TIMESTAMP DEFAULT NOW()
+  );
     `);
     console.log("✅ PostgreSQL connected & tables ready");
   } catch (err) {
@@ -272,7 +280,6 @@ app.post("/api/activity/end", async (req, res) => {
 });
 
 
-
 /* -------------------------------
    🧭 AVI 前後測儲存
 ---------------------------------*/
@@ -304,6 +311,42 @@ app.post("/api/avi/save", async (req, res) => {
   } catch (err) {
     console.error("❌ AVI Save Error:", err);
     res.json({ success: false, message: err.message });
+  }
+});
+
+/* -------------------------------
+   🎨 情緒安心角：前後測情緒座標儲存
+---------------------------------*/
+app.post("/api/calm-kit/save-mood", async (req, res) => {
+  const { userId, mode, x, y } = req.body;
+
+  try {
+    // 1. 根據 userid 找出真正的 user_id (整數)
+    const userResult = await db.query(
+      "SELECT id FROM users WHERE userid = $1",
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "找不到使用者" });
+    }
+
+    const realId = userResult.rows[0].id;
+    const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+
+    // 2. 存入新表格 calm_kit_moods
+    await db.query(
+      `INSERT INTO calm_kit_moods (user_id, phase, x, y, created_at)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [realId, mode, x, y, taipeiTime]
+    );
+
+    console.log(`✅ [Calm Kit] 存入成功: User=${userId}, Phase=${mode}, (${x}, ${y})`);
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error("❌ Calm Kit Save Error:", err);
+    res.status(500).json({ success: false, message: "伺服器儲存失敗" });
   }
 });
 

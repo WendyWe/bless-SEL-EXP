@@ -51,19 +51,42 @@ confirmBtn.addEventListener("click", () => {
         return;
     }
 
+    // 準備要傳送的資料
+    const payload = {
+        userId: localStorage.getItem("userId"),
+        mode: mode, // 這裡是 "enter" 或 "exit"
+        x: selectedSquare.x,
+        y: selectedSquare.y
+    };
+    
+    // 傳送到 Server (假設 API 路徑為 /api/save-mood)
+    fetch('../api/save-mood.php', { // 根據你的後端檔名調整
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            handleFlowAfterSave(); 
+        }
+    })
+    .catch(err => console.error("Error:", err));
+});
+    
+    // 封裝原本的換頁邏輯
+    function handleFlowAfterSave() {
     if (mode === "enter") {
-        // 進入階段：顯示功能選單
         affectSection.classList.add("hidden");
         mainContainer.classList.remove("hidden");
-        mode = "function"; // 進入功能選擇階段
+        mode = "function";
         feedback.textContent = "";
-    } 
-    else if (mode === "exit") {
-        // 離開階段：回首頁
+        selectedSquare = null; // 清除選擇，準備給後測使用
+    } else if (mode === "exit") {
         alert("謝謝你願意花時間照顧自己。\n希望現在的你，比剛剛更安穩一些。");
         window.location.href = "../index.html";
     }
-});
+}
 
 // 功能選擇（只能選一次）
 document.querySelectorAll(".option-btn").forEach(btn => {
@@ -84,7 +107,7 @@ document.querySelectorAll(".option-btn").forEach(btn => {
         if (title.includes("腦袋很亂")) timeMsg = "10";
 
         // 3. 彈出確認視窗
-        const confirmMessage = `接下來約莫會花費你 ${timeMsg} 分鐘的時間練習。\n中途無法離開，否則無法視作使用時間。\n\n確定要現在開始嗎？`;
+        const confirmMessage = `接下來約莫會花費你 ${timeMsg} 分鐘的時間練習。\n為了能穩定的接住情緒，建議給自己一段不被打擾的時間，直到練習結束。\n\n你準備好開始了嗎`;
 
         if (confirm(confirmMessage)) {
             chosenFunction = btn.dataset.target;
