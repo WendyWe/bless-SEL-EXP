@@ -95,25 +95,30 @@ try {
   titleEl.textContent = "載入失敗";
   contentEl.innerHTML = "<p>今日文章目前無法顯示。</p>";
 }
-finishBtn.addEventListener("click", async () => {
-  try {
-    // （你原本的 API 可以先留著，或之後再拿掉）
-    /*
-    await fetch("/api/education/complete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId })
+finishBtn.addEventListener('click', async () => {
+    const reflectionText = reflectionInput.value.trim();
+    
+    // 計算閱讀時間 (假設你在頁面 load 時有存一個 startTime)
+    const duration = (Date.now() - startTime) / 1000; 
+
+    const payload = {
+        userId: localStorage.getItem("userId"),
+        articleIndex: currentArticleIndex, // 你頁面上載入的文章編號
+        articleTitle: document.getElementById('article-title').innerText,
+        reflectionText: reflectionText,
+        duration: duration
+    };
+
+    const res = await fetch('/api/study/save-reflection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
     });
-    */
-   console.log("📖 文章閱讀完成，通知父頁面顯示後測...");
-   } catch (err) {
-    console.error("❌ 提交讀畢狀態時出錯:", err);
-  } finally {
-    // 3. ✅ 無論 API 是否成功，都必須告知父頁面：切換到後測問卷
-    window.parent.postMessage(
-      { type: "practice-finished", practice: "study" }, // 確保 practice 與父頁面邏輯對應
-      "*"
-    );
-  }
+
+    const data = await res.json();
+    if (data.success) {
+        alert("心得已成功儲存！");
+        window.location.href = "../calm_kit/calm_kit.html?from=functionDone";
+    }
 });
 

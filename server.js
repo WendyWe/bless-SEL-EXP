@@ -350,6 +350,42 @@ app.post("/api/calm-kit/save-mood", async (req, res) => {
   }
 });
 
+/* -------------------------------
+   📚 學習心得：專屬儲存路由
+---------------------------------*/
+app.post("/api/study/save-reflection", async (req, res) => {
+  const { userId, articleIndex, articleTitle, reflectionText, duration } = req.body;
+
+  try {
+    // 1. 將 TEST001 轉為真正的 user_id
+    const userResult = await db.query(
+      "SELECT id FROM users WHERE userid = $1",
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const realId = userResult.rows[0].id;
+    const time = getTaipeiNow(); // 使用你現有的 helper function
+
+    // 2. 存入新表格 study_reflections
+    await db.query(
+      `INSERT INTO study_reflections (user_id, article_index, article_title, reflection_text, duration, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [realId, articleIndex, articleTitle, reflectionText, duration, time]
+    );
+
+    console.log(`✅ [Study] 心得存入成功: User=${userId}, 文章=${articleTitle}`);
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error("❌ Study Reflection Save Error:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 
 
 /* -------------------------------
