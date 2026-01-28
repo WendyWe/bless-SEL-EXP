@@ -32,6 +32,22 @@ const handleLogout = () => {
     document.getElementById('userInfo').style.display = 'none';
 };
 
+const follower = document.getElementById('cursor-follower');
+
+document.addEventListener('mousemove', (e) => {
+        // 讓光點跟隨座標移動
+        follower.style.left = e.clientX - 10 + 'px';
+        follower.style.top = e.clientY - 10 + 'px';
+    });
+
+    // 當點擊按鈕時，讓光點縮小再放大，產生互動感
+    document.addEventListener('mousedown', () => {
+        follower.style.transform = 'scale(0.8)';
+    });
+    document.addEventListener('mouseup', () => {
+        follower.style.transform = 'scale(1)';
+    });
+
 // Check login state on page load
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
