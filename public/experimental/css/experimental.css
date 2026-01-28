@@ -98,10 +98,12 @@ h1 {
     left: 50%;
     transform: translate(-50%, -50%); /* 這是達成正中心對齊的關鍵 */
     
-    padding: 3rem;
+    padding: 3rem 2rem 2rem 2rem;
     border-radius: 24px;
-    width: 85%;
-    max-width: 450px;
+    width: 95%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
     text-align: center;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1); /* 增加陰影深度，產生浮空感 */
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -111,20 +113,46 @@ h1 {
     flex-direction: column;
     align-items: center;
 }
+
+.guide-container {
+    display: flex;
+    flex-direction: row; /* 關鍵：橫向排列 */
+    gap: 20px; /* 區塊間距 */
+    width: 100%;
+    align-items: stretch; /* 讓左右高度一致 */
+    margin-top: 10px;
+}
+
+
 .close-btn {
     position: absolute;
-    right: 30px;
-    top: 25px;
+    right: 25px;
+    top: 20px;
     font-size: 28px;
+    z-index: 10002;
     cursor: pointer;
-    color: #90a4ae;
-    z-index: 10001; /* 確保叉叉在彈窗內容的最上層 */
-    transition: transform 0.2s, color 0.2s;
+    background: white; /* 增加背景避免背景太亂看不清 */
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .close-btn:hover {
     color: #ef5350;
     transform: scale(1.2) rotate(90deg); /* 懸停時稍微放大旋轉，更有互動感 */
+}
+
+@media (max-width: 768px) {
+    .guide-container {
+        flex-direction: column;
+    }
+    .modal-content {
+        max-width: 450px;
+    }
 }
 
 /* 彈窗內部的分區標題 */
@@ -136,10 +164,11 @@ h1 {
 
 /* 通用區塊樣式 */
 .guide-section {
-    width: 100%;
+    flex: 1; /* 平分寬度 */
+    display: flex;
+    flex-direction: column;
     padding: 20px;
     border-radius: 16px;
-    margin-bottom: 20px;
     box-sizing: border-box;
 }
 
