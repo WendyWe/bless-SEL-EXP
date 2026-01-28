@@ -7,34 +7,44 @@
 </head>
 <body>
   <div id="app">
+    <div class="task-header">
+       <div class="header-logo">BLESS</div>
+       <p id="task-step-indicator">每日安頓旅程：第一站</p>
+    </div>
 
     <!-- 1. 影片區 -->
     <section id="video-section">
-      <h2>今日影片</h2>
-      <video id="daily-video" width="640" height="360" controls></video>
-      <br>
-      <button id="finish-video">完成觀看</button>
-      <br>
-      <button class="btn btn-home" onclick="window.location.href='/experimental/index.html'">回到首頁</button>
+      <h2 class="section-title">今日影片</h2>
+      <div class="video-wrapper">
+        <video id="daily-video" controls poster="../images/video-placeholder.png"></video>
+      </div>
+      <div class="btn-group">
+        <button id="finish-video" class="btn btn-primary">完成觀看</button>
+        <button class="btn btn-ghost" onclick="window.location.href='/experimental/index.html'">回到首頁</button>
+      </div>
     </section>
 
     <!-- 2. AVI 感覺形容詞問卷 -->
     <section id="avi-section" class="hidden">
-      <form id="avi-form">
-        <h2>感覺評估</h2>
-        <p>以下列表是一些描述感覺的形容詞。有一些感覺是非常相似的，有一些是非常不同的。請認真閱讀以下每一個詞，並評估你此刻感受到這些不同感覺的強烈程度（1 = 完全沒有，5 = 極為強烈）。</p>
+      <form id="avi-form" class="avi-modern-form">
+        <h2 class="section-title">此刻的感覺評估</h2>
+        <div class="avi-instruction">
+          <p>以下列表是一些描述感覺的形容詞。有一些感覺是非常相似的，有一些是非常不同的。請認真閱讀以下每一個詞，並評估你此刻感受到這些不同感覺的強烈程度（1 = 完全沒有，5 = 極為強烈）。</p>
+          <div class="scale-info">1 = 完全沒有 │ 5 = 極為強烈</div>
+        </div>
         
-        <table border="1" cellspacing="0" cellpadding="5">
-          <thead>
-            <tr>
-              <th>形容詞</th>
-              <th>1<br>完全沒有</th>
-              <th>2</th>
-              <th>3</th>
-              <th>4</th>
-              <th>5<br>極為強烈</th>
-            </tr>
-          </thead>
+        <div class="table-container">
+            <table class="avi-table">
+            <thead>
+              <tr>
+                <th>形容詞</th>
+                <th>1<br>完全沒有</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5<br>極為強烈</th>
+              </tr>
+            </thead>
           <tbody>
             <tr><td>熱誠</td><td><input type="radio" name="q1" value="1" required></td><td><input type="radio" name="q1" value="2"></td><td><input type="radio" name="q1" value="3"></td><td><input type="radio" name="q1" value="4"></td><td><input type="radio" name="q1" value="5"></td></tr>
             <tr><td>驚愕</td><td><input type="radio" name="q2" value="1" required></td><td><input type="radio" name="q2" value="2"></td><td><input type="radio" name="q2" value="3"></td><td><input type="radio" name="q2" value="4"></td><td><input type="radio" name="q2" value="5"></td></tr>
@@ -75,26 +85,31 @@
             <tr><td>蔑視</td><td><input type="radio" name="q37" value="1" required></td><td><input type="radio" name="q37" value="2"></td><td><input type="radio" name="q37" value="3"></td><td><input type="radio" name="q37" value="4"></td><td><input type="radio" name="q37" value="5"></td></tr>
             <tr><td>疲勞</td><td><input type="radio" name="q38" value="1" required></td><td><input type="radio" name="q38" value="2"></td><td><input type="radio" name="q38" value="3"></td><td><input type="radio" name="q38" value="4"></td><td><input type="radio" name="q38" value="5"></td></tr>
             <tr><td>生氣</td><td><input type="radio" name="q39" value="1" required></td><td><input type="radio" name="q39" value="2"></td><td><input type="radio" name="q39" value="3"></td><td><input type="radio" name="q39" value="4"></td><td><input type="radio" name="q39" value="5"></td></tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
 
-        <br>
-        <button type="submit">下一步</button>
-        <br>
-        <button class="btn btn-home" onclick="window.location.href='/experimental/index.html'">回首頁</button>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary">下一步</button>
+          <button type="button" class="btn btn-ghost" onclick="window.location.href='/experimental/index.html'">回首頁</button>
+        </div>
       </form>
     </section>
 
     <!-- 3. 隨機練習 -->
     <section id="practice-section" class="hidden">
-      <h2>隨機練習</h2>
-      <iframe id="practiceFrame" width="100%" height="800" frameborder="0"></iframe>
+      <h2 class="section-title">隨機安頓練習</h2>
+      <div class="practice-wrapper">
+        <iframe id="practiceFrame" width="100%" height="700" frameborder="0"></iframe>
+      </div>
     </section>
 
     <!-- 4. 結束頁 -->
     <section id="end-section" class="hidden">
-      <h2>任務完成</h2>
-      <button onclick="window.location.href='/experimental/index.html'">回到首頁</button>
+      <div class="success-icon">✨</div>
+      <h2 class="section-title">任務圓滿完成</h2>
+      <p>感謝你今天的投入，祝你有個平靜的一天。</p>
+      <button class="btn btn-primary" onclick="window.location.href='/experimental/index.html'">回到首頁</button>
     </section>
 
   </div>
