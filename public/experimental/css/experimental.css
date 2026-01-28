@@ -29,7 +29,7 @@ body {
   border-radius: 60%;
   position: fixed;
   pointer-events: none; /* 確保光點不會擋住點擊 */
-  z-index: 9999;
+  z-index: 99999;
   transition: transform 0.1s ease-out;
   box-shadow: 0 0 15px rgba(255, 202, 40, 0.7),
               0 0 30px rgba(255, 236, 179, 0.4);
@@ -85,14 +85,14 @@ h1 {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.8); /* 半透明白底，更有靈性感 */
-    backdrop-filter: blur(10px); /* 模糊背景，遮住後方按鈕 */
+    background-color: rgba(255, 255, 255, 0.1); /* 半透明白底，更有靈性感 */
+    backdrop-filter: blur(8px); /* 模糊背景，遮住後方按鈕 */
     -webkit-backdrop-filter: blur(10px);
 }
 
 /* 2. 彈窗主體：絕對置中 */
 .modal-content {
-    background: white;
+    background: rgba(255, 255, 255, 0.9);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -113,11 +113,18 @@ h1 {
 }
 .close-btn {
     position: absolute;
-    right: 25px;
-    top: 20px;
+    right: 30px;
+    top: 25px;
+    font-size: 28px;
     cursor: pointer;
-    font-size: 24px;
     color: #90a4ae;
+    z-index: 10001; /* 確保叉叉在彈窗內容的最上層 */
+    transition: transform 0.2s, color 0.2s;
+}
+
+.close-btn:hover {
+    color: #ef5350;
+    transform: scale(1.2) rotate(90deg); /* 懸停時稍微放大旋轉，更有互動感 */
 }
 
 /* 4. 輸入框美化：去角、柔和化 */
