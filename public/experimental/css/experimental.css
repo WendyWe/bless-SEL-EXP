@@ -59,6 +59,7 @@ h1 {
   color: #37474f;
   margin-bottom: 0.5rem;
   letter-spacing: 3px;
+  text-shadow: 0.5px 0 0 #37474f, -0.5px 0 0 #37474f;
   transform: rotate(-1deg); 
 }
 
