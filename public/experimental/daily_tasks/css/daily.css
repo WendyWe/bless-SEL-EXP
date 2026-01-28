@@ -26,6 +26,10 @@ body.daily-task-page {
   width: 90%;
   max-width: 800px;
   transition: all 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 水平置中 */
+  justify-content: center;
 }
 
 .hidden {
@@ -62,6 +66,13 @@ body.daily-task-page {
   margin: 10px;
 }
 
+.btn-group {
+  display: flex;
+  flex-direction: column; /* 垂直排列按鈕 */
+  align-items: center;
+  width: 100%;
+}
+
 .btn-primary {
   background: var(--primary-color);
   color: var(--text-dark);
@@ -92,12 +103,19 @@ body.daily-task-page {
   overflow: hidden;
   background: #000;
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  margin-bottom: 1.5rem;
+  margin: 0 auto 1.5rem auto; /* 自動左右邊距達成置中 */
+  
+  /* 🔑 關鍵：調整影片大小 */
+  width: 75%;       /* 將影片寬度限制在卡片的 75% */
+  max-width: 500px;  /* 確保在寬螢幕上不會太大 */
+  aspect-ratio: 16 / 9; /* 維持標準影片比例 */
 }
 
 video {
   display: block;
-  width: 100%;
+  width: 100%;       /* 填滿 wrapper */
+  height: 100%;      /* 填滿 wrapper */
+  object-fit: contain; /* 確保影片內容不被裁切 */
 }
 
 /* === AVI 問卷樣式 === */
