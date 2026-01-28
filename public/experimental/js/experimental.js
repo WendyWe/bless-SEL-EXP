@@ -60,8 +60,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const aidBtn = document.getElementById('btn-aid');
 
     // 按鈕導向子頁面
-    dailyBtn.addEventListener('click', () => window.location.href = '/experimental/daily_tasks/index.html');  
-    aidBtn.addEventListener('click', () => window.location.href = '/experimental/calm_kit/index.html');
+    dailyBtn.addEventListener('click', () => {
+    // 點擊時讓 app 容器慢慢變透明，再跳轉
+    document.getElementById('app').style.opacity = '0';
+    document.getElementById('app').style.transition = 'opacity 0.8s';
+    setTimeout(() => {
+        window.location.href = '/experimental/daily_tasks/index.html';
+    }, 800);
+    });
+
+aidBtn.addEventListener('click', () => {
+    document.getElementById('app').style.opacity = '0';
+    document.getElementById('app').style.transition = 'opacity 0.8s';
+    setTimeout(() => {
+        window.location.href = '/experimental/calm_kit/index.html';
+    }, 800);
+    });
 
 
     // Check if user is logged in
@@ -119,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('usernameDisplay').textContent = username;
         document.getElementById('loginTimeInfo').textContent = 
-            `登入時間: ${loginTime} (${period})`;
+            `登入時間: ${loginTime} `;
 
         loginForm.style.display = 'none';
         userInfo.style.display = 'block';

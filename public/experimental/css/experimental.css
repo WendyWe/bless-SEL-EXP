@@ -95,7 +95,7 @@ h1 {
 }
 
 /* 5. 按鈕設計：具備呼吸感 */
-.login-btn, #btn-daily, #btn-aid {
+.login-btn {
   background: #90caf9;
   color: white;
   border: none;
@@ -117,11 +117,50 @@ h1 {
   transform: translateY(-2px);
 }
 
+#btn-daily, #btn-aid {
+    background: rgba(144, 202, 249, 0.2); /* 極輕柔的藍色透明感 */
+    color: #455a64;
+    border: 1.5px solid rgba(144, 202, 249, 0.4);
+    padding: 15px 40px;
+    margin: 15px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* 緩慢的呼吸感 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(5px);
+}
+
+/* 鼠標懸停：發出柔和微光 */
+#btn-daily:hover, #btn-aid:hover {
+    background: rgba(144, 202, 249, 0.6);
+    color: #ffffff;
+    transform: scale(1.05); /* 輕微膨脹 */
+    box-shadow: 0 0 20px rgba(144, 202, 249, 0.4), 
+                0 0 40px rgba(144, 202, 249, 0.2);
+    border-color: #bbdefb;
+}
+
+/* 特別針對「情緒急救包」做一點色彩區隔，給予溫暖感 */
+#btn-aid:hover {
+    background: rgba(255, 204, 188, 0.6); /* 溫暖的橘粉色 */
+    box-shadow: 0 0 20px rgba(255, 204, 188, 0.4);
+    border-color: #ffccbc;
+}
+
 /* 登出按鈕稍微淡化 */
 .logout-btn {
-  background: none;
-  border: 1px solid #ccc;
-  color: #999;
-  border-radius: 50px;
-  margin-top: 20px;
+    background: transparent;
+    border: none;
+    color: #90a4ae;
+    text-decoration: underline;
+    font-size: 0.9rem;
+    margin-top: 30px;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.logout-btn:hover {
+    opacity: 1;
+    color: #ef5350;
 }
