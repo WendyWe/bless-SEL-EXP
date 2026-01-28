@@ -1,166 +1,207 @@
-/* === 基本頁面排版 === */
+/* === 全域氛圍與情緒調節風格 === */
 :root {
-  --primary-color: #90caf9;
-  --primary-dark: #64b5f6;
-  --bg-gradient: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 50%, #80cbc4 100%);
-  --text-dark: #37474f;
-  --glass-bg: rgba(255, 255, 255, 0.95);
+  --primary-color: #A5CAD2; /* 柔和湖水綠 */
+  --primary-dark: #7DA8B1;
+  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #e4edea 100%);
+  --text-dark: #4A5568;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --accent-soft: #C2DEDC;
 }
 
+/* 背景與整體佈局 */
 body.daily-task-page {
   background: var(--bg-gradient);
-  font-family: 'Noto Sans TC', sans-serif;
-  color: var(--text-dark);
   margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 0;
+  /* 關鍵修復：確保父層撐滿螢幕並清除偏移 */
+  width: 100%;
+  min-height: 100vh; 
+  display: flex !important;
+  justify-content: center !important; /* 水平置中 */
+  align-items: center !important;     /* 垂直置中 */
+  overflow-x: hidden;
 }
 
 #app {
-  background: var(--glass-bg);
-  padding: 3rem;
-  border-radius: 24px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+  /* 關鍵修復：移除可能導致偏移的 margin，並固定寬度邏輯 */
+  margin: 0 auto !important; 
   width: 90%;
   max-width: 800px;
-  transition: all 0.5s ease;
   display: flex;
   flex-direction: column;
-  align-items: center; /* 水平置中 */
+  align-items: center; /* 確保內部子元素水平置中 */
   justify-content: center;
+  padding: 20px 0;
 }
 
-.hidden {
-  display: none !important;
-}
-
-/* === 標題與引導樣式 === */
-.section-title {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: var(--text-dark);
-  letter-spacing: 2px;
-}
-
-.task-header {
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 1rem;
-}
-
-.header-logo {
-  font-weight: 700;
-  color: var(--primary-dark);
-  letter-spacing: 4px;
-}
-
-.btn {
-  padding: 12px 35px;
-  border-radius: 50px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none;
-  margin: 10px;
-}
-
-.btn-group {
-  display: flex;
-  flex-direction: column; /* 垂直排列按鈕 */
-  align-items: center;
+/* 影片區塊優化 */
+#video-section {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.btn-primary {
-  background: var(--primary-color);
-  color: var(--text-dark);
-  font-weight: 500;
-  box-shadow: 0 4px 15px rgba(144, 202, 249, 0.3);
-}
-
-.btn-primary:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(144, 202, 249, 0.4);
-}
-
-.btn-ghost {
-  background: transparent;
-  border: 1px dashed #b0bec5;
-  color: #78909c;
-}
-
-.btn-ghost:hover {
-  background: rgba(176, 190, 197, 0.1);
-  border-style: solid;
-}
-
-/* === 影片區優化 === */
 .video-wrapper {
-  border-radius: 16px;
+  width: 100%;
+  max-width: 700px; /* 這裡決定影片大小 */
+  background: #2D3748;
+  border-radius: 20px;
   overflow: hidden;
-  background: #000;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  margin: 0 auto 1.5rem auto; /* 自動左右邊距達成置中 */
-  
-  /* 🔑 關鍵：調整影片大小 */
-  width: 75%;       /* 將影片寬度限制在卡片的 75% */
-  max-width: 500px;  /* 確保在寬螢幕上不會太大 */
-  aspect-ratio: 16 / 9; /* 維持標準影片比例 */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border: 4px solid white; /* 增加一個細邊框增加高級感 */
+  margin-bottom: 30px;
 }
 
 video {
+  width: 100%;
   display: block;
-  width: 100%;       /* 填滿 wrapper */
-  height: 100%;      /* 填滿 wrapper */
-  object-fit: contain; /* 確保影片內容不被裁切 */
 }
 
-/* === AVI 問卷樣式 === */
-.table-container {
-  max-height: 50vh;
-  overflow-y: auto;
-  margin: 20px 0;
+/* 標題樣式 */
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #2D3748;
+  letter-spacing: 1px;
+}
+
+/* 按鈕美化 */
+.btn-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.btn {
+  padding: 14px 40px;
   border-radius: 12px;
-  border: 1px solid #edf2f7;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 12px rgba(165, 202, 210, 0.4);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(165, 202, 210, 0.5);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid #CBD5E0;
+  color: #718096;
+}
+
+.btn-ghost:hover {
+  background: white;
+  color: var(--primary-dark);
+}
+
+/* === AVI 問卷深度優化 === */
+#avi-section, .avi-form {
+  width: 100%;
+  animation: fadeIn 0.6s ease-in;
+}
+
+.avi-instruction {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  line-height: 1.6;
+  border-left: 5px solid var(--primary-color);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.table-container {
+  background: white;
+  border-radius: 20px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+  max-height: none; /* 在本設計中不限制高度，改用 body 捲動，增加穩定性 */
 }
 
 .avi-table {
-  width: 100%;
   border-collapse: collapse;
+  width: 100%;
 }
 
 .avi-table th {
-  position: sticky;
-  top: 0;
-  background: #f8fafc;
-  padding: 15px;
-  z-index: 10;
+  background: #EDF2F7;
+  color: #4A5568;
+  padding: 20px 10px;
+  font-weight: 600;
 }
 
 .avi-table td {
-  padding: 15px;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 18px 10px;
+  border-bottom: 1px solid #F7FAFC;
+  text-align: center;
+}
+
+/* 斑馬紋設計：幫助視線橫向對齊 */
+.avi-table tr:nth-child(even) {
+  background-color: #F8FAFC;
 }
 
 .avi-table tr:hover {
-  background: #f1f8ff;
+  background-color: #EBF8FF;
 }
 
+.avi-table td:first-child {
+  font-weight: 500;
+  color: #2D3748;
+  padding-left: 25px;
+  text-align: left;
+}
+
+/* Radio Button 增大與美化 */
 input[type="radio"] {
-  transform: scale(1.3);
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   accent-color: var(--primary-dark);
 }
 
-/* === 結束頁與 iframe 區塊 === */
-#practice-section iframe {
-  border: none;
-  border-radius: 8px;
+/* 結束頁 */
+#end-section {
+  text-align: center;
+  background: white;
+  padding: 60px;
+  border-radius: 30px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 }
 
-#end-section {
-  padding: 20px;
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+/* 動畫 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hidden { display: none !important; }
+
+/* 響應式：手機版按鈕垂直排列 */
+@media (max-width: 600px) {
+  .btn-group { flex-direction: column; width: 100%; }
+  .btn { width: 100%; margin: 5px 0; }
+  .avi-table th, .avi-table td { padding: 12px 5px; font-size: 0.9rem; }
 }
