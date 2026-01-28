@@ -127,8 +127,75 @@ h1 {
     transform: scale(1.2) rotate(90deg); /* 懸停時稍微放大旋轉，更有互動感 */
 }
 
-.step {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 增加一點點立體感，像按鈕 */
+/* 彈窗內部的分區標題 */
+.guide-title {
+    color: #37474f;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+}
+
+/* 通用區塊樣式 */
+.guide-section {
+    width: 100%;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+/* --- 本日任務：專業、路徑感 (冷色調) --- */
+.daily-section {
+    background-color: #f1f8ff; /* 淺藍底 */
+    border: 1px solid #d1e9ff;
+}
+
+.daily-section .section-title {
+    color: #1976d2;
+}
+
+.time-hint {
+    background: #fff9c4;
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    font-size: 0.9rem;
+    margin: 10px 0;
+}
+
+/* --- 情緒急救包：溫暖、包容 (暖色調) --- */
+.aid-section {
+    background-color: #fff8f1; /* 淺橘底 */
+    border: 1px dashed #ffccbc;
+}
+
+.aid-section .section-title {
+    color: #e64a19;
+}
+
+/* 流程圖節點 */
+.flow-path {
+    margin-top: 15px;
+}
+
+.path-node {
+    background: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px solid #cfd8dc;
+    display: inline-block;
+    font-size: 0.95rem;
+}
+
+.path-node.highlight {
+    border: 2px solid #90caf9;
+    font-weight: bold;
+    color: #0d47a1;
+}
+
+.path-arrow {
+    color: #90caf9;
+    font-size: 1.1rem;
+    margin: 4px 0;
 }
 
 /* 4. 輸入框美化：去角、柔和化 */
