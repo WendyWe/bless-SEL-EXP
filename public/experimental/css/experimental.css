@@ -123,6 +123,52 @@ h1 {
     margin-top: 10px;
 }
 
+.availability-badge {
+    background-color: #fff3e0; /* 溫暖的淺橘色 */
+    color: #e65100;
+    padding: 6px 15px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    border: 1px solid #ffe0b2;
+    display: inline-block;
+}
+
+/* 急救包功能列表 */
+.aid-features {
+    text-align: left;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.aid-item {
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 204, 188, 0.5);
+    transition: transform 0.2s;
+}
+
+.aid-item:hover {
+    transform: translateX(5px);
+    border-color: #ffccbc;
+}
+
+.aid-item strong {
+    display: block;
+    color: #d84315;
+    font-size: 0.95rem;
+    margin-bottom: 3px;
+}
+
+.aid-item span {
+    font-size: 0.85rem;
+    color: #78909c;
+    line-height: 1.4;
+}
+
 
 .close-btn {
     position: absolute;
