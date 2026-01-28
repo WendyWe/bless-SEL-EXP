@@ -59,23 +59,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const dailyBtn = document.getElementById('btn-daily');
     const aidBtn = document.getElementById('btn-aid');
 
+    const guideBtn = document.getElementById('btn-guide');
+    const modal = document.getElementById('guideModal');
+    const closeBtn = document.querySelector('.close-btn');
+
     // 按鈕導向子頁面
     dailyBtn.addEventListener('click', () => {
     // 點擊時讓 app 容器慢慢變透明，再跳轉
     document.getElementById('app').style.opacity = '0';
     document.getElementById('app').style.transition = 'opacity 0.8s';
-    setTimeout(() => {
-        window.location.href = '/experimental/daily_tasks/index.html';
-    }, 800);
+        setTimeout(() => {
+            window.location.href = '/experimental/daily_tasks/index.html';
+        }, 800);
     });
 
-aidBtn.addEventListener('click', () => {
-    document.getElementById('app').style.opacity = '0';
-    document.getElementById('app').style.transition = 'opacity 0.8s';
-    setTimeout(() => {
-        window.location.href = '/experimental/calm_kit/index.html';
-    }, 800);
+    aidBtn.addEventListener('click', () => {
+        document.getElementById('app').style.opacity = '0';
+        document.getElementById('app').style.transition = 'opacity 0.8s';
+        setTimeout(() => {
+            window.location.href = '/experimental/calm_kit/index.html';
+        }, 800);
     });
+
+    // 🔑 3. 新增：使用說明彈窗邏輯
+    if (guideBtn && modal && closeBtn) {
+        // 打開彈窗
+        guideBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        // 按叉叉關閉
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // 點擊彈窗外面也可以關閉
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
 
 
     // Check if user is logged in
@@ -130,6 +154,12 @@ aidBtn.addEventListener('click', () => {
         const username = localStorage.getItem('username');
         const loginTime = localStorage.getItem('loginTime');
         const period = localStorage.getItem('period');
+
+        // 修改標題為更具邀請感的文字
+        const infoTitle = userInfo.querySelector('h2');
+        if (infoTitle) {
+            infoTitle.textContent = "今天，想如何照顧你的心靈？";
+        }
 
         document.getElementById('usernameDisplay').textContent = username;
         document.getElementById('loginTimeInfo').textContent = 

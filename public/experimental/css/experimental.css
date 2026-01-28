@@ -148,6 +148,33 @@ h1 {
     border-color: #ffccbc;
 }
 
+#btn-guide {
+    background: transparent; /* 背景透明 */
+    color: #78909c; /* 較淡的藍灰色 */
+    border: 1px dashed #b0bec5; /* 使用虛線邊框，增加「輔助/指引」的視覺意象 */
+    padding: 8px 20px;
+    margin: 20px auto;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: block; /* 讓它獨自一行，或放在按鈕下方 */
+    transition: all 0.3s ease;
+    box-shadow: none; /* 移除發光，拉開層級 */
+}
+
+#btn-guide:hover {
+    background: rgba(176, 190, 197, 0.1);
+    color: #546e7a;
+    border-style: solid; /* 懸停時變實線 */
+    transform: translateY(-1px);
+}
+
+#userInfo h2 {
+    font-weight: 700; /* 加粗 */
+    color: #37474f;
+    margin-bottom: 30px;
+}
+
 /* 登出按鈕稍微淡化 */
 .logout-btn {
     background: transparent;
