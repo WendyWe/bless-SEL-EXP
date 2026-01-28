@@ -127,6 +127,18 @@ h1 {
     transform: scale(1.2) rotate(90deg); /* 懸停時稍微放大旋轉，更有互動感 */
 }
 
+.step.highlight {
+    background: #e3f2fd; /* 給予輕微的背景色 */
+    border: 2px solid #90caf9;
+    color: #1565c0;
+    font-weight: bold;
+    padding: 10px 20px;
+}
+
+.step {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 增加一點點立體感，像按鈕 */
+}
+
 /* 4. 輸入框美化：去角、柔和化 */
 .login-input {
   width: 100%;
