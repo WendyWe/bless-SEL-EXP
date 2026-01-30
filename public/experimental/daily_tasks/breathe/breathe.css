@@ -9,38 +9,44 @@ body {
     overflow-x: hidden;
 }
 
-/* 修改背景層 */
+/* === 柔和粉綠 Aura 漸層背景 === */
 .background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* 使用多層徑向漸層堆疊出 Aura 感 */
+    /* 結合了湖水綠、奶油白與淡粉色的多層次漸層 */
     background: 
-        radial-gradient(circle at 20% 30%, rgba(165, 202, 210, 0.4) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(194, 222, 220, 0.4) 0%, transparent 40%),
-        #f5f7fa; 
+        radial-gradient(circle at 10% 20%, rgba(165, 202, 210, 0.3) 0%, transparent 50%), /* 湖水藍 */
+        radial-gradient(circle at 90% 80%, rgba(252, 239, 239, 0.6) 0%, transparent 50%), /* 暖粉色 */
+        radial-gradient(circle at 50% 50%, rgba(253, 252, 240, 0.5) 0%, transparent 80%), /* 奶油黃 */
+        #f8f9fa; /* 基底淺灰白 */
     z-index: -1;
     overflow: hidden;
 }
 
-/* 增加一個緩慢漂浮的動畫層 */
-.background::before {
+/* 增加緩慢流動的光影效果，模擬「呼吸感」 */
+.background::after {
     content: "";
     position: absolute;
-    width: 150%;
-    height: 150%;
-    top: -25%;
-    left: -25%;
-    background: radial-gradient(circle at center, rgba(112, 201, 139, 0.15) 0%, transparent 50%);
-    animation: auraFlow 20s infinite ease-in-out;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    /* 一個淡淡的粉紅光暈在背景緩慢漂浮 */
+    background: radial-gradient(circle at center, rgba(255, 192, 203, 0.15) 0%, transparent 60%);
+    animation: auraMovement 25s infinite ease-in-out;
+    pointer-events: none;
 }
 
-@keyframes auraFlow {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(5%, 10%) scale(1.1); }
-    66% { transform: translate(-5%, 5%) scale(0.9); }
+@keyframes auraMovement {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(5%, -5%) scale(1.1);
+    }
 }
 
 #app {
