@@ -9,45 +9,33 @@ body {
     overflow-x: hidden;
 }
 
-/* === 柔和粉綠 Aura 漸層背景 === */
+/* 修改背景層 */
 .background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* 結合了湖水綠、奶油白與淡粉色的多層次漸層 */
-    background: 
-        radial-gradient(circle at 10% 20%, rgba(165, 202, 210, 0.3) 0%, transparent 50%), /* 湖水藍 */
-        radial-gradient(circle at 90% 80%, rgba(252, 239, 239, 0.6) 0%, transparent 50%), /* 暖粉色 */
-        radial-gradient(circle at 50% 50%, rgba(253, 252, 240, 0.5) 0%, transparent 80%), /* 奶油黃 */
-        #f8f9fa; /* 基底淺灰白 */
+    /* 1. 插入生成的圖片 URL，並設定為不重複、置中、填滿 */
+    background-image: url("../../media/raw_image/breathe_background.png"); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     z-index: -1;
     overflow: hidden;
 }
 
-/* 增加緩慢流動的光影效果，模擬「呼吸感」 */
-.background::after {
+.background::before {
     content: "";
     position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    /* 一個淡淡的粉紅光暈在背景緩慢漂浮 */
-    background: radial-gradient(circle at center, rgba(255, 192, 203, 0.15) 0%, transparent 60%);
-    animation: auraMovement 25s infinite ease-in-out;
-    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1); /* 0.1 透明度，讓圖片保有原本色彩但稍微柔和 */
+    backdrop-filter: blur(2px); /* 增加一點點毛玻璃感，不遮擋美景但讓文字更清晰 */
 }
 
-@keyframes auraMovement {
-    0%, 100% {
-        transform: translate(0, 0) scale(1);
-    }
-    50% {
-        transform: translate(5%, -5%) scale(1.1);
-    }
-}
 
 #app {
     width: 100%;
@@ -69,15 +57,13 @@ body {
 
 /* 文字區塊優化 */
 .text-container {
-    background-color: rgba(255, 255, 255, 0.7); /* 降低透明度 */
-    backdrop-filter: blur(10px); /* 加入磨砂效果 */
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.85);
     padding: 25px;
     border-radius: 20px;
-    box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 40px;
-    max-width: 800px;
-    width: 90%;
+    color: #333;
+    width: 100%;
 }
 
 /* 氣球容器置中 */
@@ -94,16 +80,19 @@ body {
 #balloon {
     width: 120px;
     height: 120px;
-    background: radial-gradient(circle at 30% 30%, #a2e8b4, #70c98b);
+    /* 使用圖片中的暖黃色調 */
+    background: radial-gradient(circle at 35% 35%, #fff5e1 0%, #ffdf91 70%, #f4c542 100%);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    /* 文字改為深色以確保對比度 */
+    color: #855e1d; 
     font-weight: bold;
     font-size: 1.2rem;
-    box-shadow: 0 10px 25px rgba(112, 201, 139, 0.4);
-    transition: transform 0.1s ease-out; /* 讓縮放平滑 */
+    /* 增加發光感的陰影 */
+    box-shadow: 0 0 30px rgba(255, 223, 145, 0.4), 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.1s ease-out;
 }
 
 /* 按鈕美化 */
@@ -124,14 +113,21 @@ body {
 }
 
 #control {
-    background-color: #70c98b;
-    color: white;
+    background-color: #f4c542; /* 黃色主色 */
+    color: #5d4013; /* 深棕色文字 */
+    font-weight: bold;
 }
 
+#control:hover {
+    background-color: #f19a4d;
+    transform: scale(1.05);
+}
+
+/* 「完成練習」按鈕：啟用時 */
 #finish-btn {
-    background-color: #fff;
-    color: #70c98b;
-    border: 2px solid #70c98b;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #f4c542;
+    border: 2px solid #f4c542;
 }
 
 /* 當按鈕被禁用時的樣式 */
@@ -145,16 +141,12 @@ body {
 
 /* 播放進度提示 */
 #audio-status {
+    color: rgba(255, 255, 255, 0.9) !important; /* 改為 90% 不透明的白色 */
+    font-size: 0.85rem !important;
+    font-weight: 500;
+    text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5); /* 加入文字陰影，確保在亮處也能看清 */
+    margin-top: 15px;
     transition: opacity 0.5s ease;
-}
-
-#control:hover { transform: scale(1.05); background-color: #5bb376; }
-
-.background {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4edea 100%);
-    z-index: -1;
 }
 
 /* 說明按鈕樣式 */
@@ -185,13 +177,11 @@ body {
 
 /* 彈窗主體 */
 .modal-content {
-    background: (255, 255, 255, 0.9);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 30px; /* 圓角加大更親切 */
-    padding: 40px;
+    background: white;
     width: 90%;
     max-width: 500px;
+    padding: 30px;
+    border-radius: 20px;
     position: relative;
     box-shadow: 0 20px 50px rgba(0,0,0,0.2);
     animation: fadeInModal 0.3s ease-out;
