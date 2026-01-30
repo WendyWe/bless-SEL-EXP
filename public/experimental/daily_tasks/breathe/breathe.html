@@ -6,54 +6,70 @@
   <link rel="stylesheet" href="../breathe/breathe.css">
 </head>
 
-<body>
-  <main>
+<body class="daily-task-page">
+  <div class="background"></div>
+  <main id="app">
     <section class="hero">
       <div class="text-container">
-        <h1>Breathe腹式呼吸</h1>
+        <h1>Breathe 腹式呼吸</h1>
         <h2>
-          🌿腹式呼吸是一種深長的呼吸方法，<br>
-          能夠幫助我們與內心建立更深的連結。🌿<br>
-          🌬️當我們慢慢地吸入新鮮的空氣，感受腹部隨之擴張時，那份平靜和安寧也逐漸進入心中。🌬️<br>
-          這種呼吸方式不僅可以舒緩壓力和焦慮，還能幫助我們更好地覺察情緒，<br>
-          💖讓心靈恢復平靜與平衡。💖
+          🌿 腹式呼吸搭配冥想能幫助我們與內心建立更深的連結。🌿<br>
+          🌬️ 請感受腹部的擴張，聽著冥想的指導語，讓平靜進入心中。🌬️
         </h2>
+
+        <button id="open-info" class="info-btn">💡 了解更多：腹式呼吸與冥想</button>
+
+        <div id="info-modal" class="modal-overlay">
+          <div class="modal-content">
+              <button id="close-info" class="close-btn">&times;</button>
+              <div class="modal-body">
+                  <h3>🌟 為什麼要練習腹式呼吸？</h3>
+                  <p>腹式呼吸（Diaphragmatic Breathing）能有效啟動人體的<b>副交感神經</b>，就像給大腦按下一顆放鬆鈕。當我們吸氣深至腹部，橫膈膜下移，能增加血氧交換效率並降低心率。</p>
+                  
+                  <h3>🧠 冥想的重要性</h3>
+                  <p>身體掃描與慈悲冥想能幫助我們將專注力從「焦慮的思緒」帶回「當下的身體」。這種覺察能減少情緒的反芻，讓我們在壓力下依然能保有內在的慈悲與平衡。</p>
+                  
+                  <div class="modal-tip">
+                      📌 提示：聽完錄音導引後，系統將自動解鎖「完成練習」按鈕。
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
         <p>
-          邀請你 尋找到一個自己舒服的姿勢<br>
-          將一手放置於肚子上方​感受腹部的隆起，<br>
-          一手按著滑鼠追蹤自己呼吸的頻率<br><br>
-
-          接著請你開始吸氣 (Inhale)<br>
-          鼻子開始吸氣時，請按下Inhale吸氣 (I) 按鈕，<br>
-          吸氣的同時並在心中默數4秒，按下 Stop (S) 按鈕。<br><br>
-
-          接著請你屏氣 (Stop)<br>
-          閉住呼吸一會。<br><br>
-
-          最後，按下 Exhale (E) 按鈕，接著嘴巴慢慢地吐氣 (Exhale)<br>
-          吐完後按下 Show result 按鈕查看結果。<br>
-          重複5-10分鐘，直到你感到舒服好受。
+          跟隨氣球的起伏：<br>
+          <strong>吸氣 (4秒) → 憋氣 (2秒) → 吐氣 (6秒)</strong><br>
+          重複練習直到感到放鬆。
         </p>
       </div>
 
       <div class="balloon-container">
-        <div id="balloon"></div>
+        <div id="balloon"><span id="balloon-text">準備</span></div>
+        <div class="audio-player" style="display:none;">
+        <audio id="meditation-audio">
+            <source src="../../media/raw_audio/test.m4a" type="audio/mpeg">
+            您的瀏覽器不支持音頻播放。
+        </audio>
+</div>
       </div>
+
       <div class="result" id="result"></div>
+
       <div class="button-container">
-        <button id="control">Inhale吸氣 (I)</button>
+        <button id="control">開始練習</button>
       </div>
 
-      <script src="../breathe/breathe.js"></script>
-
-      <!-- 按鈕區 -->
-      <div class="button-container">
-        <button id="back-button" style="display:none;">返回</button>
-        <button id="finish-btn">完成練習</button>
+      <div class="button-container" style="margin-top: 20px;">
+        <button id="finish-btn" disabled title="請聽完冥想導引後再完成">完成練習</button>
       </div>
+      <p id="audio-status" style="color: #666; font-size: 0.8rem; margin-top: 10px; text-align: center;">
+          (聽完冥想導引後即可點擊完成)
+      </p>
     </section>
   </main>
 
+  <script src="../breathe/breathe.js"></script>
   <script>
     document.getElementById("finish-btn").addEventListener("click", () => {
       window.parent.postMessage(
