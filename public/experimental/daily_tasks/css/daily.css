@@ -14,12 +14,19 @@ body.daily-task-page {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: 100vh; /* 改為 min-height */
-  display: flex !important;
-  justify-content: center !important;
-  align-items: flex-start !important; /* 改為從頂部開始，防止長內容位移 */
+  min-height: 100vh;
+  /* 移除 Flex，或是改用一般的區塊佈局 */
+  display: block !important; 
   overflow-x: hidden;
-  overflow-y: auto; /* 允許必要時捲動 */
+  overflow-y: auto;
+}
+
+/* 針對內容容器（例如 .container 或 .card）進行設定 */
+.daily-task-page .container {
+  width: 95%;           /* 在手機上接近滿版 */
+  max-width: 600px;     /* 在電腦上限制最大寬度，避免太散 */
+  margin: 20px auto;    /* 靠這個來水平置中，並留一點上下邊距 */
+  box-sizing: border-box;
 }
 
 #app {
