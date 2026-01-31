@@ -30,16 +30,16 @@ body.daily-task-page {
 }
 
 #app {
-  width: 90%;
-  max-width: 800px;
+  width: 95%;           /* 稍微增加比例 */
+  max-width: 1100px;    /* 從 800px 增加到 1100px，電腦版會寬敞很多 */
   min-height: 100vh;
-  margin-left: auto;  /* 強制水平左右自動邊距 */
-  margin-right: auto; 
+  margin: 0 auto;       /* 置中 */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* 改為頂部開始 */
-  padding: 40px 0; /* 給予上下留白，視覺更平衡 */
+  justify-content: flex-start;
+  padding: 20px;        /* 縮小一點 padding 防止頂部過空 */
+  box-sizing: border-box;
 }
 
 /* 影片區塊優化 */
@@ -140,11 +140,11 @@ video {
   margin: 20px auto;
   background: white;
   border-radius: 20px;
-  padding: 10px;
+  padding: 20px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  margin-top: 20px;
-  max-height: 70vh; 
-  overflow-y: auto; 
+  /* 修正重點： */
+  max-height: none;    /* 移除高度限制，讓頁面自然延伸 */
+  overflow: visible;   /* 讓內容完整顯示，不要在內部捲動 */
 }
 
 .avi-table {
