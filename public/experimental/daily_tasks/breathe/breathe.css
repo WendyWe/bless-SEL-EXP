@@ -7,6 +7,7 @@ body {
     align-items: flex-start;
     min-height: 100vh;
     overflow-x: hidden;
+    font-family: "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
 }
 
 /* 修改背景層 */
@@ -64,6 +65,18 @@ body {
     margin-bottom: 40px;
     color: #333;
     width: 100%;
+}
+
+.text-container h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.text-container h2 {
+    font-size: 1.1rem;
+    font-weight: normal;
+    line-height: 1.6;
+    color: #4a5568;
 }
 
 /* 氣球容器置中 */
