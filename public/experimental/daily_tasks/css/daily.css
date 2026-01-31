@@ -23,24 +23,23 @@ body.daily-task-page {
 
 /* 針對內容容器（例如 .container 或 .card）進行設定 */
 .daily-task-page .container {
-  width: 95%;           /* 在手機上接近滿版 */
-  max-width: 600px;     /* 在電腦上限制最大寬度，避免太散 */
-  margin: 20px auto;    /* 靠這個來水平置中，並留一點上下邊距 */
+  width: 100%;
+  max-width: 900px;   /* ← 從 600 → 900 */
+  margin: 20px auto;
+  padding: 0 16px;    /* 防止貼邊 */
   box-sizing: border-box;
 }
 
 #app {
-  width: 95%;           /* 稍微增加比例 */
-  max-width: 1100px;    /* 從 800px 增加到 1100px，電腦版會寬敞很多 */
-  min-height: 100vh;
-  margin: 0 auto;       /* 置中 */
+  width: 100%;
+  max-width: 1200px;   /* 可以稍微再大一點 */
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 20px;        /* 縮小一點 padding 防止頂部過空 */
-  box-sizing: border-box;
+  align-items: stretch; /* ← 改這裡！ */
+  padding: 20px;
 }
+
 
 /* 影片區塊優化 */
 #video-section {
