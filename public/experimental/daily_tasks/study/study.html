@@ -3,38 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>每日文章</title>
+  <title>Study 知識文章分享</title>
   <link rel="stylesheet" href="../study/study.css">
 </head>
-<body>
-  <main>
+
+<body class="daily-task-page">
+  <div class="background"></div>
+  
+  <main id="app">
     <section class="hero">
-      <div class="container">
+      
+      <div class="text-container">
         <h1 id="article-title">載入中...</h1>
-        <p class="date" id="article-date"></p>
-        <article id="article-content">
+        <h2 class="date" id="article-date"></h2>
+        
+        <article id="article-content" style="text-align: left; margin-top: 20px;">
           <p>請稍候，正在載入文章內容...</p>
         </article>
       </div>
+
+      <div class="arena-container" style="padding: 20px; margin-top: 30px;">
+        <div class="reflection-container">
+          <label for="reflection-input" style="display: block; margin-bottom: 10px; font-weight: bold;">
+            🌿 請用至少 20 字，簡述你從這篇文章中學到的重點：
+          </label>
+          <textarea
+            id="reflection-input"
+            rows="5"
+            placeholder="請輸入你的學習心得（至少 20 字）"
+            style="width: 100%; border-radius: 12px; padding: 15px; border: 1px solid #ddd;"
+          ></textarea>
+          <p id="char-count" class="result" style="margin-top: 10px;">目前字數：0 / 20</p>
+        </div>
+      </div>
+
+      <div class="button-container" style="margin-top: 30px;">
+        <button id="finish-btn">完成閱讀</button>
+      </div>
+
     </section>
-
-    <!-- 學習反思輸入區 -->
-    <div class="reflection-container">
-      <label for="reflection-input">
-        請用至少 20 字，簡述你從這篇文章中學到的重點：
-      </label>
-      <textarea
-        id="reflection-input"
-        rows="4"
-        placeholder="請輸入你的學習心得（至少 20 字）"
-      ></textarea>
-      <p id="char-count">目前字數：0 / 20</p>
-    </div>
-
-    <!-- 按鈕區 -->
-    <div class="button-container">
-      <button id="finish-btn">完成閱讀</button>
-    </div>
   </main>
 
   <script type="module" src="study.js"></script>
