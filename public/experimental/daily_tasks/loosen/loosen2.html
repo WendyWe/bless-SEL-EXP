@@ -1,62 +1,109 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EF Training Game</title>
+  <title>Loosen 執行功能小遊戲</title>
   <link rel="stylesheet" href="loosen2.css">
 </head>
-<body>
 
-<div class="wrap">
-  <header>
-    <h1>執行功能訓練遊戲</h1>
-    <p class="sub">
-      第一關：記憶顏色 × 方向　
-      第二關：忽略字義與方向，只回報顏色
-    </p>
-  </header>
+<body class="daily-task-page">
+  <div class="background"></div>
+  
+  <main id="app">
+    <section class="hero">
+      
+      <div class="text-container">
+        <h1>Loosen 執行功能小遊戲</h1>
+        <h2>
+          🌿 透過輕快的認知練習，幫助我們釋放僵化的思維慣性。🌿<br>
+          🧩 請感受注意力的流動，隨著節奏切換思考，讓靈活進入腦海中。🧩
+        </h2>
 
-  <!-- 規則卡 -->
-  <section class="card">
-    <div class="hd">規則</div>
-    <div class="rules" id="rules"></div>
-  </section>
+        <button id="open-info" class="info-btn">💡 了解更多：認知靈活度與大腦</button>
 
-  <!-- 遊戲區 -->
-  <section class="card arena">
-    <div class="center">
-      <div class="fix" id="fix"></div>
+        <div id="info-modal" class="modal-overlay">
+          <div class="modal-content">
+              <button id="close-info" class="close-btn">&times;</button>
+              <div class="modal-body">
+                  <h3>🌟 為什麼這項練習能幫助大腦？</h3>
+                  <p>這項小遊戲是基於神經心理學中經典的 Stroop Task（史楚普效應） 與 Task Switching（任務切換） 實驗所設計。
+                    透過從記憶方向變成辨識顏色時，便正鍛鍊大腦適應變化的能力，減少思考僵化。
+                    並透過強行抑制讀字的衝動，改為反應顏色，增強過濾干擾資訊、提升專注力的能力</p>
+                  
+                  <h3>🧠 認知靈活度與執行功能</h3>
+                  <p>不論是史楚普效應或任務切換都是訓練大腦執行功能 (Executive Functions) 的經典遊戲，而執行功能就像是大腦的「總指揮部」，負責管理我們的日常行為與思考<br>
+                  包含三個核心支柱：<br>
+                  <strong>抑制控制 (Inhibitory Control)</strong>：幫助你抵抗直覺，當你能更好地「抑制」直覺衝動時，面對壓力時也較能冷靜應對。<br>
+                  <strong>工作記憶 (Working Memory)</strong>：在極短時間內記住並運用新規則，能活化前額葉皮質，讓我們能在腦中同時掌握多項資訊並進行運算，提升處理複雜問題的效率。<br>
+                  <strong>認知靈活度 (Cognitive Flexibility)</strong>：在不同規則間快速切換，不被舊有的習慣卡住，當計畫改變時，大腦能更快轉彎，不因意外而感到過度崩潰。</p>
+                  
+                  <div class="modal-tip">
+                      📌 提示：順利完成兩階段訓練，系統將自動解鎖「完成練習」按鈕。
+                  </div>
+              </div>
+          </div>
+        </div>
 
-      <div class="stim hidden" id="stim">
-        <div class="arrow" id="arrow"></div>
-        <div class="word" id="word"></div>
+        <p>
+          跟隨指令的變換：<br>
+          <strong>第一關：記憶顏色 ➔ 方向</strong>；<strong>第二關：忽略字義，只回報顏色</strong><br>
+          重複練習直到感到放鬆。<br>
+        </p>
       </div>
-    </div>
 
-    <!-- 第一關：方向鍵 -->
-    <div class="controls hidden" id="dirControls">
-      <button data-key="ArrowUp">⬆ 上</button>
-      <button data-key="ArrowLeft">⬅ 左</button>
-      <button data-key="ArrowRight">➡ 右</button>
-      <button data-key="ArrowDown">⬇ 下</button>
-    </div>
+      
 
-    <!-- 第二關：顏色鍵 -->
-    <div class="controls hidden" id="colorControls">
-      <button data-key="RED" class="red">紅</button>
-      <button data-key="BLUE" class="blue">藍</button>
-      <button data-key="YELLOW" class="yellow">黃</button>
-      <button data-key="GREEN" class="green">綠</button>
-    </div>
+      <div class="arena-container">
+        <div id="rules" class="hidden"></div>
 
-    <div class="status" id="status">請點擊開始</div>
-  </section>
+        <div class="center">
+          <div class="fix" id="fix"></div>
+          <div class="stim hidden" id="stim">
+            <div id="arrow" class="arrow"></div>
+            <div id="word" class="word"></div>
+          </div>
+        </div>
 
-  <button class="btn primary" id="startBtn">開始訓練</button>
-  <button id="finish-btn">完成練習</button>
-</div>
+        <div class="controls-wrapper">
+          <div class="controls hidden" id="dirControls">
+            <button data-key="ArrowUp">⬆ 上</button>
+            <button data-key="ArrowLeft">⬅ 左</button>
+            <button data-key="ArrowRight">➡ 右</button>
+            <button data-key="ArrowDown">⬇ 下</button>
+          </div>
 
-<script src="loosen2.js"></script>
+          <div class="controls hidden" id="colorControls">
+            <button data-key="RED" class="btn-red">紅</button>
+            <button data-key="BLUE" class="btn-blue">藍</button>
+            <button data-key="YELLOW" class="btn-yellow">黃</button>
+            <button data-key="GREEN" class="btn-green">綠</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="result" id="status">請點擊開始</div>
+
+      <div class="button-container">
+        <button id="startBtn">開始訓練</button>
+      </div>
+
+      <div class="button-container" style="margin-top: 20px;">
+        <button id="finish-btn" disabled class="btn-disabled">完成練習</button>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="loosen2.js"></script>
+  <script>
+    // 統一的完成練習事件傳遞機制
+    document.getElementById("finish-btn").addEventListener("click", () => {
+      window.parent.postMessage(
+        { type: "practice-finished", practice: "loosen" },
+        "*"
+      );
+    });
+  </script>
 </body>
 </html>

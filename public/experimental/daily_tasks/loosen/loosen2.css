@@ -1,151 +1,265 @@
+/* 1. 基礎架構與背景統一 */
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system;
-  background: #0b0f18;
-  color: #e8eefc;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
 }
 
-.wrap {
-  max-width: 760px;
-  margin: auto;
-  padding: 20px;
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 建議換成 Loosen 專屬的背景圖，或沿用 Breathe 的統一風格 */
+    background-image: url("../../media/raw_image/loosen_background.png"); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
 }
 
-h1 { margin-bottom: 6px; }
-.sub { color: #a9b4d6; font-size: 14px; }
-
-.card {
-  background: #121a2a;
-  border-radius: 14px;
-  padding: 16px;
-  margin-bottom: 16px;
+.background::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(2px);
 }
 
-.hd {
-  font-size: 14px;
-  color: #a9b4d6;
-  margin-bottom: 10px;
+/* 2. 核心容器 (對齊 Reference 的 #app) */
+#app {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    z-index: 1;
 }
 
-/* 規則卡 */
-.rules {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+.hero {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
-.rule {
-  background: rgba(255,255,255,0.08);
-  padding: 12px;
-  border-radius: 12px;
-  font-weight: 800;
-  text-align: center;
+/* 3. 文字區塊 (移植 Reference 的毛玻璃卡片感) */
+.text-container {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 25px;
+    border-radius: 20px; /* 統一圓角 */
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    color: #333;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* 遊戲區 */
-.arena {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.text-container h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.text-container h2 {
+    font-size: 1.1rem;
+    font-weight: normal;
+    line-height: 1.6;
+    color: #4a5568;
+}
+
+#rules {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* 4. 遊戲競技場 (對齊 Reference 的容器感) */
+.arena-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
 }
 
 .center {
-  height: 220px;
-  border-radius: 16px;
-  background: rgba(0,0,0,0.22);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 250px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px; /* 統一圓角 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
 }
 
-/* 修改這部分 */
-.stim {
-  position: absolute;
-  top: 0;           /* 填滿父層 */
-  left: 0;          /* 填滿父層 */
-  right: 0;         /* 填滿父層 */
-  bottom: 0;        /* 填滿父層 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px; /* 讓方塊邊角圓滑一點 */
+/* 5. 遊戲內元素樣式 */
+#stim {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 18px; /* 讓顏色塊也有圓角 */
 }
 
-/* 確保 Fixation 是十字或明顯的一點 */
-.fix {
-  width: 20px;
-  height: 20px;
-  background: #fff;
-  border-radius: 50%;
-  opacity: 0.5;
+.arrow { font-size: 48px; }
+.word { font-size: 52px; font-weight: 900; }
+.fix { width: 12px; height: 12px; background: #cbd5e0; border-radius: 50%; }
+.hidden { display: none !important; }
+
+/* 6. 遊戲按鈕組 (保持功能性，但視覺圓角化) */
+.controls-wrapper {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
 }
 
-.arrow {
-  font-size: 36px;
-  opacity: 0.6;
-  margin-bottom: 6px;
-}
-
-.word {
-  font-size: 44px;
-  font-weight: 900;
-}
-
-.hidden { display: none; }
-
-/* 按鈕 */
 .controls {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
 }
 
 .controls button {
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-size: 16px;
-  font-weight: 800;
-  cursor: pointer;
-  background: rgba(255,255,255,0.08);
-  color: #fff;
+    padding: 12px 5px;
+    border-radius: 15px; /* 稍小的圓角以區分主按鈕 */
+    border: none;
+    font-weight: bold;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.1s;
 }
 
-.controls button:hover {
-  background: rgba(255,255,255,0.15);
+/* 顏色鍵移植 Reference 的發光感邏輯 */
+.btn-red { background: #fff5f5 !important; color: #f56565 !important; border: 2px solid #feb2b2 !important; }
+.btn-blue { background: #ebf8ff !important; color: #4299e1 !important; border: 2px solid #90cdf4 !important; }
+.btn-yellow { background: #fff9db !important; color: #d69e2e !important; border: 2px solid #faf089 !important; }
+.btn-green { background: #f0fff4 !important; color: #48bb78 !important; border: 2px solid #9ae6b4 !important; }
+
+/* 7. 狀態提示 (對齊 Reference 的 result 樣式) */
+.result {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    font-size: 1rem;
 }
 
-.red { background: #ff5c7a; }
-.blue { background: #5c7aff; }
-.yellow { background: #f2c94c; color: #000; }
-.green { background: #35d07f; color: #000; }
-
-.status {
-  color: #a9b4d6;
-  font-size: 14px;
+/* 8. 底部操作按鈕 (完全複製 Reference) */
+.button-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* 垂直排列以符合 Reference 結構 */
+    align-items: center;
+    gap: 15px;
 }
 
-.btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-size: 16px;
-  font-weight: 900;
-  cursor: pointer;
+#startBtn, #finish-btn {
+    padding: 15px 60px;
+    font-size: 18px;
+    border-radius: 50px; /* 膠囊型 */
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 250px; /* 統一寬度 */
 }
 
-.primary {
-  background: #35d07f;
-  color: #0b0f18;
+#startBtn {
+    background-color: #798071;
+    color: #000000;
+    font-weight: bold;
+}
+
+#startBtn:hover {
+    background-color: #7f7c71;
+    transform: scale(1.05);
+}
+
+#finish-btn:disabled {
+    background-color: #e2e8f0; /* 灰色背景 */
+    color: #94a3b8;           /* 灰色文字 */
+    border: 2px solid #cbd5e0;
+    cursor: not-allowed;      /* 禁用游標 */
+    opacity: 0.6;
 }
 
 #finish-btn {
-  background-color: #7b7b7b;
+    background-color: #E8EBE4;
+    color: #65635a;
+    border: 2px solid #E8EBE4;
 }
 
-#finish-btn:hover {
-  background-color: #5c5c5c;
+/* 9. 說明按鈕 (移植 Reference 的 info-btn) */
+.info-btn {
+    background: none;
+    border: 1px solid #B8BACF;
+    color: #7475b1;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+}
+.info-btn:hover { background: #dddeec; }
+
+/* 彈窗背景遮罩 */
+.modal-overlay {
+    display: none; /* 初始隱藏 */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 彈窗主體 */
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    padding: 30px;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    animation: fadeInModal 0.3s ease-out;
+}
+
+/* 右上角叉叉 */
+.close-btn {
+    position: absolute;
+    top: 15px; right: 20px;
+    background: none; border: none;
+    font-size: 28px; color: #999;
+    cursor: pointer;
+}
+.close-btn:hover { color: #333; }
+
+.modal-body h3 { color: #7475b1; margin-top: 20px; font-size: 1.2rem; }
+.modal-body p { color: #555; line-height: 1.6; margin-bottom: 15px; text-align: left; }
+.modal-tip { background: #f9f9f9; padding: 15px; border-radius: 10px; font-size: 0.9rem; color: #666; border-left: 4px solid #70c98b; }
+
+@keyframes fadeInModal {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }

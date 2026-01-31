@@ -4,18 +4,22 @@ const stimEl = document.getElementById("stim");
 const arrowEl = document.getElementById("arrow");
 const wordEl = document.getElementById("word");
 const fixEl = document.getElementById("fix");
+const openInfoBtn = document.getElementById('open-info');
+const closeInfoBtn = document.getElementById('close-info');
+const infoModal = document.getElementById('info-modal');
 const statusEl = document.getElementById("status");
 const startBtn = document.getElementById("startBtn");
 const finishBtn = document.getElementById("finish-btn");
+const exitBtn = finishBtn;
 const dirControls = document.getElementById("dirControls");
 const colorControls = document.getElementById("colorControls");
 
 /* ================== 常數 ================== */
 const COLORS = [
-  { name: "紅", hex: "#ff5c7a" },
-  { name: "藍", hex: "#5c7aff" },
-  { name: "黃", hex: "#f2c94c" },
-  { name: "綠", hex: "#35d07f" }
+  { name: "紅", hex: "#f56565" }, // 更亮一點的紅
+  { name: "藍", hex: "#4299e1" }, // 天空藍
+  { name: "黃", hex: "#ecc94b" }, // 陽光黃
+  { name: "綠", hex: "#48bb78" }  // 草地綠
 ];
 
 const DIRECTIONS = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
@@ -23,7 +27,7 @@ const DIR_LABEL = { ArrowUp: "上", ArrowDown: "下", ArrowLeft: "左", ArrowRig
 const DIR_SYMBOL = { ArrowUp: "↑", ArrowDown: "↓", ArrowLeft: "←", ArrowRight: "→" };
 
 const STREAK_TO_UNLOCK = 10;
-const LEVEL2_TOTAL_TRIALS = 3;
+const LEVEL2_TOTAL_TRIALS = 10;
 
 /* ================== 狀態 ================== */
 let level = 1;
@@ -130,7 +134,7 @@ function showStimulus() {
     const dir = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
     currentCorrect = ink.name;
 
-    arrowEl.textContent = DIR_SYMBOL[dir];
+  
     wordEl.textContent = word.name;
     wordEl.style.color = ink.hex;
   }
@@ -185,6 +189,9 @@ function handleResponse(resp) {
     if (level2Trials >= LEVEL2_TOTAL_TRIALS) {
     statusEl.textContent = "✅ 訓練完成，感謝參與！";
 
+    finishBtn.disabled = false;                // 解除禁用
+    finishBtn.classList.remove("btn-disabled"); // 移除灰色類別
+
     stimEl.classList.add("hidden");
     fixEl.classList.add("hidden");
     rulesEl.classList.add("hidden");
@@ -215,13 +222,17 @@ document.querySelectorAll("#colorControls button").forEach(btn => {
 });
 
 startBtn.onclick = () => {
-  level = 1;
-  correctStreak = 0;
-  totalErrors = 0;
-  level2Trials = 0;
-  trialIndex = 0;
-  trialLog = [];
-  startCountdown();
+    level = 1;
+    correctStreak = 0;
+    totalErrors = 0;
+    level2Trials = 0;
+    trialIndex = 0;
+    trialLog = [];
+    
+    // 確保重新開始訓練時，按鈕再次變回不可點擊
+    finishBtn.disabled = true; 
+    
+    startCountdown();
 };
 
 finishBtn.addEventListener("click", () => {
@@ -235,3 +246,20 @@ finishBtn.addEventListener("click", () => {
     "*"
   );
 });
+
+// 開啟視窗
+openInfoBtn.onclick = function() {
+    infoModal.style.display = 'flex';
+}
+
+// 點擊叉叉關閉
+closeInfoBtn.onclick = function() {
+    infoModal.style.display = 'none';
+}
+
+// 點擊視窗外部也可以關閉 (如同你圖檔所述)
+window.onclick = function(event) {
+    if (event.target == infoModal) {
+        infoModal.style.display = 'none';
+    }
+}
