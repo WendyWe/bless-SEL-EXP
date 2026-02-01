@@ -5,22 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>呼吸練習</title>
     <link rel="stylesheet" href="../mindfulness/mindfulness.css">
-     <link rel="icon" href="data:;base64,iVBORw0KGgo="> 
+    <link rel="icon" href="data:;base64,iVBORw0KGgo="> 
 </head>
 <body>
+    <div class="background-overlay"></div>
+
     <div class="container">
         <div id="start-overlay">讓我們陪你 <br> 從慢下呼吸開始</div>
-        <div class="circle-wrapper">
-        <div id="breathing-circle"></div>
-        </div>
+        
         <div id="instruction"></div>
         <div id="countdown"></div>
-        <button class="finish-btn" onclick="window.location.href='/experimental/calm_kit/index.html?from=functionDone'">完成練習
-        </button>
+        
+        <button class="finish-btn" onclick="window.location.href='/experimental/calm_kit/index.html?from=functionDone'">完成練習</button>
+        
         <audio id="bg-music" src="../mindfulness/breathing.mp3" loop></audio>
     </div>
-
-    
 
     <script src="../mindfulness/mindfulness.js"></script>
 </body>
