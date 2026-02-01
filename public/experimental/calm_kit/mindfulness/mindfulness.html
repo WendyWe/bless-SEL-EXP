@@ -10,17 +10,20 @@
 <body>
     <div class="background-overlay"></div>
 
-    <div class="container">
-        <div id="start-overlay">讓我們陪你 <br> 從慢下呼吸開始</div>
+    <div class="container"> <div id="start-overlay">
+            <div class="white-strip">
+                <span>讓我們陪你</span>
+                <span>從慢下呼吸開始</span>
+            </div>
+            <div class="click-hint">請點擊頁面任一處，開始正念呼吸之練習</div>
+        </div>
         
-        <div id="instruction"></div>
-        <div id="countdown"></div>
+               
+        <div id="status-hint">練習進行中，引導結束後將出現完成練習按鈕</div>
         
         <button class="finish-btn" onclick="window.location.href='/experimental/calm_kit/index.html?from=functionDone'">完成練習</button>
         
         <audio id="bg-music" src="../mindfulness/breathing.mp3" loop></audio>
-    </div>
-
-    <script src="../mindfulness/mindfulness.js"></script>
+    </div> <script src="../mindfulness/mindfulness.js"></script>
 </body>
 </html>

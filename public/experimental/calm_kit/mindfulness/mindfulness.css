@@ -35,23 +35,66 @@ body, html {
     z-index: 1; /* 確保內容在背景之上 */
 }
 
+/* 初始開始頁面容器 */
 #start-overlay {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* 保留原本的米白色感或稍微調亮 */
-    background-color: rgba(255, 255, 255, 0.9); 
+    background-color: rgba(0, 0, 0, 0.2); /* 淡淡的暗化，突顯白條 */
     display: flex;
+    flex-direction: column; /* 讓內容垂直排列 */
+    justify-content: center; /* 讓白條居中 */
+    align-items: center;
+    cursor: pointer;
+    z-index: 100;
+}
+
+/* 垂直白條樣式 */
+.white-strip {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 40px 20px; /* 增加上下內距，呈現條狀感 */
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 2rem;
-    color: #333;
-    cursor: pointer;
-    z-index: 10;
+    line-height: 1.8;
+    letter-spacing: 0.5rem;
+    color: #444;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+    border-radius: 4px; /* 極小圓角增加精緻感 */
+}
+
+/* 螢幕最下方的小提示 */
+.click-hint {
+    position: absolute;
+    bottom: 30px; /* 固定在距離底部 30px */
+    font-size: 0.9rem; /* 字體縮小 */
+    color: rgba(255, 255, 255, 0.8); /* 半透明白色，不搶戲 */
+    letter-spacing: 1px;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5); /* 確保在森林背景上也清晰 */
+}
+
+#status-hint {
+    display: none; 
+    opacity: 0;
+    
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9); /* 柔和白 */
+    letter-spacing: 0.2rem; /* 拉開字距增加高級感 */
+    font-weight: 300;
     text-align: center;
-    line-height: 1.6;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+    
+    /* 確保在頁面下方，但不擋住按鈕 */
+    position: absolute;
+    bottom: 15%;
+    width: 100%;
+    
+    /* 動畫過渡 */
+    transition: opacity 1s ease-in-out;
 }
 
 
@@ -73,15 +116,25 @@ body, html {
 .finish-btn {
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.8s ease;
-    padding: 12px 28px;
-    font-size: 1.1rem;
-    background: linear-gradient(135deg, #63b3ed, #3182ce);
+    transition: all 1s ease;
+    
+    /* 核心設計 */
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.6); /* 淡淡的半透白框 */
     color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    padding: 15px 40px;
+    font-size: 1rem;
+    letter-spacing: 0.5rem; /* 字距拉開非常重要 */
+    text-indent: 0.5rem; /* 修正最後一個字的字距偏移 */
+    
+    /* 移除圓角，改為方角或極小圓角 */
+    border-radius: 2px; 
+    backdrop-filter: blur(3px); /* 微微的毛玻璃感 */
+}
+
+.finish-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    color: #333; /* 懸停時反白 */
 }
 
 .finish-btn.visible {
@@ -89,7 +142,3 @@ body, html {
     pointer-events: auto;
 }
 
-.finish-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
