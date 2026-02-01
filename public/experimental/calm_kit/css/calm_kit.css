@@ -155,102 +155,123 @@ transform: scale(1.05);
 /* ==================================== */
 /* 2. Slider VAS 樣式 (替換原 Affect Grid) */
 /* ==================================== */
-
 #affectgrid-section {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 2000;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(180deg, #fdfbfb 0%, #ebedee 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  overflow: hidden;
 }
 
 .slider-wrapper {
-    width: 85%;
-    max-width: 400px;
-    padding: 30px;
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    text-align: center;
+  width: 85%;
+  max-width: 420px;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 30px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+  text-align: center;
+  position: relative;
 }
 
-.slider-instruction {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 30px;
-}
+.mood-title { font-size: 1.8rem; margin-bottom: 8px; color: #333; }
+.slider-instruction { font-size: 0.9rem; color: #777; margin-bottom: 30px; }
 
-.slider-group {
-    margin-bottom: 40px;
-    text-align: left;
-}
-
-.slider-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.label-text {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--color-text-dark);
-}
+.slider-group { margin-bottom: 35px; text-align: left; }
+.slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.label-text { font-weight: bold; font-size: 1.1rem; color: #444; }
 
 .status-badge {
-    background: var(--color-bg-brand);
-    padding: 3px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    color: #333;
-    font-weight: 500;
+  background: #EDBBAB; /* 沿用你原本的粉色 */
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: #333;
 }
 
-.slider-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+.slider-container { display: flex; align-items: center; gap: 15px; }
+.emoji-label { font-size: 1.6rem; }
 
-.emoji-label { font-size: 1.8rem; }
-
-/* 滑桿美化 */
 input[type="range"] {
-    flex: 1;
-    height: 12px;
-    border-radius: 10px;
-    appearance: none;
-    outline: none;
-    cursor: pointer;
+  flex: 1;
+  height: 8px;
+  border-radius: 5px;
+  appearance: none;
+  background: #eee;
+  outline: none;
 }
 
-/* 增加視覺漸層感 */
 #valence-slider { background: linear-gradient(to right, #91A8D0, #eee, #F09476); }
 #arousal-slider { background: linear-gradient(to right, #a1c4fd, #eee, #ff6b6b); }
 
 .slider-hint {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: #999;
-    margin-top: 10px;
-    padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 10px;
+  padding: 0 35px;
 }
 
-.button-group {
-    margin-top: 20px;
+.button-area {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.btn {
+    padding: 15px 40px;
+    margin: 15px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* 緩慢的呼吸感 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(5px);
 }
 
 #confirm-btn {
-    position: static; /* 取消原本的 fixed */
-    transform: none;
-    width: 100%;
-    margin-bottom: 10px;
+    background-color: #FAA275;
+    color: white;
+    box-shadow: 0 4px 12px rgba(165, 202, 210, 0.4);
+}
+
+#confirm-btn:hover {
+    background-color: #FF8C61;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(165, 202, 210, 0.5);
+}
+
+#back-home-ag {
+  /* 1. 核心定位：脫離 button-area，固定在左上角 */
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  
+  /* 2. 樣式微調：讓它在角落看起來更精緻 */
+  margin: 0;                /* 移除原本的 15px margin */
+  padding: 8px 20px;        /* 稍微縮小尺寸 */
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid #CBD5E0;
+  color: #718096;
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+  z-index: 3000;            /* 確保它在最上層，不被其他元素遮擋 */
+}
+
+/* 修正 Hover 效果 */
+#back-home-ag:hover {
+  background: white;
+  color: #333;              /* 這裡直接寫顏色，避免 var(--primary-dark) 未定義失效 */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 

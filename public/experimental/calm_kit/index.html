@@ -9,14 +9,14 @@
 <body>
   <!-- ✳️ 進入與離開時都會出現的情緒格 -->
   <section id="affectgrid-section">
-    <h2>情緒狀態評量</h2>
-    <div class="slider-wrapper">
-        <p class="slider-instruction">請滑動下方桿子，描述你當前的感受</p>
+    <div class="background-glow"></div> <div class="slider-wrapper">
+        <h2 class="mood-title">你好嗎？</h2>
+        <p class="slider-instruction">給自己一點時間，觀察現在的狀態</p>
 
         <div class="slider-group">
             <div class="slider-header">
-                <span class="label-text">心情感受</span>
-                <span id="valence-text" class="status-badge">普通</span>
+                <span class="label-text">現在的心情</span>
+                <span id="valence-text" class="status-badge">沒特別感覺</span>
             </div>
             <div class="slider-container">
                 <span class="emoji-label">☹️</span>
@@ -24,35 +24,38 @@
                 <span class="emoji-label">😊</span>
             </div>
             <div class="slider-hint">
-                <span>不愉快</span>
-                <span>愉快</span>
+                <span>很痛苦、想哭</span>
+                <span>很愉快、想笑</span>
             </div>
         </div>
 
         <div class="slider-group">
             <div class="slider-header">
-                <span class="label-text">身體能量</span>
-                <span id="arousal-text" class="status-badge">中等</span>
+                <span class="label-text">心跳與緊繃感</span>
+                <span id="arousal-text" class="status-badge">一般</span>
             </div>
             <div class="slider-container">
                 <span class="emoji-label">💤</span>
                 <input type="range" id="arousal-slider" min="1" max="100" value="50">
-                <span class="emoji-label">🔥</span>
+                <span class="emoji-label">⚡</span>
             </div>
             <div class="slider-hint">
-                <span>疲累/平靜</span>
-                <span>亢奮/激動</span>
+                <span>心跳慢、放鬆</span>
+                <span>心跳快、緊繃</span>
             </div>
         </div>
 
         <div id="feedback">請調整滑桿後按下送出</div>
-        
-        <div class="button-group">
-            <button id="confirm-btn" class="btn">送出</button>
-            <button id="back-home-ag" class="btn btn-home hidden">回到首頁</button>
-        </div>
+
+
+        <div class="button-area">
+          <button id="confirm-btn" class="btn">送出</button>
+          <br>
+          <button id="back-home-ag" class="btn btn-back-home-ag">回到前頁</button>
+      </div>
     </div>
 </section>
+
 
   <!-- ✳️ 進入後顯示一次的功能選單 -->
   <div class="container hidden">
