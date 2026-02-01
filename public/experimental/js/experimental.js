@@ -65,6 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 按鈕導向子頁面
     dailyBtn.addEventListener('click', () => {
+    // --- 新增：警告提醒邏輯 ---
+        const warningMessage = "提醒：進入「本日任務」後，須完成完整練習（含影片、心情記錄、安頓練習與後測），否則將不視為完整使用，後續使用時間的獎勵可能會受影響。\n\n確定要開始今日任務嗎？";
+        
+        if (!confirm(warningMessage)) {
+            // 如果使用者按「取消」，就直接 return，不執行後續動作
+            return;
+        }
+        
     // 點擊時讓 app 容器慢慢變透明，再跳轉
     document.getElementById('app').style.opacity = '0';
     document.getElementById('app').style.transition = 'opacity 0.8s';
