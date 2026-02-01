@@ -15,30 +15,39 @@ let currentKitType = null;
 
 
 // --- 滑桿即時更新邏輯 ---
-function handleSliderInput() {
+// 2. 定義更新邏輯
+function updateMoodDisplay() {
     const v = parseInt(vSlider.value);
     const a = parseInt(aSlider.value);
 
-    // 更新愉悅度文字
-    if (v < 35) vText.textContent = "不愉快";
-    else if (v > 65) vText.textContent = "愉快";
-    else vText.textContent = "普通";
+    // 更新心情文字
+    if (v < 35) vText.textContent = "感覺不太好";
+    else if (v > 65) vText.textContent = "感覺挺好的";
+    else vText.textContent = "沒特別感覺";
 
-    // 更新能量感文字
-    if (a < 35) aText.textContent = "疲累 / 平靜";
-    else if (a > 65) aText.textContent = "亢奮 / 激動";
-    else aText.textContent = "中等";
+    // 更新身體文字
+    if (a < 35) aText.textContent = "慢下來了";
+    else if (a > 65) aText.textContent = "心跳很快";
+    else aText.textContent = "與平常差不多";
 
-    // 更新要存入的數值 (1-100)
+    // 同步到要發送的變數
     selectedSquare = { x: v, y: a };
-    feedback.textContent = `已調整好${mode === "enter" ? "進入前" : "練習後"}的狀態`;
 }
 
-vSlider.addEventListener('input', handleSliderInput);
-aSlider.addEventListener('input', handleSliderInput);
+// 3. 綁定監聽事件
+if (vSlider && aSlider) {
+    vSlider.addEventListener('input', updateMoodDisplay);
+    aSlider.addEventListener('input', updateMoodDisplay);
+    // 初始化一次
+    updateMoodDisplay();
+}
 
-// --- 送出按鈕與後端對接 ---
+// 4. 修改原本的送出邏輯 (確保抓到 1-100)
 confirmBtn.addEventListener("click", () => {
+    // 如果這時候沒有 selectedSquare，給個保底值
+    const xValue = selectedSquare ? selectedSquare.x : 50;
+    const yValue = selectedSquare ? selectedSquare.y : 50;
+
     let duration = 0;
     if (mode === "exit" && startTime) {
         duration = (Date.now() - startTime) / 1000;
@@ -47,12 +56,14 @@ confirmBtn.addEventListener("click", () => {
     const payload = {
         userId: localStorage.getItem("userId"),
         mode: mode, 
-        x: selectedSquare.x, // 直接傳送 1-100
-        y: selectedSquare.y, // 直接傳送 1-100
+        x: xValue, 
+        y: yValue,
         kitType: currentKitType,
         duration: duration
     };
     
+    console.log("發送 Payload:", payload); // 偵錯用
+
     fetch('/api/calm-kit/save-mood', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,8 +74,7 @@ confirmBtn.addEventListener("click", () => {
         if (data.success) {
             handleFlowAfterSave(); 
         } else {
-            console.error("儲存失敗:", data.message);
-            handleFlowAfterSave(); // 即使失敗也讓使用者繼續流程
+            handleFlowAfterSave(); 
         }
     })
     .catch(error => {
