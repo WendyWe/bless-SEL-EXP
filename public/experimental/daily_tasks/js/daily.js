@@ -49,26 +49,10 @@ async function checkDailyUsageOnce() {
 
 // ✅ 進入頁面後，先等「一天一次」檢查跑完，再初始化 daily flow
 document.addEventListener('DOMContentLoaded', async () => {
-  const btnDaily = document.getElementById('btn-daily');
-
-    if (btnDaily) {
-        btnDaily.addEventListener('click', async (e) => {
-            // --- 新增的提醒邏輯 ---
-            const message = "提醒：須完成完整練習（包含影片、心情記錄、安頓練習與後測），否則將不視為完整使用，後續使用時間的獎勵可能會受影響。\n\n確定要開始今日任務嗎？";
-            
-            if (!confirm(message)) {
-                return; // 使用者點擊取消，中斷執行
-            }
-
-            // --- 原有的檢查邏輯 ---
-            const allowed = await checkDailyUsageOnce();
-            if (allowed) {
-                // 如果檢查通過（且使用者點了確定），跳轉到每日任務頁面
-                // 註：根據你的 HTML 結構，此處應導向 daily_task 的實際頁面
-                window.location.href = "/experimental/daily_task.html"; 
-            }
-        });
-    }
+  const allowed = await checkDailyUsageOnce();
+  if (!allowed) {
+    return;
+  }
 
   // === 區塊元素 ===
   const videoSection = document.getElementById('video-section');
