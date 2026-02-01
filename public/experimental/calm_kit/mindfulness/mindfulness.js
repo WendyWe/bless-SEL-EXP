@@ -1,60 +1,62 @@
-const circle = document.getElementById('breathing-circle');
 const instruction = document.getElementById('instruction');
 const countdown = document.getElementById('countdown');
 const music = document.getElementById('bg-music');
-const backButton = document.getElementById('back-button');
 const startOverlay = document.getElementById('start-overlay');
 const finishBtn = document.querySelector('.finish-btn');
+const statusHint = document.getElementById('status-hint');
 
-// 🧘 呼吸循環
 function startCountdown(duration) {
-  let timeLeft = duration;
-  countdown.innerText = `${timeLeft} 秒`;
-  const timer = setInterval(() => {
-    timeLeft--;
+    let timeLeft = duration;
     countdown.innerText = `${timeLeft} 秒`;
-    if (timeLeft <= 0) clearInterval(timer);
-  }, 1000);
+    const timer = setInterval(() => {
+        timeLeft--;
+        if (timeLeft >= 0) countdown.innerText = `${timeLeft} 秒`;
+        if (timeLeft <= 0) clearInterval(timer);
+    }, 1000);
 }
 
 function breathingCycle() {
-  instruction.innerText = "邀請您跟著圓圈的擴大 \n 吸氣…";
-  startCountdown(4);
-  circle.style.transform = "scale(1.5)";
-  circle.style.background = "radial-gradient(circle, #90cdf4, #63b3ed)";
-  circle.style.boxShadow = "0 0 40px rgba(99, 179, 237, 0.7)";
-
-  setTimeout(() => {
-    instruction.innerText = "秉住呼吸 \n 停留…";
+    instruction.innerText = "吸氣…";
     startCountdown(4);
-
     setTimeout(() => {
-      instruction.innerText = "邀請您跟著圓圈的縮小 \n 吐氣…";
-      startCountdown(4);
-      circle.style.transform = "scale(1)";
-      circle.style.background = "radial-gradient(circle, #bee3f8, #90cdf4)";
-      circle.style.boxShadow = "0 0 20px rgba(144, 205, 244, 0.5)";
-
-      setTimeout(() => {
-        instruction.innerText = "秉住呼吸 \n 停留…";
+        instruction.innerText = "停留…";
         startCountdown(4);
-        setTimeout(breathingCycle, 4000);
-      }, 4000);
+        setTimeout(() => {
+            instruction.innerText = "吐氣…";
+            startCountdown(4);
+            setTimeout(() => {
+                instruction.innerText = "停留…";
+                startCountdown(4);
+                setTimeout(breathingCycle, 4000);
+            }, 4000);
+        }, 4000);
     }, 4000);
-  }, 4000);
 }
 
-// 🎵 開始呼吸
 function startBreathing() {
-  music.play().catch(()=>{}); // 防止自動播放錯誤
-  startOverlay.style.display = "none";
-  breathingCycle();
+    music.play().catch(() => {});
+    
+    // 淡出開始遮罩
+    startOverlay.style.transition = "opacity 1s ease";
+    startOverlay.style.opacity = "0";
+    
+    setTimeout(() => {
+        startOverlay.style.display = "none";
+        statusHint.style.display = "block"; // 顯示底部提醒
+        breathingCycle();
+    }, 1000);
 
-  // 🕊️ 60秒後淡入「完成練習」按鈕
-  setTimeout(() => {
-    finishBtn.classList.add("visible");
-  }, 20000);
+    // 20秒後邏輯：隱藏提醒、出現居中按鈕、停止呼吸文字
+    setTimeout(() => {
+        statusHint.style.opacity = "0";
+        instruction.style.opacity = "0"; // 隱藏呼吸指導，讓畫面乾淨留給按鈕
+        countdown.style.opacity = "0";
+        
+        setTimeout(() => {
+            statusHint.style.display = "none";
+            finishBtn.classList.add("visible");
+        }, 1000);
+    }, 20000);
 }
 
-// 📍事件綁定
 startOverlay.addEventListener('click', startBreathing);
