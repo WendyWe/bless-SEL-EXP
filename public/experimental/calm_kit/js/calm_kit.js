@@ -1,76 +1,58 @@
-const gridContainer = document.querySelector('.grid-container');
+const vSlider = document.getElementById('valence-slider');
+const aSlider = document.getElementById('arousal-slider');
+const vText = document.getElementById('valence-text');
+const aText = document.getElementById('arousal-text');
 const feedback = document.getElementById('feedback');
 const confirmBtn = document.getElementById('confirm-btn');
 const affectSection = document.getElementById("affectgrid-section");
 const mainContainer = document.querySelector(".container");
 
-let selectedSquare = null;
-let mode = "enter"; // "enter" = 進入時, "exit" = 離開時
-let chosenFunction = null; // 使用者選過的功能
-
-// --- 💡 新增：用於追蹤時間與功能的變數 ---
+let selectedSquare = { x: 50, y: 50 }; // 預設中間值
+let mode = "enter"; 
+let chosenFunction = null;
 let startTime = null;
 let currentKitType = null;
 
-// 顏色邏輯
-const getColor = (x, y) => {
-    if (y > 5 && x > 5) return "rgba(255, 215, 0, 0.8)";
-    if (y > 5 && x < 5) return "rgba(255, 69, 58, 0.8)";
-    if (y < 5 && x > 5) return "rgba(50, 205, 50, 0.8)";
-    if (y < 5 && x < 5) return "rgba(65, 105, 225, 0.8)";
-    return "rgba(200,200,200,0.5)";
-};
 
-// 建立 Affect Grid
-for (let y = 9; y >= 1; y--) {
-    for (let x = 1; x <= 9; x++) {
-        const gridItem = document.createElement('div');
-        gridItem.classList.add('grid-item');
-        gridItem.dataset.x = x;
-        gridItem.dataset.y = y;
+// --- 滑桿即時更新邏輯 ---
+function handleSliderInput() {
+    const v = parseInt(vSlider.value);
+    const a = parseInt(aSlider.value);
 
-        if (y === 5) gridItem.textContent = x;
-        if (x === 5) gridItem.textContent = y;
+    // 更新愉悅度文字
+    if (v < 35) vText.textContent = "不愉快";
+    else if (v > 65) vText.textContent = "愉快";
+    else vText.textContent = "普通";
 
-        gridItem.addEventListener('click', () => {
-            document.querySelectorAll('.grid-item').forEach(item => {
-                item.classList.remove('selected');
-                item.style.backgroundColor = "#f9f9f9";
-            });
+    // 更新能量感文字
+    if (a < 35) aText.textContent = "疲累 / 平靜";
+    else if (a > 65) aText.textContent = "亢奮 / 激動";
+    else aText.textContent = "中等";
 
-            gridItem.classList.add('selected');
-            gridItem.style.backgroundColor = getColor(x, y);
-            selectedSquare = { x, y };
-            feedback.textContent = `已選擇您${mode === "enter" ? "進入時" : "離開時"}的情緒狀態：X = ${x}, Y = ${y}`;
-        });
-
-        gridContainer.appendChild(gridItem);
-    }
+    // 更新要存入的數值 (1-100)
+    selectedSquare = { x: v, y: a };
+    feedback.textContent = `已調整好${mode === "enter" ? "進入前" : "練習後"}的狀態`;
 }
 
-// 點擊送出按鈕
-confirmBtn.addEventListener("click", () => {
-    if (!selectedSquare) {
-        alert("請先點選一個格子！");
-        return;
-    }
+vSlider.addEventListener('input', handleSliderInput);
+aSlider.addEventListener('input', handleSliderInput);
 
-   // --- 💡 修改：計算 duration 並準備 payload ---
+// --- 送出按鈕與後端對接 ---
+confirmBtn.addEventListener("click", () => {
     let duration = 0;
     if (mode === "exit" && startTime) {
-        duration = (Date.now() - startTime) / 1000; // 單位：秒
+        duration = (Date.now() - startTime) / 1000;
     }
 
     const payload = {
         userId: localStorage.getItem("userId"),
         mode: mode, 
-        x: selectedSquare.x,
-        y: selectedSquare.y,
-        kitType: currentKitType, // 這裡會記錄是哪個功能
-        duration: duration       // 這裡會記錄使用秒數
+        x: selectedSquare.x, // 直接傳送 1-100
+        y: selectedSquare.y, // 直接傳送 1-100
+        kitType: currentKitType,
+        duration: duration
     };
     
-    // 傳送到 Server (假設 API 路徑為 /api/save-mood)
     fetch('/api/calm-kit/save-mood', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,29 +61,28 @@ confirmBtn.addEventListener("click", () => {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            console.log("情緒座標儲存成功");
             handleFlowAfterSave(); 
         } else {
             console.error("儲存失敗:", data.message);
+            handleFlowAfterSave(); // 即使失敗也讓使用者繼續流程
         }
     })
     .catch(error => {
         console.error("網路請求出錯:", error);
-        // 即使請求失敗，為了使用者體驗，通常還是會執行後續流程
         handleFlowAfterSave(); 
     });
 });
-    
-    // 封裝原本的換頁邏輯
-    function handleFlowAfterSave() {
+
+function handleFlowAfterSave() {
     if (mode === "enter") {
         affectSection.classList.add("hidden");
         mainContainer.classList.remove("hidden");
         mode = "function";
         feedback.textContent = "";
-        selectedSquare = null; // 清除選擇，準備給後測使用
+        // 重置滑桿位置給離開時評量
+        vSlider.value = 50; aSlider.value = 50;
+        handleSliderInput();
     } else if (mode === "exit") {
-        // --- 💡 修改：結束後清除暫存 ---
         sessionStorage.removeItem('kitStartTime');
         sessionStorage.removeItem('kitType');
         alert("謝謝你願意花時間照顧自己。\n希望現在的你，比剛剛更安穩一些。");
