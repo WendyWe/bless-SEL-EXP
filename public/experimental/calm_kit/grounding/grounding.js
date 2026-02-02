@@ -1,58 +1,35 @@
-const steps = [
-    "請找個安靜的空間，讓我們準備開始",
-    "感覺腳底踩地的觸感",
-    "找出你看到的 5 樣東西",
-    "感受 4 種不同的觸感",
-    "注意 3 種你聽到的聲音",
-    "留意 2 種你聞到的氣味",
-    "感覺嘴裡的味道或想吃的東西",
-    "回到整個身體，感覺你在這裡",
-    "做幾個深呼吸，慢慢回到現在"
-];
+const music = document.getElementById('bg-music');
+const startOverlay = document.getElementById('start-overlay');
+const finishBtn = document.querySelector('.finish-btn');
+const statusHint = document.getElementById('status-hint');
 
-const timings = [
-    8000, 
-    8000,  
-    10000,  
-    10000,
-    10000,
-    10000,
-    10000,
-    15000, 
-    15000, 
-];
+function startBreathing() {
+    // 1. 播放音樂
+    music.play().catch(err => console.log("音樂播放受阻:", err));
+    
+    // 2. 淡出並移除開始遮罩
+    startOverlay.style.transition = "opacity 1s ease";
+    startOverlay.style.opacity = "0";
+    
+    setTimeout(() => {
+        startOverlay.style.display = "none";
+        // 確保提示文字是顯示的
+        statusHint.style.display = "block";
+        // 稍微延遲一下觸發 opacity，確保 transition 動畫能跑出來
+        setTimeout(() => {
+            statusHint.style.opacity = "1";
+        }, 50); 
+    }, 1000);
 
-let currentStep = 0;
-
-function showNextStep() {
-    if (currentStep < steps.length) {
-        document.getElementById("stepText").innerText = steps[currentStep];
-        const delay = timings[currentStep]; // 根據對應秒數設定 delay
-        currentStep++;
-        setTimeout(showNextStep, delay);
-    } else {
-        document.getElementById("endOptions").style.display = "block";
-    }
+    // 3. 20秒後：隱藏提示文字，顯示完成按鈕
+    setTimeout(() => {
+        statusHint.style.opacity = "0"; // 提示文字淡出
+        
+        setTimeout(() => {
+            statusHint.style.display = "none";
+            finishBtn.classList.add("visible"); // 按鈕出現
+        }, 1000);
+    }, 20000); 
 }
 
-function startGrounding() {
-    const audio = document.getElementById("groundingAudio");
-    audio.play().catch(() => {
-        console.log("語音播放被阻擋");
-    });
-
-    showNextStep();
-}
-
-// 取得返回按鈕元素
-const backBtn = document.getElementById("backBtn");
-
-// 【修正返回邏輯】: 點擊按鈕時強制導航回 calm.html 觸發 Affect Grid
-if (backBtn) {
-    backBtn.onclick = function () {
-        // 因為 grounding.html 和 calm.html 在同一個 /calm_down_kit/ 目錄下
-        window.location.href = "calm.html"; 
-    };
-}
-// 注意：原來的 HTML 是 <button onclick="window.location.href='index.html'">回首頁</button>
-// 這裡沒有改動，但如果 '回首頁' 也要回到 calm.html，請記得修改 endOptions 裡的按鈕。
+startOverlay.addEventListener('click', startBreathing);

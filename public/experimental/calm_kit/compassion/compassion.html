@@ -1,110 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <title>Self-Compassion</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    #bgVideo {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
-
-    .center-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      text-align: center;
-      z-index: 1;
-    }
-
-    #backBtn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      z-index: 10;
-      background-color: rgba(255, 255, 255, 0.6);
-      color: #333;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 15px;
-      font-size: 16px;
-      cursor: pointer;
-      backdrop-filter: blur(4px);
-      transition: background-color 0.3s ease;
-    }
-
-    #backBtn:hover {
-      background-color: rgba(255, 255, 255, 0.8);
-    }
-
-    .finish-btn {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.8s ease;
-    padding: 12px 28px;
-    font-size: 1.1rem;
-    background: linear-gradient(135deg, #63b3ed, #3182ce);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
-}
-
-    /* hover 效果 */
-    .finish-btn:hover {
-        background: linear-gradient(135deg, #4299e1, #2b6cb0);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 14px rgba(49, 130, 206, 0.4);
-    }
-
-    /* 顯示狀態 */
-    .finish-btn.visible {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自我慈悲冥想</title>
+    <link rel="stylesheet" href="../compassion/compassion.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo="> 
 </head>
 <body>
+    <div class="background-overlay"></div>
 
-  <video id="bgVideo" autoplay muted loop playsinline>
-    <source src="../compassion/compassion_video.mp4" type="video/mp4" />
-  </video>
-
-  <div class="center-text">
-    <h1>深呼吸<br> 溫柔地陪伴自己</h1>
-    <p>這一刻，讓我們一起好好照顧自己。</p>
-    <button class="finish-btn" onclick="window.location.href='/experimental/calm_kit/index.html?from=functionDone'">完成練習
-        </button>
-  </div>
-
-  <script>
-    window.onload = function () {
-      const video = document.getElementById("bgVideo");
-      video.playbackRate = 0.5;
-
-      // ✅ 取得按鈕
-      const finishBtn = document.querySelector(".finish-btn");
-
-      // ✅ 等20秒淡入顯示
-      setTimeout(() => {
-        finishBtn.classList.add("visible");
-      }, 20000);
-    };
-  </script>
+    <div class="container"> <div id="start-overlay">
+            <div class="white-strip">
+                <span>深呼吸，溫柔地陪伴自己</span>
+                <span>這一刻，讓我們一起好好照顧自己。</span>
+            </div>
+            <div class="click-hint">請點擊頁面任一處，開始自我慈悲冥想練習</div>
+        </div>
+        
+               
+        <div id="status-hint">練習進行中，引導結束後將出現完成練習按鈕</div>
+        
+        <button class="finish-btn" onclick="window.location.href='/experimental/calm_kit/index.html?from=functionDone'">完成練習</button>
+        
+        <audio id="bg-music" src="../mindfulness/compassion.mp3" loop></audio>
+    </div> <script src="../compassion/compassion.js"></script>
 </body>
 </html>

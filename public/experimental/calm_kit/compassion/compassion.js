@@ -1,14 +1,35 @@
-function startSession() {
-  const audio = document.getElementById("meditationAudio");
-  const finishBtn = document.querySelector(".finish-btn");
+const music = document.getElementById('bg-music');
+const startOverlay = document.getElementById('start-overlay');
+const finishBtn = document.querySelector('.finish-btn');
+const statusHint = document.getElementById('status-hint');
 
-  // 播放音檔
-  audio.play().catch(err => {
-    console.log("Auto-play blocked by browser. User interaction needed.");
-  });
+function startBreathing() {
+    // 1. 播放音樂
+    music.play().catch(err => console.log("音樂播放受阻:", err));
+    
+    // 2. 淡出並移除開始遮罩
+    startOverlay.style.transition = "opacity 1s ease";
+    startOverlay.style.opacity = "0";
+    
+    setTimeout(() => {
+        startOverlay.style.display = "none";
+        // 確保提示文字是顯示的
+        statusHint.style.display = "block";
+        // 稍微延遲一下觸發 opacity，確保 transition 動畫能跑出來
+        setTimeout(() => {
+            statusHint.style.opacity = "1";
+        }, 50); 
+    }, 1000);
 
-  // 20 秒後淡入出現完成按鈕
-  setTimeout(() => {
-    finishBtn.classList.add("visible");
-  }, 20000);
+    // 3. 20秒後：隱藏提示文字，顯示完成按鈕
+    setTimeout(() => {
+        statusHint.style.opacity = "0"; // 提示文字淡出
+        
+        setTimeout(() => {
+            statusHint.style.display = "none";
+            finishBtn.classList.add("visible"); // 按鈕出現
+        }, 1000);
+    }, 20000); 
 }
+
+startOverlay.addEventListener('click', startBreathing);

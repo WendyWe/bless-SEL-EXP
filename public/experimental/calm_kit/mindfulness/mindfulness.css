@@ -4,7 +4,7 @@ body, html {
     height: 100%;
     width: 100%;
     /* 這裡設置你的大自然底圖 */
-    background: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+    background: url("../../media/raw_image/calmdownkit_breathe_background.png") no-repeat center center fixed;
     background-size: cover;
     justify-content: center;
     align-items: center;

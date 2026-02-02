@@ -1,98 +1,144 @@
-/* 讓整頁滿版無邊距 */
 body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-  font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    /* 這裡設置你的大自然底圖 */
+    background: url("../../media/raw_image/calmdownkit_selfcompassion_background.png") no-repeat center center fixed;
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
+    font-family: "Noto Sans TC", sans-serif;
 }
 
-/* 背景影片設定 */
-#bgVideo {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
+/* 增加一個半透明遮罩，讓文字更好讀 */
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2); /* 20% 的黑色遮罩 */
+    z-index: 0;
 }
 
-/* 淡黑遮罩層 */
-.overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: -1;
+.container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: 1; /* 確保內容在背景之上 */
 }
 
-/* 中央文字區 */
-.center-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  text-align: center;
-  animation: fadeIn 3s ease-in-out;
-}
-
-#back-button {
-    padding: 12px 28px;
-    font-size: 1.1rem;
-    background: linear-gradient(135deg, #63b3ed, #3182ce);
-    color: white;
-    border: none;
-    border-radius: 10px;
+/* 初始開始頁面容器 */
+#start-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2); /* 淡淡的暗化，突顯白條 */
+    display: flex;
+    flex-direction: column; /* 讓內容垂直排列 */
+    justify-content: center; /* 讓白條居中 */
+    align-items: center;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
-    transition: all 0.3s ease;
-    margin-top: 10px;
-    display: none;
+    z-index: 100;
 }
 
-#back-button:hover {
-    background: linear-gradient(135deg, #4299e1, #2b6cb0);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(49, 130, 206, 0.4);
+/* 垂直白條樣式 */
+.white-strip {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 40px 20px; /* 增加上下內距，呈現條狀感 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    line-height: 1.8;
+    letter-spacing: 0.5rem;
+    color: #444;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+    border-radius: 4px; /* 極小圓角增加精緻感 */
 }
 
-#back-button:active {
-    transform: translateY(0);
-    box-shadow: 0 3px 8px rgba(49, 130, 206, 0.2);
+/* 螢幕最下方的小提示 */
+.click-hint {
+    position: absolute;
+    bottom: 30px; /* 固定在距離底部 30px */
+    font-size: 0.9rem; /* 字體縮小 */
+    color: rgba(255, 255, 255, 0.8); /* 半透明白色，不搶戲 */
+    letter-spacing: 1px;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5); /* 確保在森林背景上也清晰 */
+}
+
+#status-hint {
+    display: none; 
+    opacity: 0;
+    
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9); /* 柔和白 */
+    letter-spacing: 0.2rem; /* 拉開字距增加高級感 */
+    font-weight: 300;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+    
+    /* 確保在頁面下方，但不擋住按鈕 */
+    position: absolute;
+    bottom: 15%;
+    width: 100%;
+    
+    /* 動畫過渡 */
+    transition: opacity 1s ease-in-out;
+}
+
+
+#instruction {
+    font-size: 2.2rem;
+    color: white; /* 改為白色以配合大自然背景 */
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* 增加陰影避免背景吃掉文字 */
+    margin-bottom: 15px;
+    white-space: pre-line; /* 讓 \n 正常換行 */
+}
+
+#countdown {
+    font-size: 1.5rem;
+    color: #f0f8ff;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    margin-bottom: 30px;
 }
 
 .finish-btn {
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.8s ease;
-    padding: 12px 28px;
-    font-size: 1.1rem;
-    background: linear-gradient(135deg, #63b3ed, #3182ce);
+    transition: all 1s ease;
+    
+    /* 核心設計 */
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.6); /* 淡淡的半透白框 */
     color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+    padding: 15px 40px;
+    font-size: 1rem;
+    letter-spacing: 0.5rem; /* 字距拉開非常重要 */
+    text-indent: 0.5rem; /* 修正最後一個字的字距偏移 */
+    
+    /* 移除圓角，改為方角或極小圓角 */
+    border-radius: 2px; 
+    backdrop-filter: blur(3px); /* 微微的毛玻璃感 */
 }
 
-/* hover 效果 */
 .finish-btn:hover {
-    background: linear-gradient(135deg, #4299e1, #2b6cb0);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(49, 130, 206, 0.4);
+    background: rgba(255, 255, 255, 1);
+    color: #333; /* 懸停時反白 */
 }
 
-/* 顯示狀態 */
 .finish-btn.visible {
     opacity: 1;
     pointer-events: auto;
 }
 
-
-/* 動畫淡入 */
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}

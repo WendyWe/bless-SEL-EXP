@@ -1,90 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <title>Grounding 練習</title>
-  <style>
-    body {
-      background-color: #1C3129;
-      color: white;
-      font-family: 'Noto Sans TC', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      flex-direction: column;
-      text-align: center;
-    }
-
-    #stepText {
-      font-size: 1.6rem;
-      font-weight: bold;
-      margin-bottom: 40px;
-    }
-
-    #startBtn,.finish-btn {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 1s ease;
-      padding: 12px 28px;
-      font-size: 1.1rem;
-      background: linear-gradient(135deg, #63b3ed, #3182ce);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
-    }
-
-    #startBtn,.finish-btn.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人際慈悲冥想</title>
+    <link rel="stylesheet" href="../grounding/grounding.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo="> 
 </head>
 <body>
-  <div id="stepText">請找個安靜的空間，讓我們準備開始</div>
-  <button id="startBtn" onclick="startGrounding()">開始練習</button>
-  <button class="finish-btn" onclick="window.location.href='/experimental/calm_kit/index.html?from=functionDone'">
-    完成練習
-  </button>
+    <div class="background-overlay"></div>
 
-  <audio id="groundingAudio" src="../../audio/grounding_voice.mp3"></audio>
-
-  <script>
-    const steps = [
-      "請找個安靜的空間，讓我們準備開始",
-      "感覺腳底踩地的觸感",
-      "找出你看到的 5 樣東西",
-      "感受 4 種不同的觸感",
-      "注意 3 種你聽到的聲音",
-      "留意 2 種你聞到的氣味",
-      "感覺嘴裡的味道或想吃的東西",
-      "回到整個身體，感覺你在這裡",
-      "做幾個深呼吸，慢慢回到現在"
-    ];
-
-    const timings = [8000, 8000, 10000, 10000, 10000, 10000, 10000, 15000, 15000];
-    let currentStep = 0;
-
-    function showNextStep() {
-      if (currentStep < steps.length) {
-        document.getElementById("stepText").innerText = steps[currentStep];
-        const delay = timings[currentStep];
-        currentStep++;
-        setTimeout(showNextStep, delay);
-      } else {
-        // 全部播放完後再顯示按鈕
-        document.querySelector(".finish-btn").classList.add("visible");
-      }
-    }
-
-    function startGrounding() {
-      const audio = document.getElementById("groundingAudio");
-      audio.play().catch(() => console.log("語音播放被阻擋"));
-      document.getElementById("startBtn").style.display = "none";
-      showNextStep();
-    }
-  </script>
+    <div class="container"> <div id="start-overlay">
+            <div class="white-strip">
+                <span>輕輕地呼吸，感受心口微微的起伏。</span>
+                <span>現在，讓我們將這份平靜化作祝福，去擁抱身邊的每一個生命。</span>
+            </div>
+            <div class="click-hint">請點擊頁面任一處，開始自我慈悲冥想練習</div>
+        </div>
+        
+               
+        <div id="status-hint">練習進行中，引導結束後將出現完成練習按鈕</div>
+        
+        <button class="finish-btn" onclick="window.location.href='/experimental/calm_kit/index.html?from=functionDone'">完成練習</button>
+        
+        <audio id="bg-music" src="../mindfulness/grounding.mp3" loop></audio>
+    </div> <script src="../grounding/grounding.js"></script>
 </body>
 </html>
