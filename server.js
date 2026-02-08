@@ -583,7 +583,11 @@ app.use(
 );
 
 app.get("/api/daily-video", (req, res) => {
-  const videos = ["video1.mp4", "video2.mp4", "video3.mp4"];
+  const videos = ["video1.mp4", "video2.mp4", "video3.mp4","video4.mp4","video5.mp4","video6.mp4","video7.mp4"
+    ,"video8.mp4","video9.mp4","video10.mp4","video11.mp4","video12.mp4","video13.mp4","video14.mp4"
+    ,"video15.mp4","video16.mp4","video17.mp4","video18.mp4","video19.mp4","video20.mp4","video21.mp4"
+    ,"video22.mp4","video23.mp4","video24.mp4","video25.mp4","video26.mp4","video27.mp4","video28.mp4"
+  ];
   const day = req.query.day ? parseInt(req.query.day) : new Date().getDate();
   const index = day % videos.length;
   const videoUrl = `/experimental/videos/${videos[index]}`;
