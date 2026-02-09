@@ -62,27 +62,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   endSection = document.getElementById('end-section');
 
   // === 影片載入 ===
-  const video = document.getElementById('dailyVideo');
-  if (video) {
-    fetch("/api/daily-video")
-      .then(res => res.json())
-      .then(data => {
-        if (data.url) {
-          // 1. 設定影片來源
-          video.src = data.url;
-          
-          // 2. 💡 關鍵：必須呼叫 load() 瀏覽器才會開始加載雲端新網址
-          video.load(); 
-
-          // 3. 確保 CORS 屬性存在，以符合您 server.js 設定的 CSP
-          video.crossOrigin = "anonymous";
-          
-          console.log(`播放計畫天數 Day ${data.day} 影片`);
-        }
-      })
-      .catch(err => console.error("載入每日影片失敗:", err.message));
-  }
-
+  const videoFrame = document.getElementById('dailyVideoFrame');
+if (videoFrame) {
+  fetch("/api/daily-video")
+    .then(res => res.json())
+    .then(data => {
+      if (data.url) {
+        // 直接更換 iframe 的 src
+        videoFrame.src = data.url;
+        console.log(`✅ 影片嵌入成功: Day ${data.day}`);
+      }
+    })
+    .catch(err => console.error("載入每日影片失敗:", err.message));
+}
 
   // === 複製 AVI（生成後測表單） ===
   const postAviForm = aviForm.cloneNode(true);

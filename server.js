@@ -633,7 +633,7 @@ app.get("/api/daily-video", (req, res) => {
   const driveId = videoMap[fileName];
 
   // 5. 直接回傳 Google Drive 下載/播放網址 (加上 confirm=t 跳過大檔案警告)
-  const videoUrl = `https://drive.google.com/uc?export=download&id=${driveId}&confirm=t`;
+  const videoUrl = `https://drive.google.com/file/d/${driveId}/preview`;
 
   console.log(`📺 Day ${safeDay}: 播放雲端影片 ${fileName}`);
   res.json({ day: safeDay, url: videoUrl });
