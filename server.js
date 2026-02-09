@@ -108,6 +108,11 @@ app.use((req, res, next) => {
     "https://api.openai.com"
   ];
 
+  const allowedFrameSrc = [
+    "'self'",
+    "https://drive.google.com"
+  ];
+
   const allowedMediaSrc = [
     "'self'",
     "https://drive.google.com",
@@ -126,7 +131,8 @@ app.use((req, res, next) => {
     "connect-src " + allowedConnectSrc.join(" ") + "; " +
     "img-src " + allowedImgSrc.join(" ") + "; " +
     "font-src " + allowedFontSrc.join(" ") + ";"+
-    "media-src " + allowedMediaSrc.join(" ") + ";";
+    "media-src " + allowedMediaSrc.join(" ") + ";"+
+    "frame-src " + allowedFrameSrc.join(" ") + ";";
 
   res.setHeader("Content-Security-Policy", csp);
   next();
