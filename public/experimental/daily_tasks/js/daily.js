@@ -93,13 +93,13 @@ if (videoFrame) {
   
   // 1. 初始化按鈕狀態
   finishBtn.disabled = true;
-  finishBtn.innerText = `請觀看影片 (${secondsLeft}秒後可完成)`;
+  finishBtn.innerText = `完成觀看（影片播畢後可按）`;
 
   // 2. 開始倒數
   const timer = setInterval(() => {
     secondsLeft--;
     if (secondsLeft > 0) {
-      finishBtn.innerText = `請觀看影片 (${secondsLeft}秒後可完成)`;
+      finishBtn.innerText = `完成觀看（影片播畢後可按）`;
     } else {
       clearInterval(timer);
       finishBtn.disabled = false;
