@@ -575,34 +575,57 @@ app.get("/api/daily-article", (req, res) => {
 
 
 /* -------------------------------
-   🎥 Daily Video (Static)
+    🎥 Daily Video (Static)
 ---------------------------------*/
+// 1. 確保路徑指向根目錄下的 videos 資料夾
 const VIDEO_DIR = path.join(__dirname, "videos"); 
 
+// 2. 檢查資料夾是否存在（偵錯用，Render Log 會看到）
+const fs = require('fs');
+if (!fs.existsSync(VIDEO_DIR)) {
+    console.log("⚠️ 警告: videos 資料夾不存在，嘗試建立...");
+    fs.mkdirSync(VIDEO_DIR, { recursive: true });
+}
+
+// 3. 靜態資源掛載：將 URL "/Videos/daily" 映射到實體資料夾 VIDEO_DIR
+// 建議這裡跟 API 回傳的 URL 大小寫保持一致
 app.use("/Videos/daily", express.static(VIDEO_DIR));
 
-
 app.get("/api/daily-video", (req, res) => {
-  const videos = ["video1.mp4", "video2.mp4", "video3.mp4","video4.mp4","video5.mp4","video6.mp4","video7.mp4"
-    ,"video8.mp4","video9.mp4","video10.mp4","video11.mp4","video12.mp4","video13.mp4","video14.mp4"
-    ,"video15.mp4","video16.mp4","video17.mp4","video18.mp4","video19.mp4","video20.mp4","video21.mp4"
-    ,"video22.mp4","video23.mp4","video24.mp4","video25.mp4","video26.mp4","video27.mp4","video28.mp4"
+  const videos = [
+    "video1.mp4", "video2.mp4", "video3.mp4", "video4.mp4", "video5.mp4", "video6.mp4", "video7.mp4",
+    "video8.mp4", "video9.mp4", "video10.mp4", "video11.mp4", "video12.mp4", "video13.mp4", "video14.mp4",
+    "video15.mp4", "video16.mp4", "video17.mp4", "video18.mp4", "video19.mp4", "video20.mp4", "video21.mp4",
+    "video22.mp4", "video23.mp4", "video24.mp4", "video25.mp4", "video26.mp4", "video27.mp4", "video28.mp4"
   ];
 
-  const startDate = new Date("2026-02-09");
+  // 設定起始日期 (今天 2/9 為 Day 1)
+  const startDate = new Date("2026-02-09T00:00:00"); 
   const today = new Date();
-  const diffTime = Math.abs(today - startDate);
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 讓今天變成 Day 1
+  
+  // 計算天數差
+  const diffTime = today - startDate;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-  // 3. 優先讀取 Query Params，否則使用計算出的相對天數
   const day = req.query.day ? parseInt(req.query.day) : diffDays;
 
-  // 4. 計算索引 (注意：Day 1 應該對應 index 0)
-  const index = (day - 1) % videos.length;
+  // 防呆：如果計算出負數（例如系統時間早於起始日），強制設為 1
+  const safeDay = day < 1 ? 1 : day;
+
+  // 計算索引 (Day 1 -> index 0)
+  const index = (safeDay - 1) % videos.length;
+  const fileName = videos[index];
   
-  const videoUrl = `/Videos/daily/${videos[index]}`;
-  console.log("計畫天數:", day, "→ 播放:", videoUrl);
-  res.json({ day, url: videoUrl });
+  // 檢查檔案是否真的存在於磁碟上
+  const filePath = path.join(VIDEO_DIR, fileName);
+  if (!fs.existsSync(filePath)) {
+    console.error(`❌ 檔案缺失: ${filePath}`);
+    return res.status(404).json({ error: "Video file not found on server", fileName });
+  }
+
+  const videoUrl = `/Videos/daily/${fileName}`;
+  console.log("計畫天數:", safeDay, "→ 播放:", videoUrl);
+  res.json({ day: safeDay, url: videoUrl });
 });
 
 /* -------------------------------
