@@ -87,14 +87,37 @@ if (videoFrame) {
   aviForm.classList.add('avi-form');
   postAviForm.classList.add('avi-form');
 
-  // === 完成觀看 → 顯示 AVI 前測 ===
-  document.getElementById('finish-video').addEventListener('click', () => {
-    if (video.duration && video.currentTime < video.duration - 2) {
-      alert("請先完整觀看影片再繼續。");
-      return;
+  // === 影片觀看計時器 (要求大於1分鐘) ===
+  const finishBtn = document.getElementById('finish-video');
+  let secondsLeft = 60; // 設定倒數秒數
+  
+  // 1. 初始化按鈕狀態
+  finishBtn.disabled = true;
+  finishBtn.innerText = `請觀看影片 (${secondsLeft}秒後可完成)`;
+
+  // 2. 開始倒數
+  const timer = setInterval(() => {
+    secondsLeft--;
+    if (secondsLeft > 0) {
+      finishBtn.innerText = `請觀看影片 (${secondsLeft}秒後可完成)`;
+    } else {
+      clearInterval(timer);
+      finishBtn.disabled = false;
+      finishBtn.innerText = "完成觀看";
+      finishBtn.classList.remove('btn-ghost'); // 確保樣式醒目
+      finishBtn.classList.add('btn-primary');
     }
+  }, 1000);
+
+  // 3. 點擊按鈕跳轉至 AVI 前測
+  finishBtn.addEventListener('click', () => {
+    if (secondsLeft > 0) return; // 安全檢查
+
     videoSection.classList.add('hidden');
     aviSection.classList.remove('hidden');
+    
+    // 停止計時器以免佔用效能（如果使用者提早按的話）
+    clearInterval(timer); 
   });
 
   // === 前測與後測共同提交邏輯 ===

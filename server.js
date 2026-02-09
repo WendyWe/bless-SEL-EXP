@@ -126,13 +126,14 @@ app.use((req, res, next) => {
 
   const csp =
     "default-src 'self'; " +
-    "script-src " + allowedScriptSrc.join(" ") + "; " +
-    "style-src " + allowedStyleSrc.join(" ") + "; " +
-    "connect-src " + allowedConnectSrc.join(" ") + "; " +
-    "img-src " + allowedImgSrc.join(" ") + "; " +
-    "font-src " + allowedFontSrc.join(" ") + ";"+
-    "media-src " + allowedMediaSrc.join(" ") + ";"+
-    "frame-src " + allowedFrameSrc.join(" ") + ";";
+    "script-src 'self' 'unsafe-inline'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "connect-src 'self' https://bless-sel-exp.onrender.com https://api.openai.com; " +
+    "img-src 'self' data:; " +
+    "font-src 'self' data:; " +
+    "media-src " + allowed.join(" ") + "; " + 
+    "frame-src " + allowed.join(" ") + "; " + // 允許嵌入 Google Drive
+    "frame-ancestors 'self';"; // 預防被別人嵌入
 
   res.setHeader("Content-Security-Policy", csp);
   next();
