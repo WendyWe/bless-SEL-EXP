@@ -577,10 +577,10 @@ app.get("/api/daily-article", (req, res) => {
 /* -------------------------------
    🎥 Daily Video (Static)
 ---------------------------------*/
-app.use(
-  "/Videos/daily",
-  express.static(path.join(__dirname, "public", "experimental", "videos"))
-);
+const VIDEO_DIR = path.join(__dirname, "videos"); 
+
+app.use("/Videos/daily", express.static(VIDEO_DIR));
+
 
 app.get("/api/daily-video", (req, res) => {
   const videos = ["video1.mp4", "video2.mp4", "video3.mp4","video4.mp4","video5.mp4","video6.mp4","video7.mp4"
@@ -590,7 +590,7 @@ app.get("/api/daily-video", (req, res) => {
   ];
   const day = req.query.day ? parseInt(req.query.day) : new Date().getDate();
   const index = day % videos.length;
-  const videoUrl = `/experimental/videos/${videos[index]}`;
+  const videoUrl = `/Videos/daily/${videos[index]}`;
   console.log("Day:", day, "→ 播放:", videoUrl);
   res.json({ day, url: videoUrl });
 });

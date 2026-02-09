@@ -1,2 +1,9 @@
 # 🧠 Environment variables
 .env
+
+node_modules/
+
+public/experimental/videos/
+*.mp4
+
+videos/
