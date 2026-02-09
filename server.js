@@ -125,7 +125,7 @@ app.use((req, res, next) => {
     "style-src " + allowedStyleSrc.join(" ") + "; " +
     "connect-src " + allowedConnectSrc.join(" ") + "; " +
     "img-src " + allowedImgSrc.join(" ") + "; " +
-    "font-src " + allowedFontSrc.join(" ") + ";";
+    "font-src " + allowedFontSrc.join(" ") + ";"+
     "media-src " + allowedMediaSrc.join(" ") + ";";
 
   res.setHeader("Content-Security-Policy", csp);
