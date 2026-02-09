@@ -435,40 +435,38 @@ app.post("/api/daily/status", async (req, res) => {
   const { userId, isFinished, featureType } = req.body;
 
   try {
-    const userResult = await db.query(
-      "SELECT id FROM users WHERE userid = $1",
-      [userId]
-    );
-    if (userResult.rows.length === 0) {
-      return res.json({ success: false, message: "User not found" });
-    }
+    const userResult = await db.query("SELECT id FROM users WHERE userid = $1", [userId]);
+    if (userResult.rows.length === 0) return res.json({ success: false, message: "User not found" });
 
     const realId = userResult.rows[0].id;
     const today = getTaipeiDateString();
     const nowTaipei = getTaipeiNow();
 
     if (isFinished) {
-      // 🎯 完成時：更新 avi_posttest_done 為 true，並記錄完成時間
+      // 🎯 後測完成後的結案邏輯
+      // 不再比對 feature_type 是否等於傳入的值（因為傳入的可能是任務名，但開始記的是 video_start）
       await db.query(
         `UPDATE daily_usage 
-         SET avi_posttest_done = true, completed_at = $1 
+         SET avi_posttest_done = true, 
+             completed_at = $1,
+             feature_type = $2 -- 🎯 把最終完成的任務類型更新進去，覆蓋掉 video_start
          WHERE id = (
            SELECT id FROM daily_usage 
-           WHERE user_id = $2 AND date = $3 AND feature_type = $4 AND avi_posttest_done = false 
-           ORDER BY started_at DESC 
+           WHERE user_id = $3 AND date = $4 AND avi_posttest_done = false 
+           ORDER BY started_at DESC -- 抓最近的一筆
            LIMIT 1
          )`,
-        [nowTaipei, realId, today, featureType]
+        [nowTaipei, featureType, realId, today]
       );
-      console.log(`✅ User ${userId} 已完成今日任務`);
+      console.log(`✅ User ${userId} 後測完成，任務 ${featureType} 已結案`);
     } else {
-      // 🎯 開始時：建立紀錄 (如果還沒有的話)，標記開始時間
+      // 🎯 開始紀錄：每次重新整理點開影片、或點開前測，都會 INSERT 新紀錄
       await db.query(
         `INSERT INTO daily_usage (user_id, date, started_at, avi_posttest_done, feature_type) 
          VALUES ($1, $2, $3, false, $4)`,
         [realId, today, nowTaipei, featureType]
       );
-      console.log(`🚩 User ${userId} 已開始今日任務`);
+      console.log(`🚩 User ${userId} 開始紀錄: ${featureType}`);
     }
     res.json({ success: true });
 

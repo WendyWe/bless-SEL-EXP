@@ -61,19 +61,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   practiceSection = document.getElementById('practice-section');
   endSection = document.getElementById('end-section');
 
-  // === 影片載入 ===
-  const videoFrame = document.getElementById('dailyVideoFrame');
+// === 影片載入 ===
 if (videoFrame) {
   fetch("/api/daily-video")
     .then(res => res.json())
     .then(data => {
       if (data.url) {
-        // 直接更換 iframe 的 src
         videoFrame.src = data.url;
-        console.log(`✅ 影片嵌入成功: Day ${data.day}`);
+        
+        // 🎯 只要使用者重新整理或進入頁面看到影片，就記一筆
+        fetch("/api/daily/status", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            userId: currentUserId, 
+            isFinished: false, 
+            featureType: 'video_start' 
+          })
+        }).catch(err => console.error("紀錄影片開始失敗:", err));
       }
-    })
-    .catch(err => console.error("載入每日影片失敗:", err.message));
+    });
 }
 
   // === 複製 AVI（生成後測表單） ===
