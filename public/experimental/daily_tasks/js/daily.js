@@ -61,7 +61,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   practiceSection = document.getElementById('practice-section');
   endSection = document.getElementById('end-section');
 
-// === 影片載入 ===
+  // === 影片載入 ===
+const videoFrame = document.getElementById('dailyVideoFrame');
 if (videoFrame) {
   fetch("/api/daily-video")
     .then(res => res.json())
@@ -82,6 +83,7 @@ if (videoFrame) {
       }
     });
 }
+
 
   // === 複製 AVI（生成後測表單） ===
   const postAviForm = aviForm.cloneNode(true);
