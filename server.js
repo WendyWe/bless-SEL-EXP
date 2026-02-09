@@ -581,7 +581,6 @@ app.get("/api/daily-article", (req, res) => {
 const VIDEO_DIR = path.join(__dirname, "videos"); 
 
 // 2. 檢查資料夾是否存在（偵錯用，Render Log 會看到）
-const fs = require('fs');
 if (!fs.existsSync(VIDEO_DIR)) {
     console.log("⚠️ 警告: videos 資料夾不存在，嘗試建立...");
     fs.mkdirSync(VIDEO_DIR, { recursive: true });
