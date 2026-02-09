@@ -66,6 +66,14 @@ video {
   object-fit: contain;
 }
 
+.video-warning {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #6b7280;          /* 中性灰 */
+  text-align: center;
+}
+
 /* 標題樣式 */
 .section-title {
   font-size: 1.8rem;
