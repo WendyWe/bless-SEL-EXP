@@ -108,6 +108,12 @@ app.use((req, res, next) => {
     "https://api.openai.com"
   ];
 
+  const allowedMediaSrc = [
+    "'self'",
+    "https://drive.google.com",
+    "https://*.googleusercontent.com" // Google Drive 播放時有時會跳轉到此網域
+  ];
+
   const allowedScriptSrc = ["'self'", "'unsafe-inline'"];
   const allowedStyleSrc = ["'self'", "'unsafe-inline'"];
   const allowedImgSrc = ["'self'", "data:"];
@@ -120,6 +126,7 @@ app.use((req, res, next) => {
     "connect-src " + allowedConnectSrc.join(" ") + "; " +
     "img-src " + allowedImgSrc.join(" ") + "; " +
     "font-src " + allowedFontSrc.join(" ") + ";";
+    "media-src " + allowedMediaSrc.join(" ") + ";";
 
   res.setHeader("Content-Security-Policy", csp);
   next();
