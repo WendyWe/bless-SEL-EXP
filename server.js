@@ -570,35 +570,45 @@ app.get("/api/daily-article", (req, res) => {
   });
 });
 
-
-
-
-
 /* -------------------------------
-    🎥 Daily Video (Static)
+    🎥 Daily Video (Cloud Direct)
 ---------------------------------*/
-// 1. 確保路徑指向根目錄下的 videos 資料夾
-const VIDEO_DIR = path.join(__dirname, "videos"); 
-
-// 2. 檢查資料夾是否存在（偵錯用，Render Log 會看到）
-if (!fs.existsSync(VIDEO_DIR)) {
-    console.log("⚠️ 警告: videos 資料夾不存在，嘗試建立...");
-    fs.mkdirSync(VIDEO_DIR, { recursive: true });
-}
-
-// 3. 靜態資源掛載：將 URL "/Videos/daily" 映射到實體資料夾 VIDEO_DIR
-// 建議這裡跟 API 回傳的 URL 大小寫保持一致
-app.use("/Videos/daily", express.static(VIDEO_DIR));
-
 app.get("/api/daily-video", (req, res) => {
-  const videos = [
-    "video1.mp4", "video2.mp4", "video3.mp4", "video4.mp4", "video5.mp4", "video6.mp4", "video7.mp4",
-    "video8.mp4", "video9.mp4", "video10.mp4", "video11.mp4", "video12.mp4", "video13.mp4", "video14.mp4",
-    "video15.mp4", "video16.mp4", "video17.mp4", "video18.mp4", "video19.mp4", "video20.mp4", "video21.mp4",
-    "video22.mp4", "video23.mp4", "video24.mp4", "video25.mp4", "video26.mp4", "video27.mp4", "video28.mp4"
-  ];
+  // 1. 將 CSV 內容轉化為對照表 (Key: 檔名, Value: Drive ID)
+  const videoMap = {
+    "video1.mp4": "1nhBMIG9ot9MUZ1QtwPmNMXRkKc61UvVx",
+    "video2.mp4": "16VjRAKgFrd0DAVEGGPmAU8myiLLZX7jd",
+    "video3.mp4": "1Hsf4v4x3Wa5c8NtzuZyElE4jflYFx9NL",
+    "video4.mp4": "1qYgRLVRPmnWiavprEQP7aqIkdwhgoTQJ",
+    "video5.mp4": "1Suwr3qhlnszuSLsPpJ5tk32GijN3Jw1w",
+    "video6.mp4": "14AXSbya2Zh6y_ZE3TYoQGvdewBdoRJEN",
+    "video7.mp4": "1ekcEbbD5HqdkSj8gTbnz7a0Bwii4D0AV",
+    "video8.mp4": "1QRfgFC-fNfjhx-NbCqDSkYsWwxNptRM9",
+    "video9.mp4": "1x_UXZ3QDN2C_fzgvdKOkfXPNeypWUmLj",
+    "video10.mp4": "1K4zDM1lK-3QTbgg9X1hbn7WoORcV4Lb8",
+    "video11.mp4": "12pwrZprvWTtvMRqRcWjNc4nFnVNSJf2L",
+    "video12.mp4": "1cp8rFgwiYLzgyIbf7yj1ZFK3fLSngnAt",
+    "video13.mp4": "1wzo-_qubLvPn7GxjXh_cj-zPGFuqDAIO",
+    "video14.mp4": "1ppbuBLzfLHrTvi52GXMElE2Yjo8vQGBX",
+    "video15.mp4": "1eGg9uWVElvoBxQWqPJ5E-8zEU4JzYIz8",
+    "video16.mp4": "1zuyxIIa24rMALJE3IW-AryeMjBy6sR2V",
+    "video17.mp4": "1XIbQAK1jZH9Ld9qzRlm1dLYRo77HI-G4",
+    "video18.mp4": "15nxTXIVJX58Pgh5QHmxvl-TFQNvGhm_g",
+    "video19.mp4": "11Ykui1k1LFxZNLGFNEZyhxMbhSF-8MNW",
+    "video20.mp4": "1-6rE76J8ITmb2H-IZLVURlttH_uJSf17",
+    "video21.mp4": "1--NQ-i3qbpD4gajVWj_q_eSpTIgWfUUL",
+    "video22.mp4": "1Uk4iHndxmnPPDD6rBg3g3UZXJoDCpGzW",
+    "video23.mp4": "1mk122_4TshxT-vQu-BwzFkVpL17OFFcc",
+    "video24.mp4": "1bZJ8HD8tuHRe6_wyYfPEOj5Ogp3t_UMV",
+    "video25.mp4": "1Nh3PTTtKc3Rod5IoOImSkT1q1PXsxJKy",
+    "video26.mp4": "1kO_Yt9S6oahmm01Yx0zg57qdfXTspdux",
+    "video27.mp4": "1pmsW4RSV3Jx8srkZL719Y7dPmrkIkUoF",
+    "video28.mp4": "18HeAanWPQQKfscrrsy9MQMmZYM_hL3Uy"
+  };
 
-  // 設定起始日期 (今天 2/9 為 Day 1)
+  const videoFiles = Object.keys(videoMap);
+
+  // 2. 設定起始日期 (Day 1: 2026-02-09)
   const startDate = new Date("2026-02-09T00:00:00"); 
   const today = new Date();
   
@@ -606,27 +616,21 @@ app.get("/api/daily-video", (req, res) => {
   const diffTime = today - startDate;
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
+  // 3. 決定要播哪一天的影片
   const day = req.query.day ? parseInt(req.query.day) : diffDays;
-
-  // 防呆：如果計算出負數（例如系統時間早於起始日），強制設為 1
   const safeDay = day < 1 ? 1 : day;
 
-  // 計算索引 (Day 1 -> index 0)
-  const index = (safeDay - 1) % videos.length;
-  const fileName = videos[index];
-  
-  // 檢查檔案是否真的存在於磁碟上
-  const filePath = path.join(VIDEO_DIR, fileName);
-  if (!fs.existsSync(filePath)) {
-    console.error(`❌ 檔案缺失: ${filePath}`);
-    return res.status(404).json({ error: "Video file not found on server", fileName });
-  }
+  // 4. 取得對應的 Drive ID
+  const index = (safeDay - 1) % videoFiles.length;
+  const fileName = videoFiles[index];
+  const driveId = videoMap[fileName];
 
-  const videoUrl = `/Videos/daily/${fileName}`;
-  console.log("計畫天數:", safeDay, "→ 播放:", videoUrl);
+  // 5. 直接回傳 Google Drive 下載/播放網址 (加上 confirm=t 跳過大檔案警告)
+  const videoUrl = `https://drive.google.com/uc?export=download&id=${driveId}&confirm=t`;
+
+  console.log(`📺 Day ${safeDay}: 播放雲端影片 ${fileName}`);
   res.json({ day: safeDay, url: videoUrl });
 });
-
 /* -------------------------------
    🕓 Helper: 時段判斷
 ---------------------------------*/
