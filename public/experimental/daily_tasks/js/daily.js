@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // === 影片載入 ===
   const video = document.getElementById('dailyVideo');
   if (video) {
-    fetch("/api/dailyVideo")
+    fetch("/api/daily-video")
       .then(res => res.json())
       .then(data => {
         if (data.url) {
