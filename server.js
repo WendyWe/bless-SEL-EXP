@@ -588,10 +588,20 @@ app.get("/api/daily-video", (req, res) => {
     ,"video15.mp4","video16.mp4","video17.mp4","video18.mp4","video19.mp4","video20.mp4","video21.mp4"
     ,"video22.mp4","video23.mp4","video24.mp4","video25.mp4","video26.mp4","video27.mp4","video28.mp4"
   ];
-  const day = req.query.day ? parseInt(req.query.day) : new Date().getDate();
-  const index = day % videos.length;
+
+  const startDate = new Date("2026-02-09");
+  const today = new Date();
+  const diffTime = Math.abs(today - startDate);
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 讓今天變成 Day 1
+
+  // 3. 優先讀取 Query Params，否則使用計算出的相對天數
+  const day = req.query.day ? parseInt(req.query.day) : diffDays;
+
+  // 4. 計算索引 (注意：Day 1 應該對應 index 0)
+  const index = (day - 1) % videos.length;
+  
   const videoUrl = `/Videos/daily/${videos[index]}`;
-  console.log("Day:", day, "→ 播放:", videoUrl);
+  console.log("計畫天數:", day, "→ 播放:", videoUrl);
   res.json({ day, url: videoUrl });
 });
 
