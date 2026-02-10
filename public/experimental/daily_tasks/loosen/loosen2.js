@@ -131,10 +131,9 @@ function showStimulus() {
   } else {
     const word = COLORS[Math.floor(Math.random() * COLORS.length)];
     const ink = COLORS[Math.floor(Math.random() * COLORS.length)];
-    const dir = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
-    currentCorrect = ink.name;
+    const keyMap = { "紅": "RED", "藍": "BLUE", "黃": "YELLOW", "綠": "GREEN" };
+    currentCorrect = keyMap[ink.name];
 
-  
     wordEl.textContent = word.name;
     wordEl.style.color = ink.hex;
   }
