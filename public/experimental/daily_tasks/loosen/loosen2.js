@@ -183,8 +183,12 @@ function handleResponse(resp) {
       return;
     }
   } else {
-    level2Trials++;
-    statusEl.textContent = `Level 2：${level2Trials}/${LEVEL2_TOTAL_TRIALS}`;
+    if (correct) {
+      level2Trials++; // 這裡變成了「正確次數」的累計
+      statusEl.textContent = `Level 2 正確：${level2Trials}/${LEVEL2_TOTAL_TRIALS}`;
+    } else {
+      statusEl.textContent = `✘ 錯誤｜目前正確次數：${level2Trials}`;
+    }
 
     if (level2Trials >= LEVEL2_TOTAL_TRIALS) {
     statusEl.textContent = "✅ 訓練完成，感謝參與！";
