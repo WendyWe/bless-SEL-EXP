@@ -21,15 +21,14 @@ function startBreathing() {
         }, 50); 
     }, 1000);
 
-    // 3. 20秒後：隱藏提示文字，顯示完成按鈕
-    setTimeout(() => {
-        statusHint.style.opacity = "0"; // 提示文字淡出
-        
+    // 改用監聽器：當音樂播放結束時，自動觸發按鈕出現
+    music.onended = function() {
+        statusHint.style.opacity = "0"; 
         setTimeout(() => {
             statusHint.style.display = "none";
-            finishBtn.classList.add("visible"); // 按鈕出現
+            finishBtn.classList.add("visible");
         }, 1000);
-    }, 20000); 
+    }; 
 }
 
 startOverlay.addEventListener('click', startBreathing);

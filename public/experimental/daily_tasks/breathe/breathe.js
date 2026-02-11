@@ -1,46 +1,58 @@
 const controlButton = document.getElementById('control');
-const balloon = document.getElementById('balloon');
-const balloonText = document.getElementById('balloon-text');
 const finishBtn = document.getElementById('finish-btn');
 const audio = document.getElementById('meditation-audio');
 const audioStatus = document.getElementById('audio-status');
 const openInfoBtn = document.getElementById('open-info');
 const closeInfoBtn = document.getElementById('close-info');
 const infoModal = document.getElementById('info-modal');
+const canvas = document.getElementById("waveCanvas");
+const ctx = canvas.getContext("2d");
 
 let isPracticing = false;
 let animationFrame;
 let startTime;
 
-// 4-2-6 呼吸參數
-const INHALE_MS = 4000;
-const HOLD_MS = 2000;
-const EXHALE_MS = 6000;
-const TOTAL_CYCLE_MS = INHALE_MS + HOLD_MS + EXHALE_MS;
+function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
-// 呼吸動畫邏輯
-function updateBreathe() {
-    if (!isPracticing) return;
-    const elapsed = (Date.now() - startTime) % TOTAL_CYCLE_MS;
-    let scale = 1;
-    let status = "";
+function drawWave(time) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (elapsed < INHALE_MS) {
-        status = "吸氣...";
-        scale = 1 + (elapsed / INHALE_MS) * 1.5;
-    } else if (elapsed < INHALE_MS + HOLD_MS) {
-        status = "憋氣";
-        scale = 2.5;
-    } else {
-        status = "吐氣...";
-        const exhaleElapsed = elapsed - (INHALE_MS + HOLD_MS);
-        scale = 2.5 - (exhaleElapsed / EXHALE_MS) * 1.5;
+    const width = canvas.width;
+    const height = canvas.height;
+
+    ctx.beginPath();
+    ctx.moveTo(0, height / 2);
+
+    const amplitude = height * 0.05; // 波動幅度 5%
+    const frequency = 0.01; // 波長
+    const speed = 0.0003; // 移動速度
+
+    for (let x = 0; x < width; x++) {
+        const y =
+            height / 2 +
+            Math.sin(x * frequency + time * speed) * amplitude;
+        ctx.lineTo(x, y);
     }
 
-    balloon.style.transform = `scale(${scale})`;
-    balloonText.textContent = status;
-    animationFrame = requestAnimationFrame(updateBreathe);
+    ctx.lineTo(width, height);
+    ctx.lineTo(0, height);
+    ctx.closePath();
+
+   const gradient = ctx.createLinearGradient(0, 0, 0, height);
+    gradient.addColorStop(0, "rgba(255,255,255,0.25)");
+    gradient.addColorStop(1, "rgba(255,255,255,0.05)");
+    ctx.fillStyle = gradient;
+        ctx.fill();
+
+    animationFrame = requestAnimationFrame(drawWave);
 }
+
+
 
 // 錄音結束後的解鎖機制
 audio.onended = function() {
@@ -52,20 +64,17 @@ audio.onended = function() {
 
 function togglePractice() {
     if (!isPracticing) {
-        // 開始練習
         isPracticing = true;
-        startTime = Date.now();
         controlButton.textContent = "暫停練習";
-        audio.play(); // 播放錄音
-        updateBreathe();
+        audio.play();
+        drawWave(0);
         audioStatus.textContent = "🎵 冥想導引播放中...";
     } else {
-        // 暫停練習
         isPracticing = false;
         cancelAnimationFrame(animationFrame);
         controlButton.textContent = "繼續練習";
-        audio.pause(); // 暫停錄音
-        balloonText.textContent = "已暫停";
+        audio.pause();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 }
 

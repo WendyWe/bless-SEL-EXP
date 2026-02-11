@@ -79,34 +79,19 @@ body {
     color: #4a5568;
 }
 
-/* 氣球容器置中 */
-.balloon-container {
+.wave-container {
     width: 100%;
     height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: relative;
     margin: 20px 0;
 }
 
-#balloon {
-    width: 120px;
-    height: 120px;
-    /* 使用圖片中的暖黃色調 */
-    background: radial-gradient(circle at 35% 35%, #fff5e1 0%, #ffdf91 70%, #f4c542 100%);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* 文字改為深色以確保對比度 */
-    color: #855e1d; 
-    font-weight: bold;
-    font-size: 1.2rem;
-    /* 增加發光感的陰影 */
-    box-shadow: 0 0 30px rgba(255, 223, 145, 0.4), 0 10px 20px rgba(0, 0, 0, 0.1);
-    transition: transform 0.1s ease-out;
+#waveCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
 }
+
 
 /* 按鈕美化 */
 .button-container {
