@@ -114,9 +114,9 @@ document.querySelectorAll(".option-btn").forEach(btn => {
         const title = btn.querySelector('.option-title').innerText;
         let timeMsg = "3~5"; // 預設值
         
-        if (title.includes("冷靜")) timeMsg = "3";
-        if (title.includes("痛苦")) timeMsg = "5";
-        if (title.includes("腦袋很亂")) timeMsg = "10";
+        if (title.includes("冷靜")) timeMsg = "6";
+        if (title.includes("卡住")) timeMsg = "8";
+        if (title.includes("好累")) timeMsg = "10";
 
         // 3. 彈出確認視窗
         const confirmMessage = `接下來約莫會花費你 ${timeMsg} 分鐘的時間練習。\n為了能穩定的接住情緒，建議給自己一段不被打擾的時間，直到練習結束。\n\n你準備好開始了嗎`;
