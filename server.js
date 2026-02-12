@@ -109,7 +109,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
+    sameSite: "none",
     maxAge: 1000 * 60 * 60 * 6
   }
 }));
@@ -117,7 +118,10 @@ app.use(session({
 /* -------------------------------
    ⚙️ Middleware (CORS + CSP)
 ---------------------------------*/
-app.use(cors());
+app.use(cors({
+  origin: "https://bless-sel-exp.onrender.com",
+  credentials: true
+}));;
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
