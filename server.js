@@ -97,15 +97,20 @@ const db = new Pool({
 })();
 
 const session = require("express-session");
+const pgSession = require("connect-pg-simple")(session);
 
 app.use(session({
+  store: new pgSession({
+    pool: db, // 用你現有的 PostgreSQL pool
+    tableName: "user_sessions"
+  }),
   secret: process.env.SESSION_SECRET || "bless-secret",
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 1000 * 60 * 60 * 6 // 6 小時
+    maxAge: 1000 * 60 * 60 * 6
   }
 }));
 
