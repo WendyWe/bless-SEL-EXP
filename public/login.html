@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>BLESS 正念社會情緒調節平台</title>
+
+<style>
+
+/* ===== 你原本的 CSS 完整保留 ===== */
+
+body {
+  cursor: none;
+  margin: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Noto Sans TC', "PingFang TC", "Microsoft JhengHei", sans-serif;
+  background: linear-gradient(-45deg, #e3f2fd, #f3e5f5, #e8f5e9, #fff9c4);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  overflow: hidden;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+#cursor-follower {
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 224, 130, 0.5);
+  border-radius: 60%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  transition: transform 0.1s ease-out;
+  box-shadow: 0 0 15px rgba(255, 202, 40, 0.7),
+              0 0 30px rgba(255, 236, 179, 0.4);
+}
+
+#app {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
+  padding: 3rem;
+  border-radius: 24px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.login-input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.login-btn {
+  background: #90caf9;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.login-btn:hover {
+  background: #bbdefb;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="cursor-follower"></div>
+
+<div id="app">
+  <h1>BLESS</h1>
+  <p>願在此刻感受到平安、幸福與祝福</p>
+
+  <input type="text" id="username" placeholder="帳號" class="login-input">
+  <input type="password" id="password" placeholder="密碼" class="login-input">
+  <button id="loginBtn" class="login-btn">登入</button>
+</div>
+
+<script>
+
+/* ========= 滑鼠光點 ========= */
+
+const follower = document.getElementById('cursor-follower');
+
+document.addEventListener('mousemove', (e) => {
+  follower.style.left = e.clientX - 10 + 'px';
+  follower.style.top = e.clientY - 10 + 'px';
+});
+
+document.addEventListener('mousedown', () => {
+  follower.style.transform = 'scale(0.8)';
+});
+document.addEventListener('mouseup', () => {
+  follower.style.transform = 'scale(1)';
+});
+
+
+/* ========= 登入邏輯（安全版） ========= */
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!username || !password) {
+    alert("請輸入帳號密碼");
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      alert(data.message || "登入失敗");
+      return;
+    }
+
+    // 🔐 不再使用 localStorage
+    // 依 group 自動導向
+
+    if (data.group === "A") {
+      window.location.href = "/experimental/";
+    } else if (data.group === "B") {
+      window.location.href = "/shift_comparison/";
+    } else {
+      alert("帳號組別設定錯誤");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("登入系統錯誤");
+  }
+});
+
+</script>
+
+</body>
+</html>

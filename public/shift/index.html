@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>BLESS 社會情緒學習調節平台</title>
+    <link rel="stylesheet" href="../experimental/css/experimental.css">
+    </head>
+<body>
+    <div id="app">
+
+        <div id="loginForm"> 
+            <h1>BLESS</h1>
+            <p class="blessing-text" id="blessingText">願在此刻感受到平安、幸福與祝福</p>
+            
+            <input type="text" id="username" placeholder="帳號" class="login-input">
+            <input type="password" id="password" placeholder="密碼" class="login-input">
+            <button id="loginBtn" class="login-btn">登入</button>
+        </div>
+
+        <div id="userInfo" style="display: none;"> 
+            
+            <div class="user-header">
+                <span id="usernameDisplay"></span>
+                <div id="loginTimeInfo"></div>
+            </div>
+            
+            <h2>請選擇功能</h2>
+           
+            <button id="btn-writing" >心理位移書寫</button>
+        
+            <br>
+            <button id="logoutBtn" class="logout-btn">登出</button>
+        </div>
+
+    </div>
+
+    <script src="../experimental/js/experimental.js"></script>
+</body>
+</html>

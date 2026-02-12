@@ -96,6 +96,19 @@ const db = new Pool({
   }
 })();
 
+const session = require("express-session");
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || "bless-secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 1000 * 60 * 60 * 6 // 6 小時
+  }
+}));
+
 /* -------------------------------
    ⚙️ Middleware (CORS + CSP)
 ---------------------------------*/
@@ -149,6 +162,10 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
    👤 Login
 ---------------------------------*/
 app.post("/api/login", async (req, res) => {
+  if (req.session.userId) {
+    return res.json({ success: true, group: req.session.group });
+  }
+
   const { username, password } = req.body;
 
   try {
@@ -166,13 +183,18 @@ app.post("/api/login", async (req, res) => {
       return res.json({ success: false, message: "Invalid password" });
     }
 
-    // 建立 session
+    // 🔐 Express session（安全控管）
+    req.session.userId = user.id;
+    req.session.useridText = user.userid;
+    req.session.group = user.group_label;
+
+    // DB session（研究紀錄）
     const loginTime = new Date().toLocaleString("en-US", {
       timeZone: "Asia/Taipei",
     });
     const period = getTaipeiPeriod();
 
-    const sessionInsert = await db.query(
+    await db.query(
       `INSERT INTO sessions (user_id, login_time, period)
        VALUES ($1, $2, $3)
        RETURNING id`,
@@ -181,10 +203,6 @@ app.post("/api/login", async (req, res) => {
 
     res.json({
       success: true,
-      userId: user.userid,          // TEST001 → 前端用
-      sessionId: sessionInsert.rows[0].id,
-      loginTime,
-      period,
       group: user.group_label
     });
 
@@ -194,14 +212,12 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.get("/api/progress", async (req, res) => {
-  const userId = req.query.userId;
+app.get("/api/progress", requireLogin, async (req, res) => {
+  const realId = req.session.userId;
 
-  const userResult = await db.query(
-    "SELECT id FROM users WHERE userid = $1",
-    [userId]
-  );
-  const realId = userResult.rows[0].id;
+  if (!realId) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
 
   const prog = await db.query(
     "SELECT current_trial FROM user_progress WHERE user_id = $1",
@@ -209,7 +225,6 @@ app.get("/api/progress", async (req, res) => {
   );
 
   if (prog.rows.length === 0) {
-    // 第一次登入，自動建立
     await db.query(
       "INSERT INTO user_progress (user_id, current_trial) VALUES ($1, 1)",
       [realId]
@@ -220,14 +235,14 @@ app.get("/api/progress", async (req, res) => {
   res.json({ trial: prog.rows[0].current_trial });
 });
 
-app.post("/api/progress/update", async (req, res) => {
-  const { userId, newTrial } = req.body;
+app.post("/api/progress/update", requireLogin, async (req, res) => {
+  const realId = req.session.userId;
 
-  const userResult = await db.query(
-    "SELECT id FROM users WHERE userid = $1",
-    [userId]
-  );
-  const realId = userResult.rows[0].id;
+  if (!realId) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
+
+  const { newTrial } = req.body;
 
   await db.query(
     "UPDATE user_progress SET current_trial = $1 WHERE user_id = $2",
@@ -238,84 +253,22 @@ app.post("/api/progress/update", async (req, res) => {
 });
 
 
-
-/* -------------------------------
-   📊 Activity Tracking
----------------------------------*/
-app.post("/api/activity/start", async (req, res) => {
-  const { userId, featureType } = req.body; // userId = TEST001
-
-  try {
-    // 將 TEST001 → 找到真正的 users.id
-    const userResult = await db.query(
-      "SELECT id FROM users WHERE userid = $1",
-      [userId]
-    );
-
-    if (userResult.rows.length === 0) {
-      return res.json({ success: false, message: "User not found" });
-    }
-
-    const realId = userResult.rows[0].id;
-    const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
-
-    const result = await db.query(
-      `INSERT INTO activities (user_id, type, start_time)
-       VALUES ($1, $2, $3)
-       RETURNING id`,
-      [realId, featureType, taipeiTime]
-    );
-
-    res.json({ success: true, activityId: result.rows[0].id });
-
-  } catch (err) {
-    console.error("❌ Activity Save Error:", err);
-    res.json({ success: false, message: err.message });
-  }
-});
-
-
-app.post("/api/activity/end", async (req, res) => {
-  const { activityId } = req.body;
-  const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
-
-  try {
-    await db.query(
-      `UPDATE activities
-       SET end_time = $1,
-           duration = EXTRACT(EPOCH FROM ($1::timestamp - start_time)) / 60
-       WHERE id = $2`,
-      [taipeiTime, activityId]
-    );
-
-    res.json({ success: true });
-
-  } catch (err) {
-    console.error("❌ Activity End Error:", err);
-    res.json({ success: false, message: err.message });
-  }
-});
-
-
 /* -------------------------------
    🧭 AVI 前後測儲存
 ---------------------------------*/
-app.post("/api/avi/save", async (req, res) => {
-  const { userId, phase, featureType, responses } = req.body; // userId = TEST001
+app.post("/api/avi/save", requireLogin, async (req, res) => {
+
+  const realId = req.session.userId;
+
+  if (!realId) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
+
+  const { phase, featureType, responses } = req.body;
 
   try {
-    // 把 TEST001 → 查 user.id
-    const userResult = await db.query(
-      "SELECT id FROM users WHERE userid = $1",
-      [userId]
-    );
 
-    if (userResult.rows.length === 0) {
-      return res.json({ success: false, message: "User not found" });
-    }
-
-    const realId = userResult.rows[0].id;
-    const time = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
+    const time = getTaipeiNow();
 
     await db.query(
       `INSERT INTO avi_results (user_id, phase, feature_type, responses, created_at)
@@ -327,79 +280,73 @@ app.post("/api/avi/save", async (req, res) => {
 
   } catch (err) {
     console.error("❌ AVI Save Error:", err);
-    res.json({ success: false, message: err.message });
+    res.status(500).json({ success: false });
   }
 });
 
 /* -------------------------------
    🎨 情緒安心角：前後測情緒座標儲存
 ---------------------------------*/
-app.post("/api/calm-kit/save-mood", async (req, res) => {
-  const { userId, mode, x, y, kitType, duration } = req.body;
+app.post("/api/calm-kit/save-mood", requireLogin, async (req, res) => {
+  const realId = req.session.userId;
+
+  if (!realId) {
+    return res.status(401).json({ success: false, message: "未登入" });
+  }
+
+  const { mode, x, y, kitType, duration } = req.body;
 
   try {
-    // 1. 根據 userid 找出真正的 user_id (整數)
-    const userResult = await db.query(
-      "SELECT id FROM users WHERE userid = $1",
-      [userId]
-    );
 
-    if (userResult.rows.length === 0) {
-      return res.status(404).json({ success: false, message: "找不到使用者" });
-    }
+    const taipeiTime = getTaipeiNow();
 
-    const realId = userResult.rows[0].id;
-    const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
-
-    // 2. 存入新表格 calm_kit_moods
     await db.query(
       `INSERT INTO calm_kit_moods (user_id, phase, x, y, kit_type, duration, created_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [realId, mode, x, y, kitType, duration, taipeiTime]
     );
 
-    console.log(`✅ [Calm Kit] 存入成功: User=${userId}, Phase=${mode}, (${x}, ${y})`);
+    console.log(`✅ [Calm Kit] 存入成功: userId=${realId}, phase=${mode}`);
+
     res.json({ success: true });
 
   } catch (err) {
     console.error("❌ Calm Kit Save Error:", err);
-    res.status(500).json({ success: false, message: "伺服器儲存失敗" });
+    res.status(500).json({ success: false });
   }
 });
 
 /* -------------------------------
    📚 學習心得：專屬儲存路由
 ---------------------------------*/
-app.post("/api/study/save-reflection", async (req, res) => {
-  const { userId, articleIndex, articleTitle, reflectionText, duration } = req.body;
+app.post("/api/study/save-reflection", requireLogin, async (req, res) => {
+
+  const realId = req.session.userId;
+
+  if (!realId) {
+    return res.status(401).json({ success: false, message: "未登入" });
+  }
+
+  const { articleIndex, articleTitle, reflectionText, duration } = req.body;
 
   try {
-    // 1. 將 TEST001 轉為真正的 user_id
-    const userResult = await db.query(
-      "SELECT id FROM users WHERE userid = $1",
-      [userId]
-    );
 
-    if (userResult.rows.length === 0) {
-      return res.status(404).json({ success: false, message: "User not found" });
-    }
+    const time = getTaipeiNow();
 
-    const realId = userResult.rows[0].id;
-    const time = getTaipeiNow(); // 使用你現有的 helper function
-
-    // 2. 存入新表格 study_reflections
     await db.query(
-      `INSERT INTO study_reflections (user_id, article_index, article_title, reflection_text, duration, created_at)
+      `INSERT INTO study_reflections 
+       (user_id, article_index, article_title, reflection_text, duration, created_at)
        VALUES ($1, $2, $3, $4, $5, $6)`,
       [realId, articleIndex, articleTitle, reflectionText, duration, time]
     );
 
-    console.log(`✅ [Study] 心得存入成功: User=${userId}, 文章=${articleTitle}`);
+    console.log(`✅ [Study] 心得存入成功: userId=${realId}, article=${articleTitle}`);
+
     res.json({ success: true });
 
   } catch (err) {
     console.error("❌ Study Reflection Save Error:", err);
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({ success: false });
   }
 });
 
@@ -408,72 +355,88 @@ app.post("/api/study/save-reflection", async (req, res) => {
 /* -------------------------------
    🔒 Check Daily Usage (一天一次限制)
 ---------------------------------*/
-app.post("/api/daily/check", async (req, res) => {
-  const { userId } = req.body;  
+app.post("/api/daily/check", requireLogin, async (req, res) => {
+
+  const realId = req.session.userId;
 
   try {
-    const userResult = await db.query(
-      "SELECT id FROM users WHERE userid = $1",
-      [userId]
-    );if (userResult.rows.length === 0) {return res.json({ success: false, message: "User not found" });}
-    const realId = userResult.rows[0].id;
+
     const today = getTaipeiDateString();
-    
+
     const check = await db.query(
-      "SELECT 1 FROM daily_usage WHERE user_id = $1 AND date = $2 AND avi_posttest_done = true LIMIT 1",
+      `SELECT 1 
+       FROM daily_usage 
+       WHERE user_id = $1 
+       AND date = $2 
+       AND avi_posttest_done = true 
+       LIMIT 1`,
       [realId, today]
     );
 
-    res.json({ success: true, blocked: check.rows.length > 0 });
+    res.json({
+      success: true,
+      blocked: check.rows.length > 0
+    });
+
   } catch (err) {
-    res.json({ success: false, message: err.message });
+    res.status(500).json({ success: false });
   }
 });
 
 
 
-app.post("/api/daily/status", async (req, res) => {
-  const { userId, isFinished, featureType } = req.body;
+app.post("/api/daily/status", requireLogin, async (req, res) => {
+
+  const realId = req.session.userId;
+
+  if (!realId) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
+
+  const { isFinished, featureType } = req.body;
 
   try {
-    const userResult = await db.query("SELECT id FROM users WHERE userid = $1", [userId]);
-    if (userResult.rows.length === 0) return res.json({ success: false, message: "User not found" });
 
-    const realId = userResult.rows[0].id;
     const today = getTaipeiDateString();
     const nowTaipei = getTaipeiNow();
 
     if (isFinished) {
-      // 🎯 後測完成後的結案邏輯
-      // 不再比對 feature_type 是否等於傳入的值（因為傳入的可能是任務名，但開始記的是 video_start）
+
       await db.query(
         `UPDATE daily_usage 
          SET avi_posttest_done = true, 
              completed_at = $1,
-             feature_type = $2 -- 🎯 把最終完成的任務類型更新進去，覆蓋掉 video_start
+             feature_type = $2
          WHERE id = (
            SELECT id FROM daily_usage 
-           WHERE user_id = $3 AND date = $4 AND avi_posttest_done = false 
-           ORDER BY started_at DESC -- 抓最近的一筆
+           WHERE user_id = $3 
+           AND date = $4 
+           AND avi_posttest_done = false
+           ORDER BY started_at DESC
            LIMIT 1
          )`,
         [nowTaipei, featureType, realId, today]
       );
-      console.log(`✅ User ${userId} 後測完成，任務 ${featureType} 已結案`);
+
+      console.log(`✅ User ${realId} 完成任務 ${featureType}`);
+
     } else {
-      // 🎯 開始紀錄：每次重新整理點開影片、或點開前測，都會 INSERT 新紀錄
+
       await db.query(
-        `INSERT INTO daily_usage (user_id, date, started_at, avi_posttest_done, feature_type) 
+        `INSERT INTO daily_usage 
+         (user_id, date, started_at, avi_posttest_done, feature_type) 
          VALUES ($1, $2, $3, false, $4)`,
         [realId, today, nowTaipei, featureType]
       );
-      console.log(`🚩 User ${userId} 開始紀錄: ${featureType}`);
+
+      console.log(`🚩 User ${realId} 開始任務 ${featureType}`);
     }
+
     res.json({ success: true });
 
   } catch (err) {
     console.error("❌ daily/status Error:", err);
-    res.json({ success: false, message: err.message });
+    res.status(500).json({ success: false });
   }
 });
 
@@ -481,11 +444,13 @@ app.post("/api/daily/status", async (req, res) => {
 /* -------------------------------
    🎯 Get Task Sequence (Trial-based)
 ---------------------------------*/
-app.get("/api/getTask", async (req, res) => {
-  const { subject, trial } = req.query;
+app.get("/api/getTask", requireLogin, async (req, res) => {
 
-  if (!subject || !trial) {
-    return res.status(400).json({ error: "Missing subject or trial" });
+  const trial = req.query.trial;
+  const subject = req.session.useridText;
+
+  if (!trial) {
+    return res.status(400).json({ error: "Missing trial" });
   }
 
   try {
@@ -502,7 +467,6 @@ app.get("/api/getTask", async (req, res) => {
     res.json({ task: result.rows[0].task });
 
   } catch (err) {
-    console.error("❌ GetTask Error:", err);
     res.status(500).json({ error: "Database error" });
   }
 });
@@ -517,23 +481,19 @@ app.use(
   express.static(path.join(__dirname, "public", "experimental", "articles"))
 );
 
-app.get("/api/daily-article", (req, res) => {
-  const { userId, source, index } = req.query;
+app.get("/api/daily-article", requireLogin, (req, res) => {
+
+  const { source, index } = req.query;
 
   // 🧪 行為驗證用 log（建議保留）
   console.log("🧪 DAILY ARTICLE REQUEST", {
-    userId,
+    userId: req.session.userId,
     source,
     index,
     time: new Date().toISOString()
   });
 
-  // ① 基本防呆
-  if (!userId) {
-    return res.status(400).json({ error: "Missing userId" });
-  }
-
-  // ② 只允許 study
+// ② 只允許 study
   if (source !== "study") {
     return res.status(403).json({ error: "Invalid source" });
   }
@@ -663,22 +623,51 @@ function getTaipeiPeriod() {
   return "晚";
 }
 
+function requireLogin(req, res, next) {
+  if (!req.session.userId) {
+
+    // API 請求 → 回 JSON
+    if (req.originalUrl.startsWith("/api")) {
+      return res.status(401).json({ error: "Not logged in" });
+    }
+
+    // 頁面請求 → 回登入頁
+    return res.redirect("/");
+  }
+
+  next();
+}
+function requireGroup(groupName) {
+  return (req, res, next) => {
+    if (!req.session.userId) {
+      return res.redirect("/");
+    }
+
+    if (req.session.group !== groupName) {
+      return res.redirect("/");
+    }
+
+    next();
+  };
+}
 
 /* -------------------------------
    🌐 Static Routes
 ---------------------------------*/
 app.use(
   "/experimental",
+  requireGroup("A"),
   express.static(path.join(__dirname, "public", "experimental"))
 );
 app.use(
-  "/shift_comparison",
-  express.static(path.join(__dirname, "public", "shift_comparison"))
+  "/shift",
+  requireGroup("B"),
+  express.static(path.join(__dirname, "public", "shift"))
 );
 
 // 🏠 預設首頁導向
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "experimental", "index.html"));
+  res.sendFile(path.join(__dirname, "public", "login.html"));
 });
 
 /* -------------------------------

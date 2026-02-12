@@ -171,7 +171,6 @@ if (videoFrame) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            userId: currentUserId,
             phase: 'pre',
             featureType: practiceType, // 👈 這裡傳入動態任務名稱
             responses: result
@@ -198,7 +197,6 @@ if (videoFrame) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            userId: currentUserId,
             phase: 'post',
             featureType: practiceType, // 👈 這裡同樣確保有值
             responses: result
@@ -218,14 +216,17 @@ if (videoFrame) {
           });
           
           // --- 3. 更新進度 ---
-          const currentProgRes = await fetch(`/api/progress?userId=${currentUserId}`);
+          // 取得目前進度
+          const currentProgRes = await fetch("/api/progress");
           const currentProgData = await currentProgRes.json();
+
           const nextTrial = Number(currentProgData.trial) + 1;
 
+          // 更新進度
           await fetch("/api/progress/update", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: currentUserId, newTrial: nextTrial })
+            body: JSON.stringify({ newTrial: nextTrial })
           });
 
           if (practiceType === 'study') {

@@ -54,7 +54,6 @@ confirmBtn.addEventListener("click", () => {
     }
 
     const payload = {
-        userId: localStorage.getItem("userId"),
         mode: mode, 
         x: xValue, 
         y: yValue,
