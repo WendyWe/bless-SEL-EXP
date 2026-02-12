@@ -99,6 +99,7 @@ const db = new Pool({
 const session = require("express-session");
 const pgSession = require("connect-pg-simple")(session);
 
+app.set("trust proxy", 1);
 app.use(session({
   store: new pgSession({
     pool: db, // 用你現有的 PostgreSQL pool
