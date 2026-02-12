@@ -1,107 +1,83 @@
-const handleLogin = async () => {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+document.addEventListener("DOMContentLoaded", () => {
 
-    try {
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password })
-        });
+  const app = document.getElementById("app");
+  const dailyBtn = document.getElementById("btn-writing");
+  const guideBtn = document.getElementById("btn-guide");
+  const logoutBtn = document.getElementById("logoutBtn");
 
-        const data = await response.json();
-        if (data.success) {
-            localStorage.setItem('userId', data.userId);
-            updateUIForLoggedInUser();
-        }
-    } catch (error) {
-        console.error('Login failed:', error);
-    }
-};
+  const modal = document.getElementById("guideModal");
+  const closeBtn = document.querySelector(".close-btn");
+  
+  if (dailyBtn) {
+    dailyBtn.addEventListener("click", () => {
 
-const updateUIForLoggedInUser = () => {
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('userInfo').style.display = 'block';
-};
+      const warningMessage =
+        "提醒：進入「心理位移書寫」後，須完成完整四個位格之書寫，否則將不視為完整使用，後續使用時間的獎勵可能會受影響。\n\n確定要開始今日任務嗎？";
 
-const handleLogout = () => {
-    localStorage.removeItem('userId');
-    document.getElementById('loginForm').style.display = 'block';
-    document.getElementById('userInfo').style.display = 'none';
-};
+      if (!confirm(warningMessage)) return;
 
-// Check login state on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('loginForm');
-    const userInfo = document.getElementById('userInfo');
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
+      app.style.transition = "opacity 0.8s";
+      app.style.opacity = "0";
 
-    // 這裡新增：抓取三個功能按鈕
-    const writingBtn = document.getElementById('btn-writing');
+      setTimeout(() => {
+        window.location.href = "./writing/writing.html";
+      }, 800);
+    });
+  }
 
-    // 按鈕導向子頁面
-    writingBtn.addEventListener('click', () => window.location.href = '/shift_comparison/writing/writing.html');  
+  /* -------------------------------
+     📘 使用說明彈窗
+  ---------------------------------*/
+  if (guideBtn && modal && closeBtn) {
 
-    // Check if user is logged in
-    const sessionId = localStorage.getItem('sessionId');
-    if (sessionId) {
-        showUserInfo();
-    }
-
-    loginBtn.addEventListener('click', async () => {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        try {
-            const response = await fetch('http://localhost:3000/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password })
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                localStorage.setItem('userId', data.userId);
-                localStorage.setItem('sessionId', data.sessionId);
-                localStorage.setItem('username', username);
-                localStorage.setItem('loginTime', data.loginTime);
-                localStorage.setItem('period', data.period);
-                
-                showUserInfo();
-                
-                 // 🔑 登入成功後解鎖按鈕
-                writingBtn.disabled = false;
-
-            } else {
-                alert(data.message || '登入失敗');
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('登入系統錯誤');
-        }
+    guideBtn.addEventListener("click", () => {
+      modal.style.display = "block";
     });
 
-    logoutBtn.addEventListener('click', () => {
-        localStorage.clear();
-        loginForm.style.display = 'block';
-        userInfo.style.display = 'none';
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
     });
 
-    function showUserInfo() {
-        const username = localStorage.getItem('username');
-        const loginTime = localStorage.getItem('loginTime');
-        const period = localStorage.getItem('period');
+    window.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  }
 
-        document.getElementById('usernameDisplay').textContent = username;
-        document.getElementById('loginTimeInfo').textContent = 
-            `登入時間: ${loginTime} (${period})`;
+   /* -------------------------------
+     🚪 登出（由 server session 控制）
+  ---------------------------------*/
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await fetch("/api/logout", { method: "POST" });
+      } catch (err) {
+        console.error("Logout error:", err);
+      }
 
-        loginForm.style.display = 'none';
-        userInfo.style.display = 'block';
-    }
+      window.location.href = "/";
+    });
+  }
+
+  /* -------------------------------
+     ✨ 游標光點效果
+  ---------------------------------*/
+  const follower = document.getElementById("cursor-follower");
+
+  if (follower) {
+    document.addEventListener("mousemove", (e) => {
+      follower.style.left = e.clientX - 10 + "px";
+      follower.style.top = e.clientY - 10 + "px";
+    });
+
+    document.addEventListener("mousedown", () => {
+      follower.style.transform = "scale(0.8)";
+    });
+
+    document.addEventListener("mouseup", () => {
+      follower.style.transform = "scale(1)";
+    });
+  }
+
 });

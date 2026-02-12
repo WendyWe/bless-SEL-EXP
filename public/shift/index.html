@@ -6,34 +6,41 @@
     <link rel="stylesheet" href="../experimental/css/experimental.css">
     </head>
 <body>
+    <div id="cursor-follower"></div>
     <div id="app">
-
-        <div id="loginForm"> 
-            <h1>BLESS</h1>
-            <p class="blessing-text" id="blessingText">願在此刻感受到平安、幸福與祝福</p>
-            
-            <input type="text" id="username" placeholder="帳號" class="login-input">
-            <input type="password" id="password" placeholder="密碼" class="login-input">
-            <button id="loginBtn" class="login-btn">登入</button>
-        </div>
-
-        <div id="userInfo" style="display: none;"> 
-            
-            <div class="user-header">
-                <span id="usernameDisplay"></span>
-                <div id="loginTimeInfo"></div>
+ 
+        <h2>請選擇功能</h2>
+            <div class="action-buttons">
+                <button id="btn-writing" >心理位移書寫</button>
             </div>
-            
-            <h2>請選擇功能</h2>
-           
-            <button id="btn-writing" >心理位移書寫</button>
-        
-            <br>
+
+            <button id="btn-guide">如何使用BLESS？</button>
             <button id="logoutBtn" class="logout-btn">登出</button>
         </div>
 
     </div>
 
-    <script src="../experimental/js/experimental.js"></script>
+    <div id="guideModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 class="guide-title">BLESS 使用說明</h2>
+
+            <div class="guide-container"> <section class="guide-section daily-section">
+                    <h3 class="section-title">★ 心理位移書寫 ★</h3>
+                    <p class="time-hint">⏳ 邀請您每天至少留給自己 10 分鐘完成一次完整的心理位移書寫</p>
+                    <div class="flow-path">
+                        <div class="path-node">1. 記錄此時此刻的心情</div>
+                        <div class="path-arrow">↓</div>
+                        <div class="path-node">2. 進行心理位移書寫</div>
+                        <div class="path-arrow">↓</div>
+                        <div class="path-node">3. 再次感受心情變化</div>
+                    </div>
+                </section>
+
+            </div> <p class="modal-footer" style="margin-top: 20px;">點擊右上角或視窗外即可回到首頁</p>
+        </div>
+    </div>
+
+    <script src="../shift/js/shift.js"></script>
 </body>
 </html>

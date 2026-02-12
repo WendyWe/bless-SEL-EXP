@@ -302,7 +302,7 @@ h1 {
   transform: translateY(-2px);
 }
 
-#btn-daily, #btn-aid {
+#btn-daily, #btn-aid,#btn-writing {
     background: rgba(144, 202, 249, 0.2); /* 極輕柔的藍色透明感 */
     color: #455a64;
     border: 1.5px solid rgba(144, 202, 249, 0.4);
@@ -317,7 +317,7 @@ h1 {
 }
 
 /* 鼠標懸停：發出柔和微光 */
-#btn-daily:hover, #btn-aid:hover {
+#btn-daily:hover, #btn-aid:hover,#btn-writing:hover {
     background: rgba(144, 202, 249, 0.6);
     color: #ffffff;
     transform: scale(1.05); /* 輕微膨脹 */
