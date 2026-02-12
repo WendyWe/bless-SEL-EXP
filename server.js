@@ -257,6 +257,14 @@ app.post("/api/progress/update", requireLogin, async (req, res) => {
   res.json({ success: true });
 });
 
+/* -------------------------------
+   👤 Logout
+---------------------------------*/
+app.post("/api/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.json({ success: true });
+  });
+});
 
 /* -------------------------------
    🧭 AVI 前後測儲存
