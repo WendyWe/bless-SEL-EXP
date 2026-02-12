@@ -102,7 +102,7 @@ const pgSession = require("connect-pg-simple")(session);
 app.use(session({
   store: new pgSession({
     pool: db, // 用你現有的 PostgreSQL pool
-    tableName: "user_sessions"
+    createTableIfMissing: true
   }),
   secret: process.env.SESSION_SECRET || "bless-secret",
   resave: false,
