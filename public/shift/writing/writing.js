@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         featureType: practiceType || 'writing'
       };
 
-      // 2. 進行必填與字數檢查 (至少 20 字)
+      // 2. 進行必填與字數檢查 (至少 10 字)
       for (const field of fields) {
         const element = document.getElementById(field.id);
         const content = element.value.trim();
@@ -119,8 +119,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
 
-        if (content.length < 20) {
-          alert(`「${field.name}」內容過短（目前 ${content.length} 字），請至少輸入 20 個字。`);
+        if (content.length < 10) {
+          alert(`「${field.name}」內容過短（目前 ${content.length} 字），請至少輸入 10 個字。`);
           element.focus();
           return;
         }
@@ -173,10 +173,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (area && hint) {
       area.addEventListener('input', () => {
         const count = area.value.trim().length;
-        hint.innerText = `目前字數：${count} / 20`;
+        hint.innerText = `目前字數：${count} / 10`;
         
         // 視覺反饋：達到 20 字變綠色，沒達到是紅色或灰色
-        if (count >= 20) {
+        if (count >= 10) {
           hint.style.color = "#2ecc71"; // 綠色
           hint.style.fontWeight = "bold";
         } else {
