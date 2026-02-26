@@ -43,52 +43,58 @@ let trialIndex = 0;
 let trialLog = [];
 let trialStartTime = null;
 
-/* ================== 規則生成 ================== */
+/* ================== 規則生成修改 ================== */
 function generateRules() {
-  rulesEl.innerHTML = "";
-  rulesEl.classList.remove("hidden");
+    rulesEl.innerHTML = "";
+    rulesEl.classList.remove("hidden");
 
-  if (level === 1) {
-    let colorsToUse = [...COLORS];
-    let dirsToUse = [...DIRECTIONS];
+    if (level === 1) {
+        let colorsToUse = [...COLORS];
+        let dirsToUse = [...DIRECTIONS];
 
-    if (totalErrors >= 8) {
-      colorsToUse = COLORS.slice(0, 2);
-      dirsToUse = DIRECTIONS.slice(0, 2);
-      statusEl.textContent = "🛡️ 簡單模式：2 色 × 2 方向";
-    } else if (totalErrors >= 3) {
-      colorsToUse = COLORS.slice(0, 3);
-      dirsToUse = DIRECTIONS.slice(0, 3);
-      statusEl.textContent = "🛡️ 中等模式：3 色 × 3 方向";
+        // ... 保持原本的難度調整邏輯 ...
+        if (totalErrors >= 8) {
+            colorsToUse = COLORS.slice(0, 2);
+            dirsToUse = DIRECTIONS.slice(0, 2);
+        } else if (totalErrors >= 3) {
+            colorsToUse = COLORS.slice(0, 3);
+            dirsToUse = DIRECTIONS.slice(0, 3);
+        }
+
+        const shuffled = [...dirsToUse].sort(() => Math.random() - 0.5);
+        ruleMap = {};
+
+        // 規則生成核心修改點：
+        colorsToUse.forEach((c, i) => {
+          const direction = shuffled[i]; // 這會是 ArrowUp, ArrowDown 等
+          ruleMap[c.name] = direction;
+          
+          const div = document.createElement("div");
+          // 關鍵點：根據方向動態加上 rule-ArrowUp 等類別
+          div.className = `rule rule-${direction}`; 
+          
+          div.innerHTML = `
+              <span style="color: ${c.hex}; font-size: 1.6rem; line-height: 1;">●</span>
+              <span style="font-size: 1.2rem; font-weight: bold; margin-top: 5px; color: #4a5568;">
+                  ${DIR_SYMBOL[direction]}
+              </span>
+          `;
+          rulesEl.appendChild(div);
+      });
+
+        dirControls.classList.remove("hidden");
+        colorControls.classList.add("hidden");
+    } else {
+        // Level 2 保持原樣
+        const div = document.createElement("div");
+        div.className = "rule";
+        div.style.gridColumn = "span 2";
+        div.innerHTML = "🎯 <strong>Level 2</strong>忽略字義，只回報顏色";
+        rulesEl.appendChild(div);
+
+        dirControls.classList.add("hidden");
+        colorControls.classList.remove("hidden");
     }
-
-    const shuffled = [...dirsToUse].sort(() => Math.random() - 0.5);
-    ruleMap = {};
-
-    document.querySelectorAll("#dirControls button").forEach(btn => {
-      btn.classList.toggle("hidden", !dirsToUse.includes(btn.dataset.key));
-    });
-
-    colorsToUse.forEach((c, i) => {
-      ruleMap[c.name] = shuffled[i];
-      const div = document.createElement("div");
-      div.className = "rule";
-      div.textContent = `${c.name} → ${DIR_LABEL[shuffled[i]]}`;
-      rulesEl.appendChild(div);
-    });
-
-    dirControls.classList.remove("hidden");
-    colorControls.classList.add("hidden");
-  } else {
-    const div = document.createElement("div");
-    div.className = "rule";
-    div.style.gridColumn = "span 2";
-    div.innerHTML = "🎯 <strong>Level 2</strong><br>請按【文字的顏色】";
-    rulesEl.appendChild(div);
-
-    dirControls.classList.add("hidden");
-    colorControls.classList.remove("hidden");
-  }
 }
 
 /* ================== 倒數 ================== */

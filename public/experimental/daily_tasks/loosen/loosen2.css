@@ -76,15 +76,75 @@ body {
     color: #4a5568;
 }
 
+/* 修改規則容器：左、下、右 同一排 (倒 T 型) */
 #rules {
-    background: rgba(255, 255, 255, 0.8);
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    display: flex;
-    gap: 10px;
+    display: grid;
+    /* 定義兩排：第一排置中放上，第二排左、下、右並列 */
+    grid-template-areas: 
+        ".          rule-up    ."
+        "rule-left  rule-down  rule-right";
+    gap: 12px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.2); 
+    border-radius: 20px;
+    margin-bottom: 20px;
     justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
 }
+
+/* 當 rules 內部只有一個子元素時（即 Level 2），切換為橫向長條模式 */
+#rules:has(> .rule:only-child) {
+    display: flex;
+    grid-template-areas: none;
+    background: rgba(255, 255, 255, 0.1); /* 稍微調淡背景 */
+}
+
+#rules .rule:only-child {
+    width: auto;               /* 改為自動寬度 */
+    min-width: 280px;          /* 設定最小寬度 */
+    padding: 10px 20px;        /* 增加左右內距 */
+    height: auto;              /* 高度隨內容增長，或設定一個夠用的 min-height */
+    min-height: 60px;
+    flex-direction: row;       /* 橫向排列標籤與文字 */
+    background: #ffffff;
+    border-left: 6px solid #f56565;
+    font-size: 1.2rem;
+    gap: 15px;                 /* 增加元素間距 */
+    grid-area: auto;
+    box-sizing: border-box;    /* 確保 padding 不會撐破寬度 */
+    white-space: nowrap;       /* 防止文字換行導致的歪斜 */
+}
+
+/* 針對 Level 2 內部的文字微調 */
+#rules .rule:only-child span, 
+#rules .rule:only-child strong {
+    display: flex;
+    align-items: center;
+    line-height: 1;            /* 統一對齊線 */
+}
+
+/* 確保各方向卡片精準歸位 */
+.rule-ArrowUp    { grid-area: rule-up; }
+.rule-ArrowDown  { grid-area: rule-down; }
+.rule-ArrowLeft  { grid-area: rule-left; }
+.rule-ArrowRight { grid-area: rule-right; }
+
+/* 統一規則卡片寬度，確保三張並排時對稱 */
+.rule {
+    width: 70px;
+    height: 85px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* 移除原本的 ::before，改用更乾淨的 JS 控制 */
+.rule::before { display: none; }
 
 /* 4. 遊戲競技場 (對齊 Reference 的容器感) */
 .arena-container {
@@ -124,31 +184,71 @@ body {
 .fix { width: 12px; height: 12px; background: #cbd5e0; border-radius: 50%; }
 .hidden { display: none !important; }
 
-/* 6. 遊戲按鈕組 (保持功能性，但視覺圓角化) */
+/* 6. 遊戲按鈕組 - 優化佈局與直覺性 */
 .controls-wrapper {
     width: 100%;
     max-width: 400px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
 }
 
-.controls {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-}
-
+/* 基礎按鈕樣式升級 */
 .controls button {
-    padding: 12px 5px;
-    border-radius: 15px; /* 稍小的圓角以區分主按鈕 */
     border: none;
     font-weight: bold;
     background: white;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 0px #cbd5e0; /* 增加立體感，讓它看起來像實體按鍵 */
     cursor: pointer;
-    transition: transform 0.1s;
+    transition: all 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* 顏色鍵移植 Reference 的發光感邏輯 */
+.controls button:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0px #cbd5e0;
+}
+
+/* --- Level 1: 方向鍵改為十字型 --- */
+#dirControls {
+    display: grid;
+    /* 使用 Grid Area 建立直覺的空間映射 */
+    grid-template-areas: 
+        ".      up     ."
+        "left   down   right";
+    gap: 15px;
+}
+
+#dirControls button {
+    width: 75px;
+    height: 65px;
+    font-size: 1.2rem;
+    border-radius: 12px;
+}
+
+/* 指定按鈕位置 */
+#dirControls button[data-key="ArrowUp"]    { grid-area: up; }
+#dirControls button[data-key="ArrowLeft"]  { grid-area: left; }
+#dirControls button[data-key="ArrowRight"] { grid-area: right; }
+#dirControls button[data-key="ArrowDown"]  { grid-area: down; }
+
+/* --- Level 2: 顏色鍵改為圓形 --- */
+#colorControls {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+#colorControls button {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%; /* 圓形在視覺上與方向鍵做明確區隔 */
+    font-size: 1.1rem;
+}
+
+/* 顏色鍵專屬配色與發光感 */
 .btn-red { background: #fff5f5 !important; color: #f56565 !important; border: 2px solid #feb2b2 !important; }
 .btn-blue { background: #ebf8ff !important; color: #4299e1 !important; border: 2px solid #90cdf4 !important; }
 .btn-yellow { background: #fff9db !important; color: #d69e2e !important; border: 2px solid #faf089 !important; }

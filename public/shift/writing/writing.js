@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const count = area.value.trim().length;
         hint.innerText = `目前字數：${count} / 10`;
         
-        // 視覺反饋：達到 20 字變綠色，沒達到是紅色或灰色
+        // 視覺反饋：達到 10 字變綠色，沒達到是紅色或灰色
         if (count >= 10) {
           hint.style.color = "#2ecc71"; // 綠色
           hint.style.fontWeight = "bold";
