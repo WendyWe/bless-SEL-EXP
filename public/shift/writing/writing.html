@@ -67,33 +67,62 @@
 
     <!-- 3. 心理位移書寫 -->
     <section id="writing-section" class="hidden">
-      <h2>心理位移書寫</h2>
-      <p>請以下列方式，依序寫下你最煩惱的事</p>
-      <div class="row">
-      <label for="self"> <b> 我的位格</b> <br> 首先，以第一人稱的「我」書寫最煩惱的事。</label>
-      <textarea id="self" placeholder="請輸入『我的位格』書寫…"></textarea>
-      <div class="word-count-hint" id="self-hint">目前字數：0 / 20</div>
-
-      <label for="you"><b>你的位格</b><br> 接著，將主詞換成第二人稱的「你」，書寫最煩惱的事。</label>
-      <textarea id="you" placeholder="請輸入『你的位格』書寫…"></textarea>
-      <div class="word-count-hint" id="you-hint">目前字數：0 / 20</div>
-
-      <label for="he"><b>他的位格</b><br> 接著，將主詞換成第三人稱的「他」，書寫最煩惱的事。</label>
-      <textarea id="he" placeholder="請輸入『他的位格』書寫…"></textarea>
-      <div class="word-count-hint" id="he-hint">目前字數：0 / 20</div>
-
-      <label for="back"><b>回到我的位格</b><br>現在，請以「此時此刻的我」，寫下你現在的心情與狀態。</label>
-      <textarea id="back" placeholder="請輸入『回到我的位格』書寫…"></textarea>
-      <div class="word-count-hint" id="back-hint">目前字數：0 / 20</div>
-
-      <label for="reflect"><b>所思所想</b><br>最後，比較「我」、「你」、「他」三種狀態轉換之間的感受與想法，有何不同。</label>
-      <textarea id="reflect" placeholder="請輸入現在的『所思所想』…"></textarea>
-      <div class="word-count-hint" id="reflect-hint">目前字數：0 / 20</div>
+    <div class="section-header">
+      <h2 class="section-title">心理位移書寫</h2>
+      <p class="section-subtitle">請以下列方式，依序寫下你最煩惱的事</p>
     </div>
-          
-      <br>
-      <button id="finish-writing" class="btn">完成並繼續</button>
-    </section>
+
+    <div class="writing-container">
+      <div class="writing-card">
+        <label for="self" class="card-label">
+          <b>我的位格</b>
+          <p class="step-desc">首先，以第一人稱的「我」書寫最煩惱的事。</p>
+        </label>
+        <textarea id="self" placeholder="請輸入『我的位格』書寫…"></textarea>
+        <div class="word-count-hint" id="self-hint">目前字數：0 / 20</div>
+      </div>
+
+      <div class="writing-card">
+        <label for="you" class="card-label">
+          <b>你的位格</b>
+          <p class="step-desc">接著，將主詞換成第二人稱的「你」，書寫最煩惱的事。</p>
+        </label>
+        <textarea id="you" placeholder="請輸入『你的位格』書寫…"></textarea>
+        <div class="word-count-hint" id="you-hint">目前字數：0 / 20</div>
+      </div>
+
+      <div class="writing-card">
+        <label for="he" class="card-label">
+          <b>他的位格</b>
+          <p class="step-desc">接著，將主詞換成第三人稱的「他」，書寫最煩惱的事。</p>
+        </label>
+        <textarea id="he" placeholder="請輸入『他的位格』書寫…"></textarea>
+        <div class="word-count-hint" id="he-hint">目前字數：0 / 20</div>
+      </div>
+
+      <div class="writing-card">
+        <label for="back" class="card-label">
+          <b>回到我的位格</b>
+          <p class="step-desc">現在，請以「此時此刻的我」，寫下你現在的心情與狀態。</p>
+        </label>
+        <textarea id="back" placeholder="請輸入『回到我的位格』書寫…"></textarea>
+        <div class="word-count-hint" id="back-hint">目前字數：0 / 20</div>
+      </div>
+
+      <div class="writing-card">
+        <label for="reflect" class="card-label">
+          <b>所思所想</b>
+          <p class="step-desc">最後，比較「我」、「你」、「他」三種狀態轉換之間的感受與想法，有何不同。</p>
+        </label>
+        <textarea id="reflect" placeholder="請輸入現在的『所思所想』…"></textarea>
+        <div class="word-count-hint" id="reflect-hint">目前字數：0 / 20</div>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button id="finish-writing" class="btn btn-primary">完成並繼續</button>
+    </div>
+  </section>
 
     <!-- 結束頁 -->
     <section id="end-section" class="hidden">

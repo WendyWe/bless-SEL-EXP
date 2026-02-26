@@ -1,3 +1,15 @@
+沒問題，Wendy！我直接根據妳提供的原始 CSS 進行整合與優化。
+
+這次修改的重點是：
+
+卡片化設計：新增 .writing-card 樣式，讓每個位格書寫區像是一張張精緻的卡片。
+
+變數補全：修復妳原本 CSS 中未定義的變數（如 --border, --radius, --gap），確保樣式能正確顯示。
+
+視覺焦點：加入 focus-within 效果，當使用者在該格位打字時，卡片會有微小的浮起感，幫助專注。
+
+修改後的 writing.css
+CSS
 :root {
   --primary-color: #A5CAD2; /* 柔和湖水綠 */
   --primary-dark: #7DA8B1;
@@ -5,6 +17,10 @@
   --text-dark: #4A5568;
   --glass-bg: rgba(255, 255, 255, 0.85);
   --accent-soft: #C2DEDC;
+  /* 補全缺失的變數 */
+  --border: #E2E8F0;
+  --radius: 16px;
+  --gap: 25px;
 }
 
 /* 全域 */
@@ -14,38 +30,50 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100vh;
-  /* 移除 Flex，或是改用一般的區塊佈局 */
   display: block !important; 
   overflow-x: hidden;
   overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text-dark);
 }
 
 #app {
   width: 100%;
-  max-width: 1200px;   /* 可以稍微再大一點 */
+  max-width: 900px; /* 稍微縮小寬度，讓書寫時視線更集中 */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: stretch; /* ← 改這裡！ */
-  padding: 20px;
+  align-items: stretch;
+  padding: 40px 20px;
 }
 
 h1, h2, h3 {
   margin-bottom: 0.8em;
+  color: #2D3748;
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
-/* 標題樣式 */
+/* 標題與副標題樣式 */
+.section-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
 .section-title {
   font-size: 1.8rem;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   text-align: center;
   width: 100%;
 }
 
+.section-subtitle {
+  color: #718096;
+  font-size: 1rem;
+  margin: 0;
+}
 
 /* 按鈕美化 */
 .btn-group {
@@ -54,14 +82,16 @@ h1, h2, h3 {
   justify-content: center;
   gap: 15px;
   width: 100%;
+  margin-top: 20px;
 }
 
 .btn {
   padding: 14px 40px;
   border-radius: 12px;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
   border: none;
 }
 
@@ -73,29 +103,25 @@ h1, h2, h3 {
 
 .btn-primary:hover {
   background-color: var(--primary-dark);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(165, 202, 210, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(165, 202, 210, 0.5);
 }
 
 .btn-ghost {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.6);
   border: 1px solid #CBD5E0;
   color: #718096;
 }
 
-.btn-ghost:hover {
-  background: white;
-  color: var(--primary-dark);
-}
-
+/* 問卷區塊樣式 (AVI) */
 .avi-instruction {
   background: white;
-  padding: 20px;
+  padding: 25px;
   border-radius: 15px;
   margin-bottom: 25px;
-  line-height: 1.6;
-  border-left: 5px solid var(--primary-color);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  line-height: 1.7;
+  border-left: 6px solid var(--primary-color);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
 }
 
 .table-container {
@@ -105,9 +131,8 @@ h1, h2, h3 {
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  /* 修正重點： */
-  max-height: none;    /* 移除高度限制，讓頁面自然延伸 */
-  overflow: visible;   /* 讓內容完整顯示，不要在內部捲動 */
+  max-height: none;
+  overflow: visible;
 }
 
 .avi-table {
@@ -128,68 +153,80 @@ h1, h2, h3 {
   text-align: center;
 }
 
-/* 斑馬紋設計：幫助視線橫向對齊 */
-.avi-table tr:nth-child(even) {
-  background-color: #F8FAFC;
+/* 心理位移書寫區 (Writing Cards) */
+.writing-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  margin-bottom: 40px;
 }
 
-.avi-table tr:hover {
-  background-color: #EBF8FF;
+.writing-card {
+  background: white;
+  padding: 28px;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  border: 1px solid #EDF2F7;
+  transition: all 0.3s ease;
 }
 
-.avi-table td:first-child {
-  font-weight: 500;
+/* 當使用者點擊內部的 textarea 時，卡片會發光並微調 */
+.writing-card:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 8px 30px rgba(165, 202, 210, 0.15);
+  transform: translateY(-2px);
+}
+
+.card-label b {
+  font-size: 1.25rem;
   color: #2D3748;
-  padding-left: 25px;
-  text-align: left;
+  display: block;
+  margin-bottom: 6px;
 }
 
-/* 心理位移 */
+.step-desc {
+  font-size: 0.95rem;
+  color: #718096;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
 textarea {
   width: 100%;
-  min-height: 120px;
-  padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  font-size: 15px;
-  margin-bottom: 12px;
+  min-height: 140px;
+  padding: 15px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-dark);
+  transition: all 0.2s ease;
+  box-sizing: border-box; /* 重要：防止寬度溢出 */
+  resize: vertical;
 }
 
-.row {
-  display: grid;
-  gap: var(--gap);
-  margin-bottom: 14px;
+textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background-color: #F8FDFF;
 }
 
 .word-count-hint {
   font-size: 0.85rem;
-  color: #7f8c8d;
-  margin-top: -10px; /* 讓它靠近 textarea 一點 */
-  margin-bottom: 15px;
+  color: #A0AEC0;
+  margin-top: 10px;
   text-align: right;
+  transition: all 0.3s ease;
 }
 
-.card {
-  border: 1px solid #eee;
-  border-radius: var(--radius);
-  background: var(--bg-card);
-  padding: 12px;
-  white-space: pre-wrap;
-  font-size: 14px;
-}
-
-.muted {
-  color: #666;
-  font-size: 12px;
-}
-
-/* 結束頁 */
+/* 結束頁樣式 */
 #end-section {
   text-align: center;
   background: white;
-  padding: 60px;
+  padding: 80px 40px;
   border-radius: 30px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  animation: fadeIn 0.8s ease-out;
 }
 
 .success-icon {
@@ -198,17 +235,17 @@ textarea {
   display: block;
 }
 
-/* 動畫 */
+/* 動畫效果 */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.hidden { display: none !important; }
-
-/* 響應式：手機版按鈕垂直排列 */
+/* 響應式：手機版優化 */
 @media (max-width: 600px) {
-  .btn-group { flex-direction: column; width: 100%; }
-  .btn { width: 100%; margin: 5px 0; }
-  .avi-table th, .avi-table td { padding: 12px 5px; font-size: 0.9rem; }
+  #app { padding: 20px 15px; }
+  .btn-group { flex-direction: column; }
+  .btn { width: 100%; padding: 12px 20px; }
+  .writing-card { padding: 20px; }
+  .avi-table th, .avi-table td { padding: 12px 5px; font-size: 0.85rem; }
 }
