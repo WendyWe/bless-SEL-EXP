@@ -75,42 +75,47 @@ h1, h2, h3 {
   margin: 0;
 }
 
-/* 按鈕美化 */
+.btn {
+  padding: 14px 40px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600; /* 加粗文字 */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* 這是妳問卷與書寫共用的主按鈕 */
+.btn-primary {
+  background-color: #A5CAD2 !important; /* 強制湖水綠 */
+  color: #FFFFFF !important;           /* 強制文字白色 */
+  box-shadow: 0 4px 12px rgba(165, 202, 210, 0.4) !important;
+}
+
+.btn-primary:hover {
+  background-color: #7DA8B1 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(165, 202, 210, 0.5) !important;
+}
+
+/* 回首頁等次要按鈕 */
+.btn-ghost {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid #CBD5E0 !important;
+  color: #4A5568 !important;
+}
+
 .btn-group {
   display: flex;
   flex-direction: row;
   justify-content: center;
   gap: 15px;
   width: 100%;
-  margin-top: 20px;
-}
-
-.btn {
-  padding: 14px 40px;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-}
-
-.btn-primary {
-  background-color: var(--primary-color);
-  color: white;
-  box-shadow: 0 4px 12px rgba(165, 202, 210, 0.4);
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(165, 202, 210, 0.5);
-}
-
-.btn-ghost {
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid #CBD5E0;
-  color: #718096;
+  margin-top: 30px;
+  padding-bottom: 20px;
 }
 
 /* 問卷區塊樣式 (AVI) */
