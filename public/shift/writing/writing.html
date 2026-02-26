@@ -68,17 +68,29 @@
     <!-- 3. 心理位移書寫 -->
     <section id="writing-section" class="hidden">
       <h2>心理位移書寫</h2>
+      <p>請以下列方式，依序寫下你最煩惱的事</p>
       <div class="row">
-        <label for="self"> <b> 我的位格</b> <br> 先誠實地寫下你的經歷，完整地表達當時的感受與想法。<br>你可以描述發生了什麼、你當下的情緒如何、有哪些細節特別讓你印象深刻。<br>這是一個傾訴的過程，就像是寫日記一樣，讓自己真正面對內心的聲音。</label>
-        <textarea id="self" placeholder="請輸入『我的位格』書寫…"></textarea>
-        <label for="you"><b>你的位格</b><br> 接著，想要邀請您想像成是您的摯友在這個經歷上會如何回應你<br>就像是坐在自己的對面會與自己說些甚麼</label>
-        <textarea id="you" placeholder="請輸入『你的位格』書寫…"></textarea>
-        <label for="he"><b>他的位格</b><br> 接著，想要邀請您從旁觀者的角度來看待這件事<br>試著像個旁觀者一樣來敘述這個事件<br>像是在看一場電影或觀察別人的故事。</label>
-        <textarea id="he" placeholder="請輸入『他的位格』書寫…"></textarea>
-        <label for="back"><b>回到我的位格</b><br>最後，回到自己的角度，重新感受一下內心的變化。<br>回到自己的內心，感受一下現在的感受</label>
-        <textarea id="back" placeholder="請輸入『回到我的位格』書寫…"></textarea>
-      </div>
-      
+      <label for="self"> <b> 我的位格</b> <br> 首先，以第一人稱的「我」書寫最煩惱的事。</label>
+      <textarea id="self" placeholder="請輸入『我的位格』書寫…"></textarea>
+      <div class="word-count-hint" id="self-hint">目前字數：0 / 20</div>
+
+      <label for="you"><b>你的位格</b><br> 接著，將主詞換成第二人稱的「你」，書寫最煩惱的事。</label>
+      <textarea id="you" placeholder="請輸入『你的位格』書寫…"></textarea>
+      <div class="word-count-hint" id="you-hint">目前字數：0 / 20</div>
+
+      <label for="he"><b>他的位格</b><br> 接著，將主詞換成第三人稱的「他」，書寫最煩惱的事。</label>
+      <textarea id="he" placeholder="請輸入『他的位格』書寫…"></textarea>
+      <div class="word-count-hint" id="he-hint">目前字數：0 / 20</div>
+
+      <label for="back"><b>回到我的位格</b><br>現在，請以「此時此刻的我」，寫下你現在的心情與狀態。</label>
+      <textarea id="back" placeholder="請輸入『回到我的位格』書寫…"></textarea>
+      <div class="word-count-hint" id="back-hint">目前字數：0 / 20</div>
+
+      <label for="reflect"><b>所思所想</b><br>最後，比較「我」、「你」、「他」三種狀態轉換之間的感受與想法，有何不同。</label>
+      <textarea id="reflect" placeholder="請輸入現在的『所思所想』…"></textarea>
+      <div class="word-count-hint" id="reflect-hint">目前字數：0 / 20</div>
+    </div>
+          
       <br>
       <button id="finish-writing" class="btn">完成並繼續</button>
     </section>

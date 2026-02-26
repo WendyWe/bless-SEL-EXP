@@ -88,7 +88,18 @@ const db = new Pool({
       kit_type TEXT,
       duration REAL,             
       created_at TIMESTAMP DEFAULT NOW()
-  );
+      );
+      CREATE TABLE IF NOT EXISTS writing_reflections (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER REFERENCES users(id),
+      self_text TEXT,
+      you_text TEXT,
+      he_text TEXT,
+      back_text TEXT,
+      reflect_text TEXT,
+      feature_type TEXT,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
     `);
     console.log("✅ PostgreSQL connected & tables ready");
   } catch (err) {
@@ -368,6 +379,31 @@ app.post("/api/study/save-reflection", requireLogin, async (req, res) => {
   }
 });
 
+/* -------------------------------
+   📝 心理位移書寫內容儲存
+---------------------------------*/
+app.post("/api/writing/save", requireLogin, async (req, res) => {
+  const realId = req.session.userId;
+  if (!realId) return res.status(401).json({ error: "Not logged in" });
+
+  const { self, you, he, back, reflect, featureType } = req.body;
+
+  try {
+    const time = getTaipeiNow();
+    await db.query(
+      `INSERT INTO writing_reflections 
+       (user_id, self_text, you_text, he_text, back_text, reflect_text, feature_type, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [realId, self, you, he, back, reflect, featureType, time]
+    );
+
+    console.log(`✅ [Writing] 內容存入成功: userId=${realId}`);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ Writing Save Error:", err);
+    res.status(500).json({ success: false });
+  }
+});
 
 
 /* -------------------------------

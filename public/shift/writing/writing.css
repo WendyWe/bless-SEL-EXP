@@ -161,6 +161,14 @@ textarea {
   margin-bottom: 14px;
 }
 
+.word-count-hint {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-top: -10px; /* 讓它靠近 textarea 一點 */
+  margin-bottom: 15px;
+  text-align: right;
+}
+
 .card {
   border: 1px solid #eee;
   border-radius: var(--radius);
