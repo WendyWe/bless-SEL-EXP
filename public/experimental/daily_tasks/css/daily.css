@@ -188,12 +188,34 @@ video {
   text-align: left;
 }
 
-/* Radio Button 增大與美化 */
-input[type="radio"] {
-  width: 20px;
-  height: 20px;
+.scale-btn input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* 大按鈕樣式 */
+.scale-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  accent-color: var(--primary-dark);
+  width: 100%;
+  height: 50px; /* 增加高度 */
+  border: 1px solid #CBD5E0;
+  border-radius: 8px;
+  background-color: #fcfcfc;
+  transition: all 0.2s ease;
+  font-weight: bold;
+  color: #4A5568;
+}
+
+/* 選中時的樣式 (使用 :has 選擇器) */
+.scale-btn:has(input:checked) {
+  background-color: var(--primary-color); /* 你的湖水綠變量 */
+  color: white;
+  border-color: var(--primary-dark);
 }
 
 /* 結束頁 */
