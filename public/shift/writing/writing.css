@@ -1,15 +1,3 @@
-沒問題，Wendy！我直接根據妳提供的原始 CSS 進行整合與優化。
-
-這次修改的重點是：
-
-卡片化設計：新增 .writing-card 樣式，讓每個位格書寫區像是一張張精緻的卡片。
-
-變數補全：修復妳原本 CSS 中未定義的變數（如 --border, --radius, --gap），確保樣式能正確顯示。
-
-視覺焦點：加入 focus-within 效果，當使用者在該格位打字時，卡片會有微小的浮起感，幫助專注。
-
-修改後的 writing.css
-CSS
 :root {
   --primary-color: #A5CAD2; /* 柔和湖水綠 */
   --primary-dark: #7DA8B1;
@@ -156,6 +144,36 @@ h1, h2, h3 {
   padding: 18px 10px;
   border-bottom: 1px solid #F7FAFC;
   text-align: center;
+}
+
+.scale-btn input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* 大按鈕樣式 */
+.scale-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 100%;
+  height: 50px; /* 增加高度 */
+  border: 1px solid #CBD5E0;
+  border-radius: 8px;
+  background-color: #fcfcfc;
+  transition: all 0.2s ease;
+  font-weight: bold;
+  color: #4A5568;
+}
+
+/* 選中時的樣式 (使用 :has 選擇器) */
+.scale-btn:has(input:checked) {
+  background-color: var(--primary-color); /* 你的湖水綠變量 */
+  color: white;
+  border-color: var(--primary-dark);
 }
 
 /* 心理位移書寫區 (Writing Cards) */
