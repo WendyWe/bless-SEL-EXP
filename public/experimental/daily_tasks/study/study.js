@@ -27,7 +27,7 @@ async function loadArticle() {
         
         // ① 取得今日文章資訊 (串接 server.js 的 /api/daily-article)
         const metaRes = await fetch(
-           `/api/daily-article?source=study&index=${index}`
+           `/api/daily-article?source=study&index=${articleindex}`
         );
         if (!metaRes.ok) throw new Error("每日文章 API 載入失敗");
 
