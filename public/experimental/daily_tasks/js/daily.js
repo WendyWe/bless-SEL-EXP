@@ -4,9 +4,6 @@ let practiceType = null;  // ⭐ 全域宣告，後面都能存取
 let practicePages = {};   // ⭐ 也全域宣告
 let afterPractice = false;
 
-// ✅ 取得登入使用者 ID
-const currentUserId = localStorage.getItem('userId');
-if (!currentUserId) console.warn('⚠️ 未找到使用者登入資訊，請重新登入');
 
 // === 每日任務限制：一天只能一次 ===
 async function checkDailyUsageOnce() {
@@ -65,7 +62,6 @@ if (videoFrame) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
-            userId: currentUserId, 
             isFinished: false, 
             featureType: 'video_start' 
           })
@@ -130,11 +126,11 @@ if (videoFrame) {
 
       if (formType === 'pre') {
         // --- 1. 抓取 Trial 與 Task ---
-        const progRes = await fetch(`/api/progress?userId=${currentUserId}`);
+        const progRes = await fetch(`/api/progress`); 
         const progData = await progRes.json();
         const trial = progData.trial;
 
-        const taskRes = await fetch(`/api/getTask?subject=${currentUserId}&trial=${trial}`);
+        const taskRes = await fetch(`/api/getTask?trial=${trial}`);
         const taskData = await taskRes.json();
 
         if (!taskData.task) {
@@ -149,12 +145,8 @@ if (videoFrame) {
         await fetch("/api/daily/status", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            userId: currentUserId, 
-            isFinished: false, 
-            featureType: practiceType 
-          })
-        }).catch(err => console.error("開始紀錄失敗:", err));
+          body: JSON.stringify({ isFinished: false, featureType: practiceType })
+        });
 
         // --- 4. 儲存 AVI 前測數據 (確保 featureType 有值) ---
         await fetch('/api/avi/save', {
@@ -162,7 +154,7 @@ if (videoFrame) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             phase: 'pre',
-            featureType: practiceType, // 👈 這裡傳入動態任務名稱
+            featureType: practiceType,
             responses: result
           })
         });
@@ -188,7 +180,7 @@ if (videoFrame) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             phase: 'post',
-            featureType: practiceType, // 👈 這裡同樣確保有值
+            featureType: practiceType,
             responses: result
           })
         });
@@ -198,11 +190,7 @@ if (videoFrame) {
           await fetch("/api/daily/status", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-              userId: currentUserId, 
-              isFinished: true, 
-              featureType: practiceType 
-            })
+            body: JSON.stringify({ isFinished: true, featureType: practiceType })
           });
           
           // --- 3. 更新進度 ---

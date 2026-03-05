@@ -508,9 +508,9 @@ app.post("/api/daily/status", requireLogin, async (req, res) => {
    🎯 Get Task Sequence (Trial-based)
 ---------------------------------*/
 app.get("/api/getTask", requireLogin, async (req, res) => {
-
-  const trial = req.query.trial;
+  // 1. 從 Session 直接抓取 useridText (例如: S001)
   const subject = req.session.useridText;
+  const trial = req.query.trial;
 
   if (!trial) {
     return res.status(400).json({ error: "Missing trial" });
@@ -520,7 +520,7 @@ app.get("/api/getTask", requireLogin, async (req, res) => {
     const result = await db.query(
       `SELECT task FROM task_sequence_test
        WHERE subject_id = $1 AND trial = $2`,
-      [subject, trial]
+      [subject, trial] // ✨ 使用 Session 中的 ID
     );
 
     if (result.rows.length === 0) {
@@ -530,6 +530,7 @@ app.get("/api/getTask", requireLogin, async (req, res) => {
     res.json({ task: result.rows[0].task });
 
   } catch (err) {
+    console.error("getTask Error:", err);
     res.status(500).json({ error: "Database error" });
   }
 });
