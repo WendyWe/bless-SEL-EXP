@@ -639,13 +639,35 @@ app.get("/api/daily-video", (req, res) => {
     "video25.mp4": "1Nh3PTTtKc3Rod5IoOImSkT1q1PXsxJKy",
     "video26.mp4": "1kO_Yt9S6oahmm01Yx0zg57qdfXTspdux",
     "video27.mp4": "1pmsW4RSV3Jx8srkZL719Y7dPmrkIkUoF",
-    "video28.mp4": "18HeAanWPQQKfscrrsy9MQMmZYM_hL3Uy"
+    "video28.mp4": "18HeAanWPQQKfscrrsy9MQMmZYM_hL3Uy",
+    "video29.mp4": "1nhBMIG9ot9MUZ1QtwPmNMXRkKc61UvVx",
+    "video30.mp4": "16VjRAKgFrd0DAVEGGPmAU8myiLLZX7jd",
+    "video31.mp4": "1Hsf4v4x3Wa5c8NtzuZyElE4jflYFx9NL",
+    "video32.mp4": "1qYgRLVRPmnWiavprEQP7aqIkdwhgoTQJ",
+    "video33.mp4": "1Suwr3qhlnszuSLsPpJ5tk32GijN3Jw1w",
+    "video34.mp4": "14AXSbya2Zh6y_ZE3TYoQGvdewBdoRJEN",
+    "video35.mp4": "1ekcEbbD5HqdkSj8gTbnz7a0Bwii4D0AV",
+    "video36.mp4": "1QRfgFC-fNfjhx-NbCqDSkYsWwxNptRM9",
+    "video37.mp4": "1x_UXZ3QDN2C_fzgvdKOkfXPNeypWUmLj",
+    "video38.mp4": "1K4zDM1lK-3QTbgg9X1hbn7WoORcV4Lb8",
+    "video39.mp4": "12pwrZprvWTtvMRqRcWjNc4nFnVNSJf2L",
+    "video40.mp4": "1cp8rFgwiYLzgyIbf7yj1ZFK3fLSngnAt",
+    "video41.mp4": "1wzo-_qubLvPn7GxjXh_cj-zPGFuqDAIO",
+    "video42.mp4": "1ppbuBLzfLHrTvi52GXMElE2Yjo8vQGBX",
+    "video43.mp4": "1eGg9uWVElvoBxQWqPJ5E-8zEU4JzYIz8",
+    "video44.mp4": "1zuyxIIa24rMALJE3IW-AryeMjBy6sR2V",
+    "video45.mp4": "1XIbQAK1jZH9Ld9qzRlm1dLYRo77HI-G4",
+    "video46.mp4": "15nxTXIVJX58Pgh5QHmxvl-TFQNvGhm_g",
+    "video47.mp4": "11Ykui1k1LFxZNLGFNEZyhxMbhSF-8MNW",
+    "video48.mp4": "1-6rE76J8ITmb2H-IZLVURlttH_uJSf17",
+    "video49.mp4": "1--NQ-i3qbpD4gajVWj_q_eSpTIgWfUUL",
+    "video50.mp4": "1Uk4iHndxmnPPDD6rBg3g3UZXJoDCpGzW",
   };
 
   const videoFiles = Object.keys(videoMap);
 
   // 2. 設定起始日期 (Day 1: 2026-02-09)
-  const startDate = new Date("2026-02-09T00:00:00"); 
+  const startDate = new Date("2026-03-06T00:00:00+08:00"); 
   const today = new Date();
   
   // 計算天數差
