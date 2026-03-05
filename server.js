@@ -412,12 +412,12 @@ app.post("/api/writing/save", requireLogin, async (req, res) => {
 app.post("/api/daily/check", requireLogin, async (req, res) => {
 
   const realId = req.session.userId;
+  const today = getTaipeiDateString();
+
+  console.log(`🔎 正在檢查限制: 用戶ID=${realId}, 日期=${today}`);
 
   try {
-
-    const today = getTaipeiDateString();
-
-    const check = await db.query(
+     const check = await db.query(
       `SELECT 1 
        FROM daily_usage 
        WHERE user_id = $1 
@@ -426,6 +426,8 @@ app.post("/api/daily/check", requireLogin, async (req, res) => {
        LIMIT 1`,
       [realId, today]
     );
+
+    console.log(`📊 查詢結果: 找到 ${check.rows.length} 筆已完成紀錄`);
 
     res.json({
       success: true,
