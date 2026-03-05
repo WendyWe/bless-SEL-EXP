@@ -9,38 +9,52 @@ const currentUserId = localStorage.getItem('userId');
 if (!currentUserId) console.warn('⚠️ 未找到使用者登入資訊，請重新登入');
 
 // === 每日任務限制：一天只能一次 ===
+// === 每日任務限制：一天只能一次 ===
 async function checkDailyUsageOnce() {
   const userId = localStorage.getItem("userId");
-  if (!userId) return true; // 找不到 user，直接放行避免整個卡死
+  
+  // 🚩 這裡就是你截圖中報警的地方：如果 userId 為空，後端 check 就會失效
+  if (!userId) {
+    console.warn('⚠️ 未找到使用者登入資訊，限制檢查可能失效');
+    // 如果這裡 return true，限制就會被繞過。
+    // 建議：如果你希望強制執行限制，這裡應該 return false 並要求登入
+  }
 
   try {
-    // ✅ 和後端 server.js 一致：POST + JSON body
+    // ✅ 這裡發送請求到 server.js 的 /api/daily/check
     const res = await fetch("/api/daily/check", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId })
+      // 雖然 server.js 主要是看 Session，但傳入 userId 作為備援是好的
+      body: JSON.stringify({ userId }) 
     });
+
+    // 如果後端因為 requireLogin 擋住，這裡會收到 401
+    if (res.status === 401) {
+      console.error("Session 已過期，請重新登入");
+      return true; 
+    }
 
     const data = await res.json();
 
     // 後端回傳格式：{ success: true, blocked: true/false }
     if (!data.success) {
       console.warn("checkDailyUsage API 回傳失敗：", data.message);
-      return true; // 不故意擋使用者，避免因為 bug 導致完全不能用
+      return true; 
     }
 
+    // 🎯 核心限制邏輯
     if (data.blocked) {
       alert("你今天已經完成每日任務，請明天再來！");
       window.location.href = "/experimental/index.html";
-      return false; // ❗ 告訴呼叫方「不要再繼續初始化 daily flow」
+      return false; 
     }
 
     return true;
 
   } catch (err) {
     console.error("❌ 前端 checkDailyUsageOnce Error:", err);
-    // 安全設計：後端壞掉時，不要整個平台掛掉，先允許使用
-    return true;
+    return true; // 安全避風港：避免後端故障導致實驗中斷
   }
 }
 

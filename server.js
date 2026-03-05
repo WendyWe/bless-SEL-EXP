@@ -180,11 +180,16 @@ app.use((req, res, next) => {
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 /* -------------------------------
-   👤 Login
+    👤 Login
 ---------------------------------*/
 app.post("/api/login", async (req, res) => {
+  // 1. 如果已有 Session，仍要回傳所有必要資訊供前端同步
   if (req.session.userId) {
-  return res.json({ success: true, group: req.session.group });
+    return res.json({ 
+      success: true, 
+      group: req.session.group, 
+      userId: req.session.userId // 補上這個，防止前端 localStorage 遺失
+    });
   }
 
   const { username, password } = req.body;
@@ -204,12 +209,12 @@ app.post("/api/login", async (req, res) => {
       return res.json({ success: false, message: "Invalid password" });
     }
 
-    // 🔐 Express session（安全控管）
+    // 🔐 2. 設定 Express session
     req.session.userId = user.id;
     req.session.useridText = user.userid;
     req.session.group = user.group_label;
 
-    // DB session（研究紀錄）
+    // 📊 3. 完整保留你的研究紀錄邏輯：DB session
     const loginTime = new Date().toLocaleString("en-US", {
       timeZone: "Asia/Taipei",
     });
@@ -222,9 +227,11 @@ app.post("/api/login", async (req, res) => {
       [user.id, loginTime, period]
     );
 
+    // ✅ 4. 回傳結果（確保包含 userId）
     res.json({
       success: true,
-      group: user.group_label
+      group: user.group_label,
+      userId: user.id // 補上這個，前端 daily.js 才抓得到 ID 跑限制檢查
     });
 
   } catch (err) {
