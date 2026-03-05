@@ -183,9 +183,9 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
    👤 Login
 ---------------------------------*/
 app.post("/api/login", async (req, res) => {
-  //if (req.session.userId) {
-  //return res.json({ success: true, group: req.session.group });
-  //}
+  if (req.session.userId) {
+  return res.json({ success: true, group: req.session.group });
+  }
 
   const { username, password } = req.body;
 
