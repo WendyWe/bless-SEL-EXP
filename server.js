@@ -417,31 +417,31 @@ app.post("/api/writing/save", requireLogin, async (req, res) => {
    🔒 Check Daily Usage (一天一次限制)
 ---------------------------------*/
 app.post("/api/daily/check", requireLogin, async (req, res) => {
-
+  // ✅ 1. 嚴格從伺服器 Session 抓取 ID
   const realId = req.session.userId;
-  const today = getTaipeiDateString();
 
-  console.log(`🔎 正在檢查限制: 用戶ID=${realId}, 日期=${today}`);
+  if (!realId) {
+    return res.status(401).json({ success: false, message: "Unauthorized" });
+  }
 
   try {
-     const check = await db.query(
-      `SELECT 1 
-       FROM daily_usage 
-       WHERE user_id = $1 
-       AND date = $2 
-       AND avi_posttest_done = true 
+    const today = getTaipeiDateString();
+
+    // ✅ 2. 執行你的核心研究邏輯：只有「完整做完」的人才阻擋
+    const check = await db.query(
+      `SELECT 1 FROM daily_usage 
+       WHERE user_id = $1 AND date = $2 AND avi_posttest_done = true 
        LIMIT 1`,
       [realId, today]
     );
 
-    console.log(`📊 查詢結果: 找到 ${check.rows.length} 筆已完成紀錄`);
-
     res.json({
       success: true,
-      blocked: check.rows.length > 0
+      blocked: check.rows.length > 0 // 查到 true 就 blocked: true
     });
 
   } catch (err) {
+    console.error("Check API Error:", err);
     res.status(500).json({ success: false });
   }
 });
