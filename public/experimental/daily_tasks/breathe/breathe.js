@@ -64,11 +64,26 @@ audio.onended = function() {
 
 function togglePractice() {
     if (!isPracticing) {
-        isPracticing = true;
-        controlButton.textContent = "暫停練習";
-        audio.play();
-        drawWave(0);
-        audioStatus.textContent = "🎵 冥想導引播放中...";
+        // 針對 iOS 的優化：確保先 load() 觸發載入
+        if (audio.readyState === 0) { 
+            audio.load();
+        }
+
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                // 播放成功
+                isPracticing = true;
+                controlButton.textContent = "暫停練習";
+                drawWave(0);
+                audioStatus.textContent = "🎵 冥想導引播放中...";
+            }).catch(error => {
+                // 播放失敗（通常是權限或格式問題）
+                console.error("Playback failed:", error);
+                audioStatus.textContent = "❌ 播放失敗，請確認是否關閉靜音模式";
+            });
+        }
     } else {
         isPracticing = false;
         cancelAnimationFrame(animationFrame);
