@@ -545,65 +545,90 @@ app.use(
   express.static(path.join(__dirname, "public", "experimental", "articles"))
 );
 
-app.get("/api/daily-article", requireLogin, (req, res) => {
+// 修改為 async 函數，因為需要查資料庫
+app.get("/api/daily-article", requireLogin, async (req, res) => {
+  // ✅ 保留 source：用於驗證請求來源是否正確（必須是 study）
+  const { source } = req.query; 
+  const realId = req.session.userId;
 
-  const { source, index } = req.query;
-
-  // 🧪 行為驗證用 log（建議保留）
+  // 🧪 行為驗證用 log（保留並修正：移除 index 參數改為紀錄 userId）
   console.log("🧪 DAILY ARTICLE REQUEST", {
-    userId: req.session.userId,
+    userId: realId,
     source,
-    index,
     time: new Date().toISOString()
   });
 
-// ② 只允許 study
+  // ② 只允許 study (保留：安全性檢查)
   if (source !== "study") {
     return res.status(403).json({ error: "Invalid source" });
   }
 
-  // ③ 解析文章 index（前端負責給）
-  const articleIndex = parseInt(index, 10);
+  try {
+    // ③ ✨ 核心修改：從資料庫抓取「專屬文章進度」
+    const prog = await db.query(
+      "SELECT current_article_idx FROM user_progress WHERE user_id = $1",
+      [realId]
+    );
 
-  if (
-    Number.isNaN(articleIndex) ||
-    articleIndex < 1 ||
-    articleIndex > MAX_ARTICLES
-  ) {
-    return res.status(400).json({
-      error: "Invalid article index",
-      max: MAX_ARTICLES
-    });
-  }
+    // 取得文章 index，若無則預設 1
+    const articleIndex = prog.rows.length > 0 ? prog.rows[0].current_article_idx : 1;
 
-  // ④ 組出文章路徑
-  const articleFilename = `article${articleIndex}.html`;
-  const articlePath = path.join(
-    __dirname,
-    "public",
-    "experimental",
-    "articles",
-    articleFilename
-  );
+    // 檢查範圍 (保留：防止存取不存在的 index)
+    if (articleIndex < 1 || articleIndex > MAX_ARTICLES) {
+      return res.status(400).json({
+        error: "Invalid article index",
+        current: articleIndex,
+        max: MAX_ARTICLES
+      });
+    }
 
-  // ⑤ 確認檔案真的存在（避免回傳死連結）
-  if (!fs.existsSync(articlePath)) {
-    console.warn("⚠️ Article file missing", {
-      articleIndex,
+    // ④ 組出文章路徑 (保留：維持檔案系統對應邏輯)
+    const articleFilename = `article${articleIndex}.html`;
+    const articlePath = path.join(
+      __dirname,
+      "public",
+      "experimental",
+      "articles",
       articleFilename
+    );
+
+    // ⑤ 確認檔案真的存在 (保留：避免前端 fetch 到 404)
+    if (!fs.existsSync(articlePath)) {
+      console.warn("⚠️ Article file missing", {
+        articleIndex,
+        articleFilename
+      });
+      return res.status(404).json({
+        error: "Article not available yet",
+        articleIndex
+      });
+    }
+
+    // ✅ 成功派發
+    res.json({
+      articleIndex,
+      url: `/Articles/daily/${articleFilename}`
     });
 
-    return res.status(404).json({
-      error: "Article not available yet",
-      articleIndex
-    });
+  } catch (err) {
+    console.error("❌ Database error during article dispatch:", err);
+    res.status(500).json({ error: "Database error" });
   }
+});
 
-  // ✅ 成功派發（不改任何狀態）
-  res.json({
-    articleIndex,
-    url: `/Articles/daily/${articleFilename}`
-  });
+// ✅ 新增：專門更新「文章進度」的 API，避免動到每日任務的 trial
+app.post("/api/progress/update-article", requireLogin, async (req, res) => {
+  const realId = req.session.userId;
+  const { nextArticleIdx } = req.body;
+  try {
+    await db.query(
+      "UPDATE user_progress SET current_article_idx = $1 WHERE user_id = $2",
+      [nextArticleIdx, realId]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
 });
 
 /* -------------------------------
@@ -667,7 +692,7 @@ app.get("/api/daily-video", (req, res) => {
   const videoFiles = Object.keys(videoMap);
 
   // 2. 設定起始日期 (Day 1: 2026-02-09)
-  const startDate = new Date("2026-03-06T00:00:00+08:00"); 
+  const startDate = new Date("2026-03-29T00:00:00+08:00"); 
   const today = new Date();
   
   // 計算天數差

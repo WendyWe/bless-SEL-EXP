@@ -19,21 +19,27 @@ const finishBtn = document.getElementById("finish-btn");
 const charCount = document.getElementById("char-count");
 
 /* -------------------------------
-   📖 1. 每日文章載入邏輯
+   📖 1. 每日文章載入邏輯 (由後端資料庫決定文章)
 ---------------------------------*/
 async function loadArticle() {
     try {
-        const articleIndex = getCurrentArticleIndex();
+        // ✅ 修改點：不再使用 getCurrentArticleIndex()，也不在 URL 帶 index 參數
+        // 讓後端根據 Session ID 自動從 user_progress.current_article_idx 抓取文章
+        const metaRes = await fetch(`/api/daily-article?source=study`);
         
-        // ① 取得今日文章資訊 (串接 server.js 的 /api/daily-article)
-        const metaRes = await fetch(
-           `/api/daily-article?source=study&index=${articleIndex}`
-        );
         if (!metaRes.ok) throw new Error("每日文章 API 載入失敗");
 
         const meta = await metaRes.json();
 
-        // ② 根據回傳的 URL 取得文章 HTML 內容
+        // ✅ 新增判斷：如果所有文章都讀完了
+        if (meta.finished) {
+            titleEl.textContent = "已完成所有課程";
+            contentEl.innerHTML = "<p>您已經閱讀完所有的文章囉！請繼續完成其他每日任務。</p>";
+            finishBtn.style.display = 'none'; // 隱藏完成按鈕
+            return;
+        }
+
+        // ② 根據回傳的 URL 取得文章 HTML 內容 (這部分維持原樣)
         const articleRes = await fetch(meta.url);
         if (!articleRes.ok) throw new Error("文章內容載入失敗");
 
@@ -43,7 +49,7 @@ async function loadArticle() {
         titleEl.textContent = `第 ${meta.articleIndex} 篇文章`;
         contentEl.innerHTML = articleHtml;
         
-        // 將文章索引暫存在 dataset 中，供後續儲存心得時讀取
+        // 將文章索引暫存在 dataset 中
         titleEl.dataset.articleIndex = meta.articleIndex;
 
     } catch (err) {
@@ -99,47 +105,58 @@ textarea.addEventListener("compositionend", () => {
 textarea.addEventListener("input", updateCount);
 
 /* -------------------------------
-   🚀 3. 完成閱讀：儲存心得至 study_reflections 表
+   🚀 3. 完成閱讀：儲存心得並「推進文章進度」
 ---------------------------------*/
 finishBtn.addEventListener('click', async () => {
-        const reflectionText = textarea.value.trim();
-        // 計算閱讀總時長 (秒)
-        const duration = (Date.now() - startTime) / 1000; 
+    const reflectionText = textarea.value.trim();
+    const duration = (Date.now() - startTime) / 1000; 
+    
+    // 從 dataset 抓取目前這篇文章的 index
+    const currentIdx = parseInt(titleEl.dataset.articleIndex);
 
-        // 準備傳送至專屬表格的資料
-        const payload = {
-            articleIndex: titleEl.dataset.articleIndex || getCurrentArticleIndex(),
-            articleTitle: titleEl.innerText,
-            reflectionText: reflectionText,
-            duration: duration
-        };
+    const payload = {
+        articleIndex: currentIdx,
+        articleTitle: titleEl.innerText,
+        reflectionText: reflectionText,
+        duration: duration
+    };
 
-        try {
-            // 呼叫 server.js 中對應的新 API
-            const res = await fetch('/api/study/save-reflection', {
+    try {
+        // 1️⃣ 儲存心得至 study_reflections (維持原本邏輯)
+        const res = await fetch('/api/study/save-reflection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        
+        if (data.success) {
+            console.log("✅ 心得儲存成功");
+
+            // 2️⃣ ✨ 新增點：心得存成功後，呼叫「專屬文章進度更新」API
+            // 這樣做就不會動到每日任務的 current_trial
+            await fetch('/api/progress/update-article', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ nextArticleIdx: currentIdx + 1 })
             });
-
-            const data = await res.json();
-            if (data.success) {
-                console.log("✅ 心得儲存成功");
-            } else {
-                console.warn("⚠️ 心得儲存失敗:", data.message);
-            }
-        } catch (err) {
-            console.error("❌ 提交心得時出錯:", err);
-        } finally {
-            // C. 🎯 無論儲存是否成功，都執行您原本的 postMessage 告知父頁面執行後測
-            console.log("📖 通知父頁面顯示後測...");
-            window.parent.postMessage(
-                { type: "practice-finished", practice: "study" }, 
-                "*"
-            );
+            
+            console.log("✅ 文章進度已推向:", currentIdx + 1);
+        } else {
+            console.warn("⚠️ 心得儲存失敗:", data.message);
         }
-    });
-
+    } catch (err) {
+        console.error("❌ 提交心得或更新進度時出錯:", err);
+    } finally {
+        // C. 🎯 通知父頁面 (維持原本邏輯)
+        console.log("📖 通知父頁面顯示後測...");
+        window.parent.postMessage(
+            { type: "practice-finished", practice: "study" }, 
+            "*"
+        );
+    }
+});
 /* -------------------------------
    🏁 4. 頁面初始化
 ---------------------------------*/
