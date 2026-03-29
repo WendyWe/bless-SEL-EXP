@@ -77,7 +77,8 @@ const db = new Pool({
       );
       CREATE TABLE IF NOT EXISTS user_progress (
         user_id INTEGER UNIQUE REFERENCES users(id),
-        current_trial INTEGER DEFAULT 1
+        current_trial INTEGER DEFAULT 1,
+        current_article_idx INTEGER DEFAULT 1
       );
       CREATE TABLE IF NOT EXISTS calm_kit_moods (
       id SERIAL PRIMARY KEY,
@@ -248,19 +249,23 @@ app.get("/api/progress", requireLogin, async (req, res) => {
   }
 
   const prog = await db.query(
-    "SELECT current_trial FROM user_progress WHERE user_id = $1",
+    "SELECT current_trial, current_article_idx FROM user_progress WHERE user_id = $1",
     [realId]
   );
 
   if (prog.rows.length === 0) {
     await db.query(
-      "INSERT INTO user_progress (user_id, current_trial) VALUES ($1, 1)",
+      "INSERT INTO user_progress (user_id, current_trial, current_article_idx) VALUES ($1, 1, 1)",
       [realId]
     );
-    return res.json({ trial: 1 });
+    return res.json({ 
+      trial: 1,
+      articleIdx: 1 });
   }
 
-  res.json({ trial: prog.rows[0].current_trial });
+  res.json({ trial: prog.rows[0].current_trial,
+    articleIdx: prog.rows[0].current_article_idx
+   });
 });
 
 app.post("/api/progress/update", requireLogin, async (req, res) => {
@@ -692,7 +697,7 @@ app.get("/api/daily-video", (req, res) => {
   const videoFiles = Object.keys(videoMap);
 
   // 2. 設定起始日期 (Day 1: 2026-02-09)
-  const startDate = new Date("2026-03-29T00:00:00+08:00"); 
+  const startDate = new Date("2026-03-23T00:00:00+08:00"); 
   const today = new Date();
   
   // 計算天數差
