@@ -271,9 +271,10 @@ app.get("/api/progress", requireLogin, async (req, res) => {
   });
 
 
-  res.json({ trial: prog.rows[0].current_trial,
-    articleIdx: prog.rows[0].current_article_idx
-   });
+  res.json({
+    current_trial: prog.rows[0].current_trial,
+    current_article_idx: prog.rows[0].current_article_idx
+  });
 });
 
 app.post("/api/progress/update", requireLogin, async (req, res) => {
@@ -285,12 +286,37 @@ app.post("/api/progress/update", requireLogin, async (req, res) => {
 
   const { newTrial } = req.body;
 
-  await db.query(
-    "UPDATE user_progress SET current_trial = $1 WHERE user_id = $2",
-    [newTrial, realId]
-  );
+  try {
+    console.log("🧪 progress/update incoming:", {
+      userId: realId,
+      newTrial
+    });
 
-  res.json({ success: true });
+    const result = await db.query(
+      `UPDATE user_progress
+       SET current_trial = $1
+       WHERE user_id = $2
+       RETURNING user_id, current_trial, current_article_idx`,
+      [newTrial, realId]
+    );
+
+    console.log("🧪 progress/update DB result:", result.rows[0], "rowCount=", result.rowCount);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "No matching user_progress row"
+      });
+    }
+
+    res.json({
+      success: true,
+      progress: result.rows[0]
+    });
+  } catch (err) {
+    console.error("❌ progress/update error:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 /* -------------------------------
