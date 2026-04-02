@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!endSection.classList.contains('hidden')) return;
 
       e.preventDefault();
-      const warningMsg = "確定要離開嗎？\n\n若現在中斷，今日的練習進度與時數將無法被納入統計。建議完成安頓練習後再行離開，以完整累積你的紀錄。";
+      const warningMsg = "確定要離開嗎？\n\n若現在中斷，今日的練習進度與時數將無法被納入統計。建議完整完成影片、安頓練習及心情紀錄前後測 後再行離開，以完整累積你的紀錄。";
       if (confirm(warningMsg)) {
         window.location.href = '/experimental/index.html';
       }
