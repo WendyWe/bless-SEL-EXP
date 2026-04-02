@@ -224,11 +224,8 @@ if (videoFrame) {
 
           console.log("當前練習類型確認:", practiceType);
 
-          const nextTrial = Number(currentProgData.trial) + 1;
-          const updatePayload = { newTrial: nextTrial };
+          const nextTrial = Number(currentProgData.trial || 0) + 1;
 
-          // 準備更新資料
-        
         // ⭐ 如果剛才練習的類型是 study，則併入文章更新邏輯
         if (practiceType === 'study') {
             const currentArticleIdx = Number(currentProgData.current_article_idx || 1);
@@ -236,21 +233,27 @@ if (videoFrame) {
             
             console.log(`✅ 檢測到 Study 任務，準備將文章索引從 ${currentArticleIdx} 更新至 ${nextArticleIdx}`);
 
-            await fetch('/api/progress/update-article', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nextArticleIdx: nextArticleIdx })
+            const articleRes = await fetch('/api/progress/update-article', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ nextArticleIdx })
             });
-        }
 
-        // 更新 Trial 進度
-        await fetch("/api/progress/update", {
+            if (!articleRes.ok) {
+              throw new Error("update-article failed");
+            }
+          }
+
+        const trialRes = await fetch("/api/progress/update", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updatePayload)
-        });
+            body: JSON.stringify({ newTrial: nextTrial })
+          });
 
-                    
+          if (!trialRes.ok) {
+            throw new Error("progress/update failed");
+          }
+
         } catch (err) {
           console.error("更新狀態失敗:", err);
         }
