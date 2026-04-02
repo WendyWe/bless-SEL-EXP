@@ -271,9 +271,9 @@ app.get("/api/progress", requireLogin, async (req, res) => {
   });
 
 
-  res.json({
-    current_trial: prog.rows[0].current_trial,
-    current_article_idx: prog.rows[0].current_article_idx
+  return res.json({
+    trial: prog.rows[0].current_trial,
+    articleIdx: prog.rows[0].current_article_idx
   });
 });
 

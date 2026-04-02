@@ -223,10 +223,9 @@ if (videoFrame) {
 
           console.log("✅ /api/progress response =", currentProgData);
           console.log("✅ articleIdx from progress =", currentProgData.articleIdx);
-          console.log("✅ current_article_idx from progress =", currentProgData.current_article_idx);
           console.log("✅ practiceType =", practiceType);
 
-          const nextTrial = Number(currentProgData.current_trial || 0) + 1;
+          const nextTrial = Number(currentProgData.trial || 0) + 1;
             console.log("✅ 準備更新 trial:", {
               currentTrial: currentProgData.trial,
               nextTrial
@@ -246,7 +245,7 @@ if (videoFrame) {
             }
 
          if (practiceType === "study") {
-            const currentArticleIdx = Number(currentProgData.current_article_idx || 1);
+            const currentArticleIdx = Number(currentProgData.articleIdx || 1);
             const nextArticleIdx = currentArticleIdx + 1;
 
             console.log("✅ 準備更新 article:", {
