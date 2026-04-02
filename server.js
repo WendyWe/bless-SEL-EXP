@@ -258,10 +258,18 @@ app.get("/api/progress", requireLogin, async (req, res) => {
       "INSERT INTO user_progress (user_id, current_trial, current_article_idx) VALUES ($1, 1, 1)",
       [realId]
     );
+    console.log("🧪 /api/progress created default row for", realId);
     return res.json({ 
       trial: 1,
       articleIdx: 1 });
   }
+
+  console.log("🧪 /api/progress return =", {
+    userId: realId,
+    trial: prog.rows[0].current_trial,
+    articleIdx: prog.rows[0].current_article_idx
+  });
+
 
   res.json({ trial: prog.rows[0].current_trial,
     articleIdx: prog.rows[0].current_article_idx
@@ -621,18 +629,38 @@ app.get("/api/daily-article", requireLogin, async (req, res) => {
   }
 });
 
-// ✅ 新增：專門更新「文章進度」的 API，避免動到每日任務的 trial
+// debug中
 app.post("/api/progress/update-article", requireLogin, async (req, res) => {
   const realId = req.session.userId;
   const { nextArticleIdx } = req.body;
+
   try {
-    await db.query(
-      "UPDATE user_progress SET current_article_idx = $1 WHERE user_id = $2",
+    console.log("🧪 update-article incoming:", {
+      userId: realId,
+      nextArticleIdx
+    });
+
+    const result = await db.query(
+      "UPDATE user_progress SET current_article_idx = $1 WHERE user_id = $2 RETURNING user_id, current_trial, current_article_idx",
       [nextArticleIdx, realId]
     );
-    res.json({ success: true });
+
+    console.log("🧪 update-article DB result:", result.rows[0], "rowCount=", result.rowCount);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "No matching user_progress row"
+      });
+    }
+
+    res.json({
+      success: true,
+      progress: result.rows[0]
+    });
   } catch (err) {
-    res.status(500).json({ success: false });
+    console.error("❌ update-article error:", err);
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 

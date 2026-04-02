@@ -217,41 +217,42 @@ if (videoFrame) {
             body: JSON.stringify({ isFinished: true, featureType: practiceType })
           });
           
-          // --- 3. 更新進度 ---
-          // 取得目前進度
-          const currentProgRes = await fetch("/api/progress");
-          const currentProgData = await currentProgRes.json();
+          // debug中 
+          const progressRes = await fetch("/api/progress", { cache: "no-store" });
+          const currentProgData = await progressRes.json();
 
-          console.log("當前練習類型確認:", practiceType);
+          console.log("✅ /api/progress response =", currentProgData);
+          console.log("✅ articleIdx from progress =", currentProgData.articleIdx);
+          console.log("✅ current_article_idx from progress =", currentProgData.current_article_idx);
+          console.log("✅ practiceType =", practiceType);
 
           const nextTrial = Number(currentProgData.trial || 0) + 1;
 
-        // ⭐ 如果剛才練習的類型是 study，則併入文章更新邏輯
-        if (practiceType === 'study') {
-            const currentArticleIdx = Number(currentProgData.article_idx || 1);
+         if (practiceType === "study") {
+            const currentArticleIdx = Number(currentProgData.articleIdx || 1);
             const nextArticleIdx = currentArticleIdx + 1;
-            
-            console.log(`✅ 檢測到 Study 任務，準備將文章索引從 ${currentArticleIdx} 更新至 ${nextArticleIdx}`);
 
-            const articleRes = await fetch('/api/progress/update-article', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+            console.log("✅ 準備更新 article:", {
+              currentArticleIdx,
+              nextArticleIdx
+            });
+
+            const articleRes = await fetch("/api/progress/update-article", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ nextArticleIdx })
             });
+
+            const articleData = await articleRes.json();
+            console.log("✅ update-article response =", articleData);
+
+            const verifyRes = await fetch("/api/progress", { cache: "no-store" });
+            const verifyData = await verifyRes.json();
+            console.log("✅ update 後再查一次 progress =", verifyData);
 
             if (!articleRes.ok) {
               throw new Error("update-article failed");
             }
-          }
-
-        const trialRes = await fetch("/api/progress/update", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ newTrial: nextTrial })
-          });
-
-          if (!trialRes.ok) {
-            throw new Error("progress/update failed");
           }
 
         } catch (err) {
