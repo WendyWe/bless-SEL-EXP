@@ -6,10 +6,7 @@ if (!userId) {
     console.error("❌ userId not found in localStorage");
 }
 
-// 取得當前文章索引 (從 localStorage)
-function getCurrentArticleIndex() {
-    return parseInt(localStorage.getItem("dailyArticleIndex") || "1", 10);
-}
+
 
 // --- 🎯 DOM 元素抓取 ---
 const titleEl = document.getElementById("article-title");

@@ -228,7 +228,7 @@ if (videoFrame) {
 
         // ⭐ 如果剛才練習的類型是 study，則併入文章更新邏輯
         if (practiceType === 'study') {
-            const currentArticleIdx = Number(currentProgData.current_article_idx || 1);
+            const currentArticleIdx = Number(currentProgData.article_idx || 1);
             const nextArticleIdx = currentArticleIdx + 1;
             
             console.log(`✅ 檢測到 Study 任務，準備將文章索引從 ${currentArticleIdx} 更新至 ${nextArticleIdx}`);
