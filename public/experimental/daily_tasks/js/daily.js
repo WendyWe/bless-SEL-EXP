@@ -222,11 +222,13 @@ if (videoFrame) {
           const currentProgRes = await fetch("/api/progress");
           const currentProgData = await currentProgRes.json();
 
+          console.log("當前練習類型確認:", practiceType);
+
           const nextTrial = Number(currentProgData.trial) + 1;
+          const updatePayload = { newTrial: nextTrial };
 
           // 準備更新資料
-        console.log("當前練習類型確認:", practiceType);
-
+        
         // ⭐ 如果剛才練習的類型是 study，則併入文章更新邏輯
         if (practiceType === 'study') {
             const currentArticleIdx = Number(currentProgData.current_article_idx || 1);
@@ -240,7 +242,7 @@ if (videoFrame) {
                 body: JSON.stringify({ nextArticleIdx: nextArticleIdx })
             });
         }
-        
+
         // 更新 Trial 進度
         await fetch("/api/progress/update", {
             method: "POST",
