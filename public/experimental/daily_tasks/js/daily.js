@@ -224,12 +224,28 @@ if (videoFrame) {
 
           const nextTrial = Number(currentProgData.trial) + 1;
 
-          // 更新進度
-          await fetch("/api/progress/update", {
+          // 準備更新資料
+        let updatePayload = { newTrial: nextTrial };
+
+        // ⭐ 如果剛才練習的類型是 study，則併入文章更新邏輯
+        if (practiceType === 'study') {
+            // 這裡建議你可以合併 API，或者連續呼叫
+            // 為了不改動你太多的後端，我們用連續呼叫：
+            const currentArticleIdx = currentProgData.current_article_idx || 1;
+            await fetch('/api/progress/update-article', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nextArticleIdx: currentArticleIdx + 1 })
+            });
+            console.log("✅ 檢測到 Study 任務，已同步更新文章索引");
+        }
+
+        // 更新 Trial 進度
+        await fetch("/api/progress/update", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ newTrial: nextTrial })
-          });
+            body: JSON.stringify(updatePayload)
+        });
 
                     
         } catch (err) {

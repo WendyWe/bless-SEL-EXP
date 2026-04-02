@@ -132,17 +132,8 @@ finishBtn.addEventListener('click', async () => {
         const data = await res.json();
         
         if (data.success) {
-            console.log("✅ 心得儲存成功");
-
-            // 2️⃣ ✨ 新增點：心得存成功後，呼叫「專屬文章進度更新」API
-            // 這樣做就不會動到每日任務的 current_trial
-            await fetch('/api/progress/update-article', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nextArticleIdx: currentIdx + 1 })
-            });
-            
-            console.log("✅ 文章進度已推向:", currentIdx + 1);
+            console.log("✅ 心得儲存成功，等待完成後測後同步更新進度");
+            // ⭐ 注意：這裡不再呼叫 /api/progress/update-article
         } else {
             console.warn("⚠️ 心得儲存失敗:", data.message);
         }
