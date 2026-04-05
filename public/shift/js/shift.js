@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dailyBtn.addEventListener("click", () => {
 
       const warningMessage =
-        "提醒：進入「心理位移書寫」後，須完成完整四個位格之書寫，否則將不視為完整使用，後續使用時間的獎勵可能會受影響。\n\n確定要開始今日任務嗎？";
+        "提醒：進入「心理位移書寫」後，須完成完整四個位格之書寫，否則將不視為完整使用，後續使用時間的獎勵可能會受影響。\n 並且，在開始書寫前，請先回想一件近期讓您產生明顯情緒的具體事件，這能幫助您進入接下來的位移練習。\n\n確定要開始今日任務嗎？";
 
       if (!confirm(warningMessage)) return;
 
