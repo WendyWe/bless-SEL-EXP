@@ -751,7 +751,7 @@ app.get("/api/daily-video", (req, res) => {
   const videoFiles = Object.keys(videoMap);
 
   // 2. 設定起始日期 (Day 1: 2026-02-09)
-  const startDate = new Date("2026-03-23T00:00:00+08:00"); 
+  const startDate = new Date("2026-04-20T00:00:00+08:00"); 
   const today = new Date();
   
   // 計算天數差
